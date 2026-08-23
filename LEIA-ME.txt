@@ -1,0 +1,10 @@
+JB Prancheta Beach Tennis V3
+
+Novidade principal: Gerador automático por prescrição textual.
+Reconhece jogadores J1–J4, professor, linhas de 3m/6m, fundo, zonas, deslocamentos, retorno, golpes e direções como paralelo/cruzado.
+Gera jogadores, setas de deslocamento, trajetórias da bola e sequência numerada.
+
+Esta V3 usa um interpretador local baseado em regras e funciona sem chave de API.
+O resultado continua editável com as ferramentas manuais.
+
+Para instalar como PWA, hospede os arquivos em HTTPS.
