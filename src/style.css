@@ -98,3 +98,24 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .presentation-nav{display:flex;align-items:center;gap:20px;margin-top:16px}.scene-dots{display:flex;gap:7px}.scene-dots i{width:8px;height:8px;border-radius:50%;background:#3a424d}.scene-dots i.active{background:#b8ff00}
 @media(max-width:850px){.sequence-head{align-items:flex-start;flex-direction:column}.sequence-actions{width:100%}.sequence-actions button{flex:1}.presentation-card{transform-origin:top center}}
 @media print{.sequence-panel{display:none!important}}
+
+
+/* V1.7 Premium Court */
+.board-wrap{
+  background:radial-gradient(circle at 50% 15%,#26313a 0,#14191f 48%,#0c1014 100%);
+  border:1px solid #35414c;
+  box-shadow:0 28px 80px rgba(0,0,0,.55),0 0 0 1px rgba(184,255,0,.04) inset;
+}
+.canvas-area{background:radial-gradient(circle at 50% 20%,rgba(48,64,76,.20),transparent 45%)}
+.stage-shell:before{
+  content:"JB TACTICS • PREMIUM COURT";
+  position:absolute;z-index:2;left:16px;top:14px;
+  font-size:9px;font-weight:1000;letter-spacing:.14em;color:rgba(255,255,255,.42);
+  pointer-events:none
+}
+.stage-shell:after{
+  content:"";
+  position:absolute;z-index:2;left:5%;right:5%;bottom:4px;height:12px;
+  background:radial-gradient(ellipse,rgba(0,0,0,.34),transparent 68%);
+  pointer-events:none
+}
