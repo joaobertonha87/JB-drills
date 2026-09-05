@@ -1,6 +1,7 @@
 {
   "name": "jb-tactics",
-  "version": "1.0.0",
+  "version": "1.6.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -8,13 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "konva": "latest",
-    "react-konva": "latest",
-    "lucide-react": "latest"
+    "@vitejs/plugin-react": "^4.3.4",
+    "konva": "^9.3.18",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-konva": "^18.2.10",
+    "vite": "^6.0.5"
   },
   "devDependencies": {}
 }

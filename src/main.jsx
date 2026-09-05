@@ -1,6 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import Editor from "./pages/Editor";
+import App from "./App";
 import "./style.css";
 
-createRoot(document.getElementById("root")).render(<Editor />);
+createRoot(document.getElementById("root")).render(
+  <React.StrictMode><App /></React.StrictMode>
+);
