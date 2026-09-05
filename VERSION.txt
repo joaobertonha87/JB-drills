@@ -1,7 +1,10 @@
-JB Tactics V1.10 CLEAN COURT
+JB Tactics V1.11 — FLAT SAND + ARROW COLORS
+
 Correções:
-- Removidos números duplicados dos jogadores.
-- Cada jogador exibe somente o número controlado pela ferramenta.
-- Removidas faixas/redes pretas que estavam gravadas na areia.
-- Quadra reconstruída somente com areia, linhas brancas e uma única rede.
-- Mantido o layout Premium Studio, jogadores 3D, professor, ferramentas, cenas e exportação.
+- Areia em 2D limpa, sem textura pesada.
+- Quadra mantém somente areia, linhas e uma rede.
+- Paleta rápida de cores para setas.
+- A cor escolhida passa a ser usada nas novas setas.
+- Ao selecionar uma seta já criada, mudar a cor altera apenas aquela seta.
+- A cor de cada seta é salva individualmente.
+- A seleção de outra seta mostra e mantém a cor própria dela.

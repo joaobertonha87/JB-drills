@@ -23,13 +23,14 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb110-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb111-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb110-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb111-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(true),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
+ const[arrowColor,setArrowColor]=useState("#f4f72b");
 
  useEffect(()=>{const r=()=>boxRef.current&&setScale(Math.min(1,boxRef.current.clientWidth/W));r();addEventListener("resize",r);return()=>removeEventListener("resize",r)},[]);
  useEffect(()=>{if(!playing)return;const t=setInterval(()=>setProgress(p=>p>=100?(setPlaying(false),0):p+1),100);return()=>clearInterval(t)},[playing]);
@@ -43,12 +44,12 @@ export default function App(){
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb110-items",JSON.stringify(items));localStorage.setItem("jb110-scenes",JSON.stringify(scenes));localStorage.setItem("jb110-meta",JSON.stringify({title,category,level,desc}))};
+ const save=()=>{localStorage.setItem("jb111-items",JSON.stringify(items));localStorage.setItem("jb111-scenes",JSON.stringify(scenes));localStorage.setItem("jb111-meta",JSON.stringify({title,category,level,desc}))};
  const exportPNG=()=>{const a=document.createElement("a");a.href=stageRef.current.toDataURL({pixelRatio:2});a.download=title.replace(/\W+/g,"_")+".png";a.click()};
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
- const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y]});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
+ const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
  const move=()=>{if(!draft)return;const p=point();if(!p)return;if(draft.type==="arrow")setDraft(d=>({...d,points:[d.points[0],d.points[1],p.x,p.y]}));else setDraft(d=>({...d,w:p.x-d.x,h:p.y-d.y}))};
- const up=()=>{if(!draft)return;if(draft.type==="arrow")commit([...items,{id:uid(),type:"arrow",points:draft.points,color:YELLOW,visible:true}]);else commit([...items,{id:uid(),type:"zone",x:draft.x,y:draft.y,w:draft.w,h:draft.h,color:LIME,visible:true}]);setDraft(null);setMode("select")};
+ const up=()=>{if(!draft)return;if(draft.type==="arrow")commit([...items,{id:uid(),type:"arrow",points:draft.points,color:draft.color||arrowColor,visible:true}]);else commit([...items,{id:uid(),type:"zone",x:draft.x,y:draft.y,w:draft.w,h:draft.h,color:LIME,visible:true}]);setDraft(null);setMode("select")};
  const newScene=()=>{const next=[...scenes,{id:uid(),title:`Cena ${scenes.length+1}`,items:clone(items)}];setScenes(next);setScene(next.length-1)};
  const updateScene=()=>{let n=[...scenes],s={id:n[scene]?.id||uid(),title:`Cena ${scene+1}`,items:clone(items)};if(!n.length)n=[s];else n[scene]=s;setScenes(n)};
  const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
@@ -81,7 +82,11 @@ export default function App(){
    <aside className="left panel">
     <h3>MODO DE QUADRA</h3><div className="seg"><button className={courtMode==="full"?"on":""} onClick={()=>setCourtMode("full")}>Quadra inteira</button><button className={courtMode==="half"?"on":""} onClick={()=>setCourtMode("half")}>Meia quadra</button></div>
     <h3>ELEMENTOS</h3>
-    <Tool icon={<UserRound/>} text="Jogador 3D" onClick={()=>addPlayer(teamTab==="B"?"B":"A")}/><Tool icon={<GraduationCap/>} text="Professor" onClick={addCoach}/><Tool icon={<CircleDot/>} text="Bola" onClick={()=>addSimple("ball")}/><Tool icon={<Triangle/>} text="Cone" onClick={()=>addSimple("cone")}/><Tool icon={<MoveRight/>} text="Seta" onClick={()=>setMode("arrow")}/><Tool icon={<Square/>} text="Área / Zona" onClick={()=>setMode("zone")}/><Tool icon={<Type/>} text="Texto" onClick={()=>addSimple("text")}/>
+    <Tool icon={<UserRound/>} text="Jogador 3D" onClick={()=>addPlayer(teamTab==="B"?"B":"A")}/><Tool icon={<GraduationCap/>} text="Professor" onClick={addCoach}/><Tool icon={<CircleDot/>} text="Bola" onClick={()=>addSimple("ball")}/><Tool icon={<Triangle/>} text="Cone" onClick={()=>addSimple("cone")}/><Tool icon={<MoveRight/>} text="Seta" onClick={()=>setMode("arrow")}/>
+    <div className="quickArrowColors">
+      {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff"].map(c=><button key={c} className={arrowColor===c?"picked":""} style={{background:c}} onClick={()=>{setArrowColor(c);if(sel?.type==="arrow")patch(sel.id,{color:c})}} title="Cor da seta"></button>)}
+    </div>
+    <Tool icon={<Square/>} text="Área / Zona" onClick={()=>setMode("zone")}/><Tool icon={<Type/>} text="Texto" onClick={()=>addSimple("text")}/>
     <h3>FERRAMENTAS</h3>
     <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>setMode("select")}/><Tool icon={<Move/>} text="Mover" onClick={()=>setMode("select")}/><Tool icon={<RotateCw/>} text="Girar"/><Tool icon={<Trash2/>} text="Excluir" onClick={del}/><Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/><Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
    </aside>
@@ -96,7 +101,7 @@ export default function App(){
         {showBrand&&<><Text x={340} y={82} text="JB TACTICS" fill="#dfffe0" fontSize={28} fontStyle="bold"/><Text x={375} y={112} text="BEACH TENNIS" fill={LIME} fontSize={11} letterSpacing={4}/></>}
         {showZones&&<><Rect x={180} y={395} width={540} height={80} fill="rgba(84,230,0,.035)"/><Rect x={180} y={190} width={540} height={75} fill="rgba(84,230,0,.035)"/></>}
         {items.map(render)}
-        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={YELLOW} fill={YELLOW} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
+        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
        </Layer>
       </Stage>
@@ -108,7 +113,15 @@ export default function App(){
     <h3>JOGADORES</h3><div className="seg three"><button className={teamTab==="A"?"on":""} onClick={()=>setTeamTab("A")}>Dupla A</button><button className={teamTab==="B"?"on":""} onClick={()=>setTeamTab("B")}>Dupla B</button><button className={teamTab==="P"?"on":""} onClick={()=>setTeamTab("P")}>Professor</button></div>
     <div className="players">{playerList.map((p,n)=><div className="playerRow" key={p.id}><i>{p.label}</i><span>{p.name}</span><button onClick={()=>setSelected(p.id)}><Pencil/></button><button onClick={()=>patch(p.id,{visible:p.visible===false})}>{p.visible===false?<EyeOff/>:<Eye/>}</button></div>)}</div>
     <h3>PROPRIEDADES</h3>
-    {!sel?<div className="empty">Selecione um elemento da quadra.</div>:<div className="props"><label>Nome<input value={sel.name||sel.text||""} onChange={e=>sel.type==="text"?patch(sel.id,{text:e.target.value}):patch(sel.id,{name:e.target.value})}/></label><label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label><label>Escala<input type="range" min="70" max="130" defaultValue="100"/></label><button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
+    {!sel?<div className="empty">Selecione um elemento da quadra.</div>:<div className="props"><label>Nome<input value={sel.name||sel.text||""} onChange={e=>sel.type==="text"?patch(sel.id,{text:e.target.value}):patch(sel.id,{name:e.target.value})}/></label>{sel.type==="arrow"?<>
+ <label>Cor da seta
+   <input type="color" value={sel.color||arrowColor} onChange={e=>{setArrowColor(e.target.value);patch(sel.id,{color:e.target.value})}}/>
+ </label>
+ <div className="arrowPalette">
+   {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a","#a855f7"].map(c=><button key={c} title={c} className={(sel.color||arrowColor)===c?"picked":""} style={{background:c}} onClick={()=>{setArrowColor(c);patch(sel.id,{color:c})}}></button>)}
+ </div>
+ </>:<label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label>}
+ <label>Escala<input type="range" min="70" max="130" defaultValue="100"/></label><button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
    </aside>
 
    <section className="info panel"><h3>INFORMAÇÕES DA TÁTICA</h3><label>Nome<input value={title} onChange={e=>setTitle(e.target.value)}/></label><label>Categoria<select value={category} onChange={e=>setCategory(e.target.value)}><option>Ofensiva</option><option>Defensiva</option><option>Construção</option><option>Transição</option></select></label><label>Nível<select value={level} onChange={e=>setLevel(e.target.value)}><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></label><label>Descrição<textarea value={desc} onChange={e=>setDesc(e.target.value)}/></label></section>
