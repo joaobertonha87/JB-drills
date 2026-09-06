@@ -533,3 +533,42 @@ body{
   font-size:10px;color:#b8c5ca;
 }
 .drawWidthLabel input{width:100%;accent-color:#54e600}
+
+/* V1.26 — smart shape recognition */
+.smartDrawToggle{
+  width:100%;
+  min-height:40px;
+  border:1px solid #274650;
+  border-radius:8px;
+  background:#0d2530;
+  color:#b7c6cb;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  padding:8px 10px;
+  font-size:10px;
+  font-weight:900;
+}
+.smartDrawToggle.on{
+  border-color:#54e600;
+  color:#eaffdf;
+  background:#12351d;
+}
+.smartDot{
+  width:9px;height:9px;border-radius:50%;
+  background:#68767c;
+}
+.smartDrawToggle.on .smartDot{
+  background:#54e600;
+  box-shadow:0 0 0 3px rgba(84,230,0,.16);
+}
+.smartHint{
+  padding:7px 8px;
+  border-left:3px solid #54e600;
+  background:#0b2028;
+  color:#aebbc0;
+  font-size:9px;
+  line-height:1.5;
+  border-radius:4px;
+}
