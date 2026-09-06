@@ -1,9 +1,10 @@
-JB Tactics V1.46 — CLEAN HUMAN + BEACH NET FIX
+JB Tactics V1.47 — EXACT PREMIUM STABLE
 
-- Removidos da imagem da arena os vestígios/pés de jogadores antigos.
-- Jogadores recortados novamente em PNG transparente, sem areia/linhas atrás.
-- Professor recortado novamente, completo e com cabeça preservada.
-- Controle funcional de tamanho individual para jogador e professor: 60% a 160%.
-- Rede única visualmente mais alta e proporcional ao Beach Tennis.
-- Formação humana e layout premium da Clean Build preservados.
-- Novo namespace local para evitar reaproveitar posições/objetos antigos do cache.
+- Corrigidos os dois jogadores superiores sem deformação.
+- Professor reconstruído a partir do asset estável, completo e sem cabeça cortada.
+- Jogadores e professor agora usam PNG transparente estável, sem o mascaramento agressivo da V1.46.
+- Mantida a disposição aprovada: dupla superior de frente e dupla inferior de costas.
+- Mantida a rede alta no padrão visual de Beach Tennis.
+- Mantidos controles de tamanho individual de jogadores e professor.
+- Arena limpa, sem pés/personagens antigos gravados na areia.
+- Cache/localStorage renovados para impedir restauração de objetos corrompidos.

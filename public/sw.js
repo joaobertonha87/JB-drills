@@ -1,4 +1,4 @@
-const CACHE="jb-tactics-v1-46-clean";
+const CACHE="jb-tactics-v1-47-clean";
 self.addEventListener("install",event=>{
   self.skipWaiting();
 });

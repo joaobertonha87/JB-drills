@@ -13,10 +13,10 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:315,y:405,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:uid(),type:"player",team:"A",x:685,y:405,label:"2",name:"Jogador 2",visible:true,scale:100},
- {id:uid(),type:"player",team:"B",x:365,y:158,label:"3",name:"Jogador 3",visible:true,scale:100},
- {id:uid(),type:"player",team:"B",x:635,y:158,label:"4",name:"Jogador 4",visible:true},
+ {id:uid(),type:"player",team:"A",x:315,y:410,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:uid(),type:"player",team:"A",x:685,y:410,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:uid(),type:"player",team:"B",x:385,y:160,label:"3",name:"Jogador 3",visible:true,scale:100},
+ {id:uid(),type:"player",team:"B",x:615,y:160,label:"4",name:"Jogador 4",visible:true,scale:100},
  {id:uid(),type:"coach",x:92,y:350,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true,scale:100}
 ];
 
@@ -28,11 +28,11 @@ export default function App(){
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb146-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb147-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb146-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb147-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -60,7 +60,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb146-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb147-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -109,7 +109,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb146-items",JSON.stringify(items));localStorage.setItem("jb146-scenes",JSON.stringify(scenes));localStorage.setItem("jb146-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb147-items",JSON.stringify(items));localStorage.setItem("jb147-scenes",JSON.stringify(scenes));localStorage.setItem("jb147-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -212,14 +212,14 @@ export default function App(){
    const im=sprite(i),col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
 
    if(i.type==="coach"){
-     const sc=(i.scale||100)/100; const cw=112*sc,ch=190*sc;
+     const sc=(i.scale||100)/100; const cw=104*sc,ch=184*sc;
      return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-       {im&&<KImage image={im} x={-cw/2} y={-ch+58} width={cw} height={ch}/>}
+       {im&&<KImage image={im} x={-cw/2} y={-ch+52} width={cw} height={ch}/>}
      </Group>
    }
 
    const isTop=i.y < COURT_H/2;
-   const sc=(i.scale||100)/100; const sw=(isTop?82:108)*sc, sh=(isTop?120:160)*sc;
+   const sc=(i.scale||100)/100; const sw=(isTop?76:104)*sc, sh=(isTop?112:154)*sc;
    return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
@@ -340,7 +340,7 @@ export default function App(){
             Rede, linhas, iluminação e decoração pertencem ao cenário-base.
             Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
-        {/* V1.46: uma única rede visual, mais alta e proporcional ao Beach Tennis.
+        {/* V1.47: uma única rede visual, mais alta e proporcional ao Beach Tennis.
             Esta camada cobre/alinha com a rede do cenário em vez de criar uma segunda rede separada. */}
         <Group listening={false}>
           <Rect x={205} y={198} width={590} height={77} fill="#171514" opacity={0.82}/>
