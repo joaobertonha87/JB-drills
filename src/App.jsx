@@ -5,7 +5,7 @@ import{
  Grid2X2,ClipboardList,Library,Users,Settings,Cloud,Save,Share2,UserRound,GraduationCap,
  CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,RotateCw,Trash2,Undo2,Redo2,
  Eye,EyeOff,Play,Square as StopSquare,Plus,Pencil,ChevronLeft,ChevronRight,Download,
- Copy,ImageDown,PanelTop,FolderOpen
+ Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
 }from"lucide-react";
 
 const W=1000,H=520, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
@@ -23,11 +23,11 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb129-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb130-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb129-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb130-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -53,7 +53,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb129-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb130-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -84,9 +84,16 @@ export default function App(){
    const obj={id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true};
    commit([...items,obj]);setSelected(obj.id);activateMode("select",`${obj.name} adicionado e selecionado`);
  };
+ const addStep=()=>{
+   const nums=items.filter(x=>x.type==="step").map(x=>Number(x.number)||0);
+   const next=(nums.length?Math.max(...nums):0)+1;
+   const col=next%2===0?BLUE:LIME;
+   const obj={id:uid(),type:"step",x:500,y:260,number:next,name:`Passo ${next}`,color:col,size:30,visible:true};
+   commit([...items,obj]);setSelected(obj.id);activateMode("select",`Passo ${next} adicionado ✓`);
+ };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb129-items",JSON.stringify(items));localStorage.setItem("jb129-scenes",JSON.stringify(scenes));localStorage.setItem("jb129-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb130-items",JSON.stringify(items));localStorage.setItem("jb130-scenes",JSON.stringify(scenes));localStorage.setItem("jb130-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -207,6 +214,15 @@ export default function App(){
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
+  if(i.type==="step"){
+   const r=i.size||30,stroke=active?"#ffffff":"#061014",fill=i.color||LIME;
+   return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"||mode==="move"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+     <Circle radius={r} fill="#061014" opacity={.30}/>
+     <Circle radius={r-3} fill={fill} stroke={stroke} strokeWidth={active?4:3} shadowColor="#000" shadowBlur={10} shadowOpacity={.35}/>
+     <Circle radius={r-8} fill="#071318" opacity={.92}/>
+     <Text x={-r} y={-12} width={r*2} align="center" text={String(i.number||1)} fill="#ffffff" fontStyle="bold" fontSize={22}/>
+   </Group>;
+  }
   if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="curvedArrow"){
@@ -235,7 +251,7 @@ export default function App(){
 
  return <div className="app">
   <header className="top">
-   <div className="logo"><b>JB</b><div><strong>JB TACTICS</strong><small>BEACH TENNIS</small></div></div>
+   <div className="logo"><b>JB</b><div><strong>JB TACTICS</strong><small>TACTICAL BOARD • BEACH TENNIS</small></div></div>
    <nav className="navtabs"><button className="navactive"><Grid2X2/>Táticas</button><button disabled title="Em desenvolvimento"><ClipboardList/>Exercícios</button><button disabled title="Em desenvolvimento"><Library/>Biblioteca</button><button disabled title="Em desenvolvimento"><Users/>Alunos</button><button disabled title="Em desenvolvimento"><Settings/>Configurações</button></nav>
    <div className="actions"><button className="cloud" disabled title="Sincronização em desenvolvimento"><Cloud/></button><button className="save" onClick={save}><Save/>Salvar</button><button className="export" onClick={exportPNG}><Share2/>Exportar</button></div>
   </header>
@@ -255,6 +271,7 @@ export default function App(){
     <Tool icon={<GraduationCap/>} text="Professor" onClick={addCoach}/>
     <Tool icon={<CircleDot/>} text="Bola" onClick={()=>addSimple("ball")}/>
     <Tool icon={<Triangle/>} text="Cone" onClick={()=>addSimple("cone")}/>
+    <Tool icon={<ListOrdered/>} text="Passo / Número" onClick={addStep}/>
 
     <Tool active={mode==="freeDraw"} icon={<Pencil/>} text="Desenho livre" onClick={()=>activateMode(mode==="freeDraw"?"select":"freeDraw",mode==="freeDraw"?"Selecionar ativo":"Lápis ativo • desenhe na quadra")}/>
     {mode==="freeDraw"&&<div className="freeDrawControls">
@@ -297,7 +314,7 @@ export default function App(){
         
         
         {items.map(render)}
-        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17}/>}
+        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
         {draft?.type==="freeDraw"&&<Line points={draft.points} stroke={draft.color||drawColor} strokeWidth={draft.width||drawWidth} lineCap="round" lineJoin="round"/>}
        </Layer>
@@ -326,6 +343,16 @@ export default function App(){
  <div className="arrowPalette">
    {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a","#a855f7"].map(c=><button key={c} title={c} className={(sel.color||arrowColor)===c?"picked":""} style={{background:c}} onClick={()=>{setArrowColor(c);patch(sel.id,{color:c})}}></button>)}
  </div>
+ </>:sel.type==="step"?<>
+   <label>Número do passo
+     <input type="number" min="1" max="99" value={sel.number||1} onChange={e=>patch(sel.id,{number:Math.max(1,Number(e.target.value)||1),name:`Passo ${Math.max(1,Number(e.target.value)||1)}`})}/>
+   </label>
+   <label>Cor do marcador
+     <input type="color" value={sel.color||LIME} onChange={e=>patch(sel.id,{color:e.target.value})}/>
+   </label>
+   <label>Tamanho
+     <input type="range" min="22" max="48" step="1" value={sel.size||30} onChange={e=>patch(sel.id,{size:Number(e.target.value)})}/>
+   </label>
  </>:sel.type==="freeDraw"?<>
    <label>Cor do desenho
      <input type="color" value={sel.color||drawColor} onChange={e=>{setDrawColor(e.target.value);patch(sel.id,{color:e.target.value});flash("Cor do desenho alterada")}}/>
