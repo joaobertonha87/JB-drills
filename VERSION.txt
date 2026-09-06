@@ -1,11 +1,12 @@
-JB Tactics V1.21 — IPAD SCROLL + SCALE
+JB Tactics V1.22 — IPAD FULL LAYOUT
 
-Ajustes:
-- Menu lateral esquerdo com rolagem vertical independente.
-- Rolar o menu não desloca a quadra.
-- Comportamento otimizado para Safari/iPad com overscroll containment.
-- Barra lateral sticky em landscape.
-- Barra lateral com área de rolagem própria em portrait.
-- Jogadores reduzidos para aproximadamente 75% do tamanho anterior.
-- Professor e cesto reduzidos proporcionalmente.
-- Posições iniciais ajustadas para melhor proporção com a quadra.
+Correções:
+- Eliminado o corte da parte inferior no iPad.
+- Página principal volta a ter rolagem vertical natural.
+- Removidas restrições de altura que travavam o Safari.
+- Sidebar esquerda mantém rolagem independente.
+- Uso de 100dvh + safe-area para respeitar barras do Safari e borda inferior do iPad.
+- Layout paisagem: quadra + sidebar em cima e painéis inferiores em sequência.
+- Layout retrato: todos os painéis empilhados e acessíveis por rolagem.
+- Fundamento, timeline, propriedades e visualização não ficam mais escondidos.
+- Escala mínima da quadra reduzida para se adaptar melhor à largura disponível.
