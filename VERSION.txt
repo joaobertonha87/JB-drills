@@ -1,10 +1,8 @@
-JB Tactics V1.13 — CLEAN COURT FIX
+JB Tactics V1.14 — PLAYER ROTATION
 
-- Sem bases amarelas/luminosas.
-- Sem artefatos verdes de base na quadra.
-- Jogadores 3 e 4 orientados para baixo, de frente para 1 e 2.
-- Texto JB Tactics / Beach Tennis removido de dentro da quadra.
-- Todas as linhas internas removidas.
-- Quadra com apenas areia 2D, contorno externo e uma rede.
-- Personagens menores e com margem para evitar cortes.
-- Mantidas as cores editáveis e independentes das setas.
+- Botão Girar +15° na barra de ferramentas.
+- Ao selecionar jogador/professor, aparecem controles −15°, 0°, +15° e Virar (180°).
+- Slider permite rotação livre de 0° a 359°.
+- Cada jogador e o professor guardam sua própria rotação.
+- O número do jogador permanece sempre reto/legível enquanto o personagem gira.
+- Removida a base luminosa amarela do render dos personagens.

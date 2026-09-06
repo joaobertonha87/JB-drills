@@ -13,21 +13,21 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:330,y:430,label:"1",name:"Jogador 1",sprite:"back",visible:true},
- {id:uid(),type:"player",team:"A",x:595,y:430,label:"2",name:"Jogador 2",sprite:"back",visible:true},
- {id:uid(),type:"player",team:"B",x:340,y:225,label:"3",name:"Jogador 3",sprite:"front",visible:true},
- {id:uid(),type:"player",team:"B",x:585,y:225,label:"4",name:"Jogador 4",sprite:"front",visible:true},
- {id:uid(),type:"coach",x:120,y:410,label:"P",name:"Professor",sprite:"coach",visible:true}
+ {id:uid(),type:"player",team:"A",x:330,y:430,label:"1",name:"Jogador 1",sprite:"back",rotation:0,visible:true},
+ {id:uid(),type:"player",team:"A",x:595,y:430,label:"2",name:"Jogador 2",sprite:"back",rotation:0,visible:true},
+ {id:uid(),type:"player",team:"B",x:340,y:225,label:"3",name:"Jogador 3",sprite:"front",rotation:0,visible:true},
+ {id:uid(),type:"player",team:"B",x:585,y:225,label:"4",name:"Jogador 4",sprite:"front",rotation:0,visible:true},
+ {id:uid(),type:"coach",x:120,y:410,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb113-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb114-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb113-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb114-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(true),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -40,11 +40,11 @@ export default function App(){
  const undo=()=>{if(!history.length)return;setFuture(f=>[clone(items),...f]);setItems(history.at(-1));setHistory(h=>h.slice(0,-1))};
  const redo=()=>{if(!future.length)return;setHistory(h=>[...h,clone(items)]);setItems(future[0]);setFuture(f=>f.slice(1))};
  const addPlayer=t=>{let n=items.filter(x=>x.type==="player").length+1;commit([...items,{id:uid(),type:"player",team:t,x:450,y:t==="A"?445:230,label:String(n),name:`Jogador ${n}`,sprite:t==="A"?"back":"front",visible:true}])};
- const addCoach=()=>commit([...items,{id:uid(),type:"coach",x:115,y:410,label:"P",name:"Professor",sprite:"coach",visible:true}]);
+ const addCoach=()=>commit([...items,{id:uid(),type:"coach",x:115,y:410,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}]);
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb113-items",JSON.stringify(items));localStorage.setItem("jb113-scenes",JSON.stringify(scenes));localStorage.setItem("jb113-meta",JSON.stringify({title,category,level,desc}))};
+ const save=()=>{localStorage.setItem("jb114-items",JSON.stringify(items));localStorage.setItem("jb114-scenes",JSON.stringify(scenes));localStorage.setItem("jb114-meta",JSON.stringify({title,category,level,desc}))};
  const exportPNG=()=>{const a=document.createElement("a");a.href=stageRef.current.toDataURL({pixelRatio:2});a.download=title.replace(/\W+/g,"_")+".png";a.click()};
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
  const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
@@ -57,11 +57,15 @@ export default function App(){
 
  const render=i=>{
   if(i.visible===false)return null;const active=i.id===selected;
-  if(i.type==="player"||i.type==="coach"){const im=sprite(i),sw=i.type==="coach"?88:76,sh=i.type==="coach"?148:136,col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-   <Circle y={42} radius={34} scaleY={.24} fill={YELLOW} opacity={.55} stroke={active?"#fff":YELLOW} strokeWidth={active?4:2}/>
-   {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
-   {showNums&&<><Circle x={31} y={-50} radius={16} fill="#14351b" stroke={col} strokeWidth={3}/><Text x={15} y={-57} width={32} align="center" text={i.label} fill="#fff" fontStyle="bold" fontSize={12}/></>}
-  </Group>}
+  if(i.type==="player"||i.type==="coach"){
+   const im=sprite(i),sw=i.type==="coach"?88:76,sh=i.type==="coach"?148:136,col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
+   return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+     <Group rotation={i.rotation||0}>
+       {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
+     </Group>
+     {showNums&&<><Circle x={31} y={-50} radius={16} fill="#14351b" stroke={col} strokeWidth={3}/><Text x={15} y={-57} width={32} align="center" text={i.label} fill="#fff" fontStyle="bold" fontSize={12}/></>}
+   </Group>
+  }
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
@@ -88,7 +92,7 @@ export default function App(){
     </div>
     <Tool icon={<Square/>} text="Área / Zona" onClick={()=>setMode("zone")}/><Tool icon={<Type/>} text="Texto" onClick={()=>addSimple("text")}/>
     <h3>FERRAMENTAS</h3>
-    <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>setMode("select")}/><Tool icon={<Move/>} text="Mover" onClick={()=>setMode("select")}/><Tool icon={<RotateCw/>} text="Girar"/><Tool icon={<Trash2/>} text="Excluir" onClick={del}/><Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/><Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
+    <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>setMode("select")}/><Tool icon={<Move/>} text="Mover" onClick={()=>setMode("select")}/><Tool icon={<RotateCw/>} text="Girar +15°" onClick={()=>{if(sel&&(sel.type==="player"||sel.type==="coach"))patch(sel.id,{rotation:((sel.rotation||0)+15)%360})}}/><Tool icon={<Trash2/>} text="Excluir" onClick={del}/><Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/><Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
    </aside>
 
    <main className="center">
@@ -120,6 +124,17 @@ export default function App(){
  <div className="arrowPalette">
    {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a","#a855f7"].map(c=><button key={c} title={c} className={(sel.color||arrowColor)===c?"picked":""} style={{background:c}} onClick={()=>{setArrowColor(c);patch(sel.id,{color:c})}}></button>)}
  </div>
+ </>:(sel.type==="player"||sel.type==="coach")?<>
+   <label>Rotação
+     <div className="rotationButtons">
+       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)-15+360)%360})}>−15°</button>
+       <button type="button" onClick={()=>patch(sel.id,{rotation:0})}>0°</button>
+       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)+15)%360})}>+15°</button>
+       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)+180)%360})}>Virar</button>
+     </div>
+     <input type="range" min="0" max="359" step="1" value={sel.rotation||0} onChange={e=>patch(sel.id,{rotation:Number(e.target.value)})}/>
+     <span className="rotationValue">{Math.round(sel.rotation||0)}°</span>
+   </label>
  </>:<label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label>}
  <label>Escala<input type="range" min="70" max="130" defaultValue="100"/></label><button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
    </aside>

@@ -8,3 +8,10 @@
 .quickArrowColors button,.arrowPalette button{width:25px;height:25px;min-width:25px;border-radius:50%;border:2px solid #263c44;padding:0}
 .quickArrowColors button.picked,.arrowPalette button.picked{border-color:#fff;box-shadow:0 0 0 2px #54e600}
 .arrowPalette{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+
+/* V1.14 — controles de rotação */
+.rotationButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px}
+.rotationButtons button{border:1px solid #24424d;background:#0b2530;color:#fff;border-radius:7px;padding:7px 4px;font-size:10px;font-weight:800}
+.rotationButtons button:hover{border-color:#54e600;color:#54e600}
+.rotationValue{font-size:11px;color:#54e600;font-weight:900;text-align:right;margin-top:-3px}
+.props input[type="range"]{accent-color:#54e600}
