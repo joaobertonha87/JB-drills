@@ -1,12 +1,10 @@
-JB Tactics V1.22 — IPAD FULL LAYOUT
+JB Tactics V1.24 — FREE DRAW
 
-Correções:
-- Eliminado o corte da parte inferior no iPad.
-- Página principal volta a ter rolagem vertical natural.
-- Removidas restrições de altura que travavam o Safari.
-- Sidebar esquerda mantém rolagem independente.
-- Uso de 100dvh + safe-area para respeitar barras do Safari e borda inferior do iPad.
-- Layout paisagem: quadra + sidebar em cima e painéis inferiores em sequência.
-- Layout retrato: todos os painéis empilhados e acessíveis por rolagem.
-- Fundamento, timeline, propriedades e visualização não ficam mais escondidos.
-- Escala mínima da quadra reduzida para se adaptar melhor à largura disponível.
+Novo:
+- Botão "Desenho livre" com ícone de lápis.
+- Funciona com dedo, Apple Pencil e mouse.
+- Seletor rápido com 8 cores.
+- Controle de espessura de 2px a 14px.
+- O modo desenho livre permanece ativo para vários traços seguidos.
+- Cada traço pode ser selecionado, movido, excluído e ter cor/espessura alteradas.
+- Compatível com o sistema de desfazer/refazer e salvar.
