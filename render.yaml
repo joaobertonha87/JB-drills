@@ -5,3 +5,14 @@ services:
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     pullRequestPreviewsEnabled: true
+
+    headers:
+      - path: /apple-touch-icon-v132.png
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate
+      - path: /manifest-v132.webmanifest
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate
+      - path: /sw.js
+        name: Cache-Control
+        value: no-store, no-cache, must-revalidate

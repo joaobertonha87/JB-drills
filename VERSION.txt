@@ -1,9 +1,17 @@
-JB Tactics V1.31 — PWA / APP ICON
+JB Tactics V1.32 — ICON CACHE FIX
 
-- Ícone oficial JB Tactics na Tela de Início.
-- apple-touch-icon para iPhone/iPad.
-- Ícones PWA 192x192 e 512x512.
-- manifest.webmanifest configurado como JB Tactics.
-- Modo standalone para abrir como aplicativo.
-- Tema escuro no padrão JB.
-- Service Worker para instalação/cache do app shell.
+- Novos nomes de arquivo para o ícone, forçando Safari/iOS a baixar a versão nova.
+- apple-touch-icon explícito em 180x180.
+- Manifesto versionado.
+- Ícones PWA 192x192 e 512x512 versionados.
+- Service Worker atualizado para cache v1.32.
+- Headers no Render para evitar cache antigo do ícone/manifest/service worker.
+
+IMPORTANTE NO IPAD/IPHONE:
+O iOS não atualiza o ícone de um atalho que já está na Tela de Início.
+Depois de publicar a V1.32:
+1. Apague o atalho JB Tactics antigo da Tela de Início.
+2. Abra o endereço novamente no Safari.
+3. Atualize a página uma vez.
+4. Compartilhar > Adicionar à Tela de Início.
+5. Confirme JB Tactics.
