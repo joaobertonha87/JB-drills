@@ -480,3 +480,56 @@ body{
 .tool.active{
   outline:1px solid #54e600;
 }
+
+/* V1.25 — sidebar realmente funcional */
+.toolFeedback{
+  min-height:38px;
+  margin:8px 0 12px;
+  padding:8px 10px;
+  border:1px solid #24414b;
+  border-radius:8px;
+  background:#0a2029;
+  color:#d5e0e4;
+  font-size:10px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.toolFeedback span{
+  width:8px;height:8px;border-radius:50%;background:#54e600;
+  box-shadow:0 0 0 3px rgba(84,230,0,.12);
+  flex:none;
+}
+.tool.active{
+  background:linear-gradient(90deg,#1d692b,#12391e)!important;
+  color:#fff!important;
+  box-shadow:inset 3px 0 0 #54e600, 0 0 0 1px rgba(84,230,0,.24);
+}
+.tool:active,.seg button:active,.quickArrowColors button:active,.freeDrawColors button:active{
+  transform:scale(.97);
+}
+.freeDrawControls{
+  margin:0 0 7px;
+  padding:9px;
+  border:1px solid #22414b;
+  background:#091c24;
+  border-radius:8px;
+  display:grid;
+  gap:8px;
+}
+.controlTitle{font-size:8px;letter-spacing:.12em;color:#7f929a;font-weight:900}
+.freeDrawColors{display:flex;flex-wrap:wrap;gap:7px}
+.freeDrawColors button{
+  width:34px;height:34px;min-width:34px;min-height:34px;
+  border-radius:50%;border:2px solid #314953;padding:0;
+}
+.freeDrawColors button.picked{
+  border-color:#fff;
+  box-shadow:0 0 0 3px #54e600;
+}
+.drawWidthLabel{
+  display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;
+  font-size:10px;color:#b8c5ca;
+}
+.drawWidthLabel input{width:100%;accent-color:#54e600}
