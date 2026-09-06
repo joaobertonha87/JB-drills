@@ -1,6 +1,8 @@
-JB Tactics V1.28 — SMART DRAW CURVED ARROW
-- Linha reta desenhada -> seta reta perfeita.
-- Traço curvo aberto -> seta curva vetorial perfeita.
-- Círculo fechado -> círculo perfeito.
-- Reconhecimento tolerante para dedo e Apple Pencil no iPad.
-- A ponta da seta curva acompanha a direção final do gesto.
+JB Tactics V1.29 — CURVED ARROW FIX
+
+Correção crítica:
+- O componente Path agora é importado corretamente; isso eliminava o travamento/tela sumindo ao reconhecer seta curva.
+- Setas curvas agora têm proteção contra pontos inválidos.
+- Setas curvas podem ser selecionadas e movidas.
+- Cor e espessura da seta curva podem ser editadas nas propriedades.
+- Mantido reconhecimento Smart Draw de reta, curva e círculo.
