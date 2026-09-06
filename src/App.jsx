@@ -22,12 +22,12 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-exact-premium-v138.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb139-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/arena-exact-premium-v138.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach_clean.png");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb140-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb139-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb140-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -55,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb139-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb140-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -96,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb139-items",JSON.stringify(items));localStorage.setItem("jb139-scenes",JSON.stringify(scenes));localStorage.setItem("jb139-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb140-items",JSON.stringify(items));localStorage.setItem("jb140-scenes",JSON.stringify(scenes));localStorage.setItem("jb140-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -187,26 +187,25 @@ export default function App(){
  const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
  const sprite=i=>{
   if(i.type==="coach") return coachImg;
-  // Jogador do lado esquerdo olha para a direita; do lado direito olha para a esquerda.
-  return i.x < W/2 ? front : back;
+  // Parte superior: jogador olha para baixo/centro (frente).
+  // Parte inferior: jogador olha para cima/centro (costas).
+  return i.y < COURT_H/2 ? front : back;
 };
 
  const render=i=>{
   if(i.visible===false)return null;const active=i.id===selected;
   if(i.type==="player"||i.type==="coach"){
    const im=sprite(i),col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
-   const face=i.facing|| (i.team==="A"?"right":"left");
-   const mirror=1;
 
    if(i.type==="coach"){
      const cw=112,ch=154;
-     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
        {im&&<KImage image={im} x={-cw/2} y={-ch+48} width={cw} height={ch}/>}
      </Group>
    }
 
-   const sw=78,sh=126;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   const sw=74,sh=118;
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
        {/* Racket is drawn separately so it can never disappear with sprite masking. */}
@@ -214,11 +213,11 @@ export default function App(){
    </Group>
   }
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill={i.color||"#f4f72b"} stroke={active?"#ffffff":"#182024"} shadowColor="#000" shadowBlur={6} shadowOpacity={.35} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
+  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="step"){
    const r=i.size||30,stroke=active?"#ffffff":"#061014",fill=i.color||LIME;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Circle radius={r} fill="#061014" opacity={.30}/>
      <Circle radius={r-3} fill={fill} stroke={stroke} strokeWidth={active?4:3} shadowColor="#000" shadowBlur={10} shadowOpacity={.35}/>
      <Circle radius={r-8} fill="#071318" opacity={.92}/>

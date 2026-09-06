@@ -1,7 +1,9 @@
-JB Tactics V1.39 — PLAYER DRAG + ORIENTATION FIX
+JB Tactics V1.40 — OFFICIAL APPROVED LAYOUT
 
-- Corrigido bloqueio de arraste causado pelos eventos de ponteiro do Stage.
-- Jogadores e professor agora são sempre arrastáveis por mouse, toque e Apple Pencil.
-- Jogadores passam a se orientar automaticamente para o centro da quadra:
-  lado esquerdo olha para a direita; lado direito olha para a esquerda.
-- Cenário premium e perspectiva da V1.38 preservados.
+- Layout premium aprovado mantido como direção visual oficial.
+- Jogadores da parte inferior usam visão de costas e ficam orientados para cima/centro.
+- Jogadores da parte superior usam visão frontal e ficam orientados para baixo/centro.
+- Todos os jogadores usam exatamente a mesma dimensão visual.
+- Orientação troca automaticamente ao atravessar o meio da quadra.
+- Arraste por mouse/toque preservado para jogadores e professor.
+- Cenário, iluminação, areia, plantas, rede e identidade premium preservados.

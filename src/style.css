@@ -843,3 +843,13 @@ body{color:var(--jb-text)}
   box-shadow:0 30px 85px rgba(0,0,0,.66),0 0 0 1px rgba(118,255,0,.10);
 }
 .center .courtBox{padding:0 10px 10px}
+
+/* ===== V1.40 — OFFICIAL APPROVED LAYOUT ===== */
+.center .courtBox{padding:0}
+.center.view3d .courtBox>div{
+  border-radius:0;
+  box-shadow:none;
+}
+.fundamentoBar{
+  border-top:1px solid rgba(84,230,0,.10);
+}
