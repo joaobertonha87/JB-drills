@@ -1,9 +1,10 @@
-JB Tactics V1.12 — BAREFOOT 3D
+JB Tactics V1.13 — CLEAN COURT FIX
 
-Atualizações:
-- Jogadores refeitos com visual 3D, corpo inteiro, raquete e pés descalços.
-- Professor 3D descalço com raquete e cesto de bolas integrado.
-- Removidas todas as bases luminosas sob os pés.
-- Mantida numeração separada e editável pelo JB Tactics.
-- Mantida areia 2D limpa.
-- Mantidas cores independentes e editáveis para cada seta.
+- Sem bases amarelas/luminosas.
+- Sem artefatos verdes de base na quadra.
+- Jogadores 3 e 4 orientados para baixo, de frente para 1 e 2.
+- Texto JB Tactics / Beach Tennis removido de dentro da quadra.
+- Todas as linhas internas removidas.
+- Quadra com apenas areia 2D, contorno externo e uma rede.
+- Personagens menores e com margem para evitar cortes.
+- Mantidas as cores editáveis e independentes das setas.

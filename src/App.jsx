@@ -13,21 +13,21 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:320,y:445,label:"1",name:"Jogador 1",sprite:"back",visible:true},
- {id:uid(),type:"player",team:"A",x:610,y:445,label:"2",name:"Jogador 2",sprite:"back",visible:true},
- {id:uid(),type:"player",team:"B",x:330,y:235,label:"3",name:"Jogador 3",sprite:"front",visible:true},
- {id:uid(),type:"player",team:"B",x:610,y:235,label:"4",name:"Jogador 4",sprite:"front",visible:true},
- {id:uid(),type:"coach",x:110,y:410,label:"P",name:"Professor",sprite:"coach",visible:true}
+ {id:uid(),type:"player",team:"A",x:330,y:430,label:"1",name:"Jogador 1",sprite:"back",visible:true},
+ {id:uid(),type:"player",team:"A",x:595,y:430,label:"2",name:"Jogador 2",sprite:"back",visible:true},
+ {id:uid(),type:"player",team:"B",x:340,y:225,label:"3",name:"Jogador 3",sprite:"front",visible:true},
+ {id:uid(),type:"player",team:"B",x:585,y:225,label:"4",name:"Jogador 4",sprite:"front",visible:true},
+ {id:uid(),type:"coach",x:120,y:410,label:"P",name:"Professor",sprite:"coach",visible:true}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb112-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb113-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb112-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb113-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(true),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -44,7 +44,7 @@ export default function App(){
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb112-items",JSON.stringify(items));localStorage.setItem("jb112-scenes",JSON.stringify(scenes));localStorage.setItem("jb112-meta",JSON.stringify({title,category,level,desc}))};
+ const save=()=>{localStorage.setItem("jb113-items",JSON.stringify(items));localStorage.setItem("jb113-scenes",JSON.stringify(scenes));localStorage.setItem("jb113-meta",JSON.stringify({title,category,level,desc}))};
  const exportPNG=()=>{const a=document.createElement("a");a.href=stageRef.current.toDataURL({pixelRatio:2});a.download=title.replace(/\W+/g,"_")+".png";a.click()};
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
  const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
@@ -98,8 +98,8 @@ export default function App(){
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onMouseDown={down} onTouchStart={down} onMouseMove={move} onTouchMove={move} onMouseUp={up} onTouchEnd={up}>
        <Layer>
         {court&&<KImage image={court} width={W} height={H}/>}
-        {showBrand&&<><Text x={340} y={82} text="JB TACTICS" fill="#dfffe0" fontSize={28} fontStyle="bold"/><Text x={375} y={112} text="BEACH TENNIS" fill={LIME} fontSize={11} letterSpacing={4}/></>}
-        {showZones&&<><Rect x={180} y={395} width={540} height={80} fill="rgba(84,230,0,.035)"/><Rect x={180} y={190} width={540} height={75} fill="rgba(84,230,0,.035)"/></>}
+        
+        
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
