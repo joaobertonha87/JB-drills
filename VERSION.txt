@@ -1,8 +1,6 @@
-JB Tactics V1.52 — COURT LINES + TOP PLAYER CLEAN
+JB Tactics V1.53 — CLEAN COURT SOURCE
 
-CORREÇÕES
-- Linhas externas da quadra redesenhadas por cima do cenário para ficarem 100% visíveis.
-- Nenhuma linha horizontal interna adicionada.
-- Jogadora superior direita usa novo sprite limpo, sem a linha branca residual atrás do corpo.
-- Rede continua única e sobrepõe os jogadores do fundo quando aproximados.
-- Cache de estado separado em jb152-* e assets com versionamento ?v=152.
+- Fundo da quadra reconstruído sem linhas internas antigas.
+- Somente o perímetro oficial é desenhado pelo app.
+- Rede única mantida como camada independente.
+- Cache/estado versionado em jb153-* e asset ?v=153.

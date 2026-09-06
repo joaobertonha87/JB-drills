@@ -21,17 +21,17 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-clean-no-net-v151.jpg?v=152"),
+ const court=useAsset("/assets/arena-sand-clean-v153.jpg?v=153"),
  topMale=useAsset("/assets/player_top_male_v142.png"),
  topFemale=useAsset("/assets/player_top_female_v152.png?v=152"),
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb152-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb153-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb152-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb153-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -45,7 +45,7 @@ export default function App(){
  useEffect(()=>{
   try{
    Object.keys(localStorage)
-    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb152-"))
+    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb153-"))
     .forEach(k=>localStorage.removeItem(k));
    if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
@@ -68,7 +68,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb152-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb153-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -117,7 +117,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb152-items",JSON.stringify(items));localStorage.setItem("jb152-scenes",JSON.stringify(scenes));localStorage.setItem("jb152-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb153-items",JSON.stringify(items));localStorage.setItem("jb153-scenes",JSON.stringify(scenes));localStorage.setItem("jb153-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -210,14 +210,14 @@ export default function App(){
    const next={id:uid(),title:`Cena ${base.length+1}`,items:clone(items)};
    const all=[...base,next];
    setScenes(all);setScene(all.length-1);setItems(clone(next.items));
-   localStorage.setItem("jb152-scenes",JSON.stringify(all));
+   localStorage.setItem("jb153-scenes",JSON.stringify(all));
    flash(`Cena ${all.length} criada a partir da anterior ✓`);
  };
  const updateScene=()=>{
    const current={id:scenes[scene]?.id||uid(),title:scenes[scene]?.title||`Cena ${scene+1}`,items:clone(items)};
    let n=scenes.length?[...scenes]:[current];
    if(scenes.length)n[scene]=current;
-   setScenes(n);localStorage.setItem("jb152-scenes",JSON.stringify(n));
+   setScenes(n);localStorage.setItem("jb153-scenes",JSON.stringify(n));
    flash(`Cena ${scene+1} atualizada ✓`);
  };
  const openScene=i=>{
@@ -225,7 +225,7 @@ export default function App(){
    const n=[...scenes];
    if(n[scene])n[scene]={...n[scene],items:clone(items)};
    setScenes(n);setScene(i);setItems(clone(n[i].items));
-   localStorage.setItem("jb152-scenes",JSON.stringify(n));
+   localStorage.setItem("jb153-scenes",JSON.stringify(n));
    flash(`Cena ${i+1} aberta`);
  };
  const sprite=i=>{
