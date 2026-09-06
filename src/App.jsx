@@ -3,21 +3,20 @@ import React,{useEffect,useMemo,useRef,useState}from"react";
 import{Stage,Layer,Image as KImage,Circle,Text,Group,Arrow,Rect,Line,Path}from"react-konva";
 import{
  Grid2X2,ClipboardList,Library,Users,Settings,Cloud,Save,Share2,UserRound,GraduationCap,
- CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,RotateCw,Trash2,Undo2,Redo2,
+ CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,Trash2,Undo2,Redo2,
  Eye,EyeOff,Play,Square as StopSquare,Plus,Pencil,ChevronLeft,ChevronRight,Download,
  Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
 }from"lucide-react";
 
-const W=1000,COURT_H=520,LEGEND_H=104,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
+const W=1000,COURT_H=520,LEGEND_H=146,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
 const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:315,y:410,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:uid(),type:"player",team:"A",x:685,y:410,label:"2",name:"Jogador 2",visible:true,scale:100},
- {id:uid(),type:"player",team:"B",x:385,y:160,label:"3",name:"Jogador 3",visible:true,scale:100},
- {id:uid(),type:"player",team:"B",x:615,y:160,label:"4",name:"Jogador 4",visible:true,scale:100},
- {id:uid(),type:"coach",x:92,y:350,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true,scale:100}
+ {id:"p-top-left",type:"player",team:"B",side:"top",x:350,y:145,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:"p-top-right",type:"player",team:"B",side:"top",x:650,y:145,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:"p-bottom-left",type:"player",team:"A",side:"bottom",x:330,y:410,label:"3",name:"Jogador 3",visible:true,scale:100},
+ {id:"p-bottom-right",type:"player",team:"A",side:"bottom",x:670,y:410,label:"4",name:"Jogador 4",visible:true,scale:100}
 ];
 
 export default function App(){
@@ -28,11 +27,11 @@ export default function App(){
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb147-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb150-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb147-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb150-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -43,6 +42,13 @@ export default function App(){
  const[viewStyle,setViewStyle]=useState("3d");
  const[toolFeedback,setToolFeedback]=useState("Selecionar ativo");
  const[fundamento,setFundamento]=useState("Saque");
+ useEffect(()=>{
+  try{
+   Object.keys(localStorage).filter(k=>/^jb1(3[0-9]|4[0-9])-/.test(k)).forEach(k=>localStorage.removeItem(k));
+   if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
+   navigator.serviceWorker?.getRegistrations?.().then(rs=>rs.forEach(r=>r.update()));
+  }catch{}
+ },[]);
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
 
  useEffect(()=>{
@@ -60,7 +66,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb147-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb150-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -88,7 +94,7 @@ export default function App(){
    ];
    const used=items.filter(x=>x.type==="player").length;
    const slot=slots[Math.min(used,3)]||{x:500,y:350,team:t};
-   const obj={id:uid(),type:"player",team:slot.team,x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true,scale:100};
+   const obj={id:uid(),type:"player",team:slot.team,side:slot.y<260?"top":"bottom",x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Jogador adicionado e selecionado");
  };
  const addCoach=()=>{
@@ -109,7 +115,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb147-items",JSON.stringify(items));localStorage.setItem("jb147-scenes",JSON.stringify(scenes));localStorage.setItem("jb147-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb150-items",JSON.stringify(items));localStorage.setItem("jb150-scenes",JSON.stringify(scenes));localStorage.setItem("jb150-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -200,7 +206,7 @@ export default function App(){
  const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
  const sprite=i=>{
   if(i.type==="coach") return coachImg;
-  const isTop=i.y < COURT_H/2;
+  const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
   const isRight=i.x >= W/2;
   if(isTop) return isRight ? topFemale : topMale;
   return isRight ? bottomFemale : bottomMale;
@@ -218,7 +224,7 @@ export default function App(){
      </Group>
    }
 
-   const isTop=i.y < COURT_H/2;
+   const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
    const sc=(i.scale||100)/100; const sw=(isTop?76:104)*sc, sh=(isTop?112:154)*sc;
    return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
@@ -321,7 +327,6 @@ export default function App(){
     <h3>FERRAMENTAS</h3>
     <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>activateMode("select","Selecionar ativo")}/>
     <Tool active={mode==="move"} icon={<Move/>} text="Mover" onClick={()=>activateMode("move","Mover ativo • arraste os elementos")}/>
-    <Tool icon={<RotateCw/>} text="Orientar corpo" onClick={()=>{if(sel&&(sel.type==="player"||sel.type==="coach")){const order=["down","right","up","left"];const n=(order.indexOf(sel.facing||"down")+1)%order.length;patch(sel.id,{facing:order[n]});flash("Orientação alterada")}else flash("Selecione um jogador ou professor")}}/>
     <Tool icon={<Trash2/>} text="Excluir" onClick={del}/>
     <Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/>
     <Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
@@ -340,27 +345,28 @@ export default function App(){
             Rede, linhas, iluminação e decoração pertencem ao cenário-base.
             Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
-        {/* V1.47: uma única rede visual, mais alta e proporcional ao Beach Tennis.
-            Esta camada cobre/alinha com a rede do cenário em vez de criar uma segunda rede separada. */}
+
+        {items.filter(i=>!(i.type==="player"||i.type==="coach") || (i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top").map(render)}
+
+        {/* Uma única rede funcional em primeiro plano sobre os jogadores do fundo. */}
         <Group listening={false}>
-          <Rect x={205} y={198} width={590} height={77} fill="#171514" opacity={0.82}/>
-          {Array.from({length:9}).map((_,r)=><Line key={`nh${r}`} points={[207,201+r*8.6,793,201+r*8.6]} stroke="#b6aa91" strokeWidth={0.75} opacity={0.72}/>)}
-          {Array.from({length:48}).map((_,c)=><Line key={`nv${c}`} points={[208+c*12.2,199,208+c*12.2,274]} stroke="#b6aa91" strokeWidth={0.65} opacity={0.66}/>)}
-          <Rect x={201} y={193} width={598} height={8} cornerRadius={2} fill="#0b0d0e"/>
-          <Rect x={199} y={187} width={29} height={101} cornerRadius={4} fill="#111619"/>
-          <Rect x={772} y={187} width={29} height={101} cornerRadius={4} fill="#111619"/>
-          <Text x={202} y={228} width={23} align="center" text="JB" fill="#54e600" fontSize={12} fontStyle="bold"/>
-          <Text x={775} y={228} width={23} align="center" text="JB" fill="#54e600" fontSize={12} fontStyle="bold"/>
+          <Rect x={205} y={218} width={590} height={72} fill="rgba(8,13,14,.10)" stroke="#151b1d" strokeWidth={5}/>
+          {Array.from({length:34}).map((_,k)=><Line key={"nv"+k} points={[210+k*17.2,222,210+k*17.2,286]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
+          {Array.from({length:8}).map((_,k)=><Line key={"nh"+k} points={[208,224+k*8.2,792,224+k*8.2]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
+          <Rect x={195} y={207} width={24} height={96} cornerRadius={4} fill="#11191b"/>
+          <Rect x={781} y={207} width={24} height={96} cornerRadius={4} fill="#11191b"/>
+          <Text x={198} y={242} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
+          <Text x={784} y={242} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
         </Group>
 
-        {items.map(render)}
+        {items.filter(i=>(i.type==="player"||i.type==="coach") && (i.side||((i.y<COURT_H/2)?"top":"bottom"))!=="top").map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
         {draft?.type==="freeDraw"&&<Line points={draft.points} stroke={draft.color||drawColor} strokeWidth={draft.width||drawWidth} lineCap="round" lineJoin="round"/>}
 
         {/* Card de legenda faz parte do canvas e aparece na exportação */}
         <Rect x={0} y={COURT_H} width={W} height={LEGEND_H} fill="#071116"/>
-        <Rect x={18} y={COURT_H+14} width={964} height={76} cornerRadius={12} fill="#0b1b22" stroke="#203840" strokeWidth={2}/>
+        <Rect x={18} y={COURT_H+14} width={964} height={118} cornerRadius={12} fill="#0b1b22" stroke="#203840" strokeWidth={2}/>
         <Text x={38} y={COURT_H+27} text="LEGENDA DAS CORES" fill="#ffffff" fontSize={12} fontStyle="bold" letterSpacing={2}/>
         <Circle x={56} y={COURT_H+60} radius={9} fill="#f4f72b"/>
         <Text x={76} y={COURT_H+52} text="TRAJETÓRIA DA BOLA" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
@@ -368,6 +374,11 @@ export default function App(){
         <Text x={394} y={COURT_H+52} text="MOVIMENTAÇÃO DO ALUNO" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
         <Circle x={721} y={COURT_H+60} radius={9} fill="#31b7ff"/>
         <Text x={741} y={COURT_H+52} text="BOLA LANÇADA PELO PROFESSOR" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
+        <Arrow points={[55,COURT_H+105,118,COURT_H+105]} stroke="#ffffff" fill="#ffffff" strokeWidth={3} pointerLength={9} pointerWidth={9}/>
+        <Text x={132} y={COURT_H+97} text="SETA RETA — BOLAS RETAS (NEUTRAS / BAIXAS)" fill="#dbe5e8" fontSize={11} fontStyle="bold"/>
+        <Path x={570} y={COURT_H+91} data="M 0 20 Q 32 -10 66 18" stroke="#ffffff" strokeWidth={3} fill="transparent"/>
+        <Arrow points={[624,COURT_H+103,636,COURT_H+109]} stroke="#ffffff" fill="#ffffff" strokeWidth={3} pointerLength={9} pointerWidth={9}/>
+        <Text x={650} y={COURT_H+97} text="SETA CURVADA — BOLAS ALTAS (LOB)" fill="#dbe5e8" fontSize={11} fontStyle="bold"/>
        </Layer>
       </Stage>
      </div>

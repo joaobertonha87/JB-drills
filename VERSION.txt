@@ -1,10 +1,10 @@
-JB Tactics V1.47 — EXACT PREMIUM STABLE
+JB Tactics V1.50 — NET DEPTH + CLEAN CACHE
 
-- Corrigidos os dois jogadores superiores sem deformação.
-- Professor reconstruído a partir do asset estável, completo e sem cabeça cortada.
-- Jogadores e professor agora usam PNG transparente estável, sem o mascaramento agressivo da V1.46.
-- Mantida a disposição aprovada: dupla superior de frente e dupla inferior de costas.
-- Mantida a rede alta no padrão visual de Beach Tennis.
-- Mantidos controles de tamanho individual de jogadores e professor.
-- Arena limpa, sem pés/personagens antigos gravados na areia.
-- Cache/localStorage renovados para impedir restauração de objetos corrompidos.
+- Jogadores do fundo iniciam mais altos na quadra.
+- Ao aproximar jogadores do fundo da rede, a rede fica visualmente por cima deles.
+- Jogadores da frente permanecem à frente da rede.
+- Removida a linha horizontal interna: cenário usa apenas demarcação externa da quadra.
+- Uma única rede funcional.
+- Cache/localStorage das versões antigas 1.30–1.49 limpos automaticamente.
+- Mantida legenda de seta reta e seta curvada.
+- Sem opção de rotação.
