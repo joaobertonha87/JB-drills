@@ -1,24 +1,25 @@
-JB Tactics V1.34 — PREMIUM 3D EVOLUTION
+JB Tactics V1.35 — COURT + EXPORT LEGEND FIX
 
-NOVO VISUAL
-- Layout evoluído para o conceito premium apresentado.
-- Identidade escura + verde-limão no padrão JB Play/JB Tactics.
-- Arena superior com branding e slogan Planeje | Treine | Evolua.
-- Botão 3D / 2D no canto da quadra.
-- Nova quadra premium com textura de areia, iluminação, profundidade e rede central mais sofisticada.
-- Painéis e controles refinados para iPad.
+CORREÇÕES
+- A quadra não depende mais de uma imagem externa para aparecer.
+- Quadra premium agora é desenhada diretamente no canvas Konva.
+- Areia, linhas externas, parede superior, branding e rede central permanecem visíveis mesmo se algum asset falhar.
+- Mantida a disposição vertical da rede e o visual premium/3D.
 
-CORES DOS ELEMENTOS
-- Bola agora aceita seletor de cores.
-- Cone agora aceita seletor de cores.
-- Cor pode ser alterada rapidamente no menu lateral e também em Propriedades.
+LEGENDA
+- O card de legenda saiu do menu lateral.
+- Agora fica permanentemente exposto abaixo da quadra.
+- A legenda faz parte do próprio canvas.
+- Portanto, aparece automaticamente ao Exportar PNG.
 
-LEGENDA DO DESENHO LIVRE
-- Amarelo — trajetória da bola.
-- Verde — movimentação do aluno.
-- Azul — bola lançada pelo professor.
+LEGENDA PADRÃO
+- Amarelo: trajetória da bola.
+- Verde: movimentação do aluno.
+- Azul: bola lançada pelo professor.
 
 MANTIDO
-- Smart Draw com seta reta, seta curva e círculo.
+- Smart Draw.
+- Setas curvas.
 - Passo/Número.
-- PWA/ícone para Tela de Início.
+- Seletor de cores de Bola e Cone.
+- PWA / ícone do aplicativo.
