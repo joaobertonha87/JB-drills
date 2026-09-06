@@ -1,10 +1,1 @@
-JB Tactics V1.26 — SMART DRAW
-
-Novo reconhecimento inteligente no Desenho Livre:
-- Traço praticamente reto vira automaticamente uma seta profissional.
-- Círculo desenhado à mão vira automaticamente um círculo geométrico perfeito.
-- Se o desenho não corresponder a uma forma reconhecida, continua como desenho livre normal.
-- Reconhecimento inteligente pode ser ligado/desligado.
-- Cor e espessura escolhidas no lápis são preservadas na forma corrigida.
-- Círculos reconhecidos podem ser selecionados, movidos, redimensionados, recoloridos e excluídos.
-- Setas reconhecidas podem ser selecionadas, movidas, recoloridas e ter espessura alterada.
+JB Tactics V1.27 SMART DRAW FIXED — reconhecimento mais tolerante para dedo e Apple Pencil; reta vira seta; círculo vira círculo perfeito; feedback visual.
