@@ -211,3 +211,71 @@ button:disabled{
   .courtBox{overflow:hidden}
   .fundamentoBar{margin:8px 0}
 }
+
+/* V1.21 — menu lateral independente + escala dos personagens */
+
+/* Desktop/iPad: sidebar esquerda fica presa e rola sozinha */
+.left{
+  position:sticky;
+  top:72px;
+  align-self:start;
+  height:calc(100vh - 72px);
+  max-height:calc(100vh - 72px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:#34515d #07151c;
+  z-index:8;
+}
+.left::-webkit-scrollbar{width:7px}
+.left::-webkit-scrollbar-track{background:#07151c}
+.left::-webkit-scrollbar-thumb{background:#34515d;border-radius:20px}
+.left::-webkit-scrollbar-thumb:hover{background:#4f7481}
+
+/* Evita que gesto vertical da barra lateral role a quadra/página */
+.left,
+.left *{
+  overscroll-behavior:contain;
+}
+.left button{
+  touch-action:manipulation;
+}
+
+/* Centro permanece estável enquanto a lateral rola */
+.center{
+  align-self:start;
+}
+
+/* iPad landscape */
+@media (min-width:768px) and (max-width:1199px){
+  .left{
+    position:sticky!important;
+    top:72px!important;
+    height:calc(100vh - 72px)!important;
+    max-height:calc(100vh - 72px)!important;
+    overflow-y:auto!important;
+    display:block!important;
+  }
+  .left h3{display:block!important}
+  .left .seg{display:flex!important}
+  .tool{width:100%}
+}
+
+/* iPad portrait/mobile */
+@media (max-width:767px){
+  .left{
+    position:relative!important;
+    top:auto!important;
+    height:auto!important;
+    max-height:330px!important;
+    overflow-y:auto!important;
+    display:block!important;
+    border-bottom:1px solid #173640;
+  }
+  .left h3{display:block!important}
+  .left .seg{display:flex!important}
+  .tool{width:100%;justify-content:flex-start}
+  .tool span{display:inline!important}
+}

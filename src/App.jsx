@@ -13,21 +13,21 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:300,y:360,label:"1",name:"Jogador 1",sprite:"back",facing:"right",visible:true},
- {id:uid(),type:"player",team:"A",x:700,y:360,label:"2",name:"Jogador 2",sprite:"back",facing:"left",visible:true},
- {id:uid(),type:"player",team:"B",x:300,y:155,label:"3",name:"Jogador 3",sprite:"front",facing:"right",visible:true},
- {id:uid(),type:"player",team:"B",x:700,y:155,label:"4",name:"Jogador 4",sprite:"front",facing:"left",visible:true},
- {id:uid(),type:"coach",x:78,y:330,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
+ {id:uid(),type:"player",team:"A",x:310,y:355,label:"1",name:"Jogador 1",sprite:"back",facing:"right",visible:true},
+ {id:uid(),type:"player",team:"A",x:690,y:355,label:"2",name:"Jogador 2",sprite:"back",facing:"left",visible:true},
+ {id:uid(),type:"player",team:"B",x:310,y:160,label:"3",name:"Jogador 3",sprite:"front",facing:"right",visible:true},
+ {id:uid(),type:"player",team:"B",x:690,y:160,label:"4",name:"Jogador 4",sprite:"front",facing:"left",visible:true},
+ {id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb120-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb121-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb120-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb121-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -49,7 +49,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb120-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb121-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -66,11 +66,11 @@ export default function App(){
  const undo=()=>{if(!history.length)return;setFuture(f=>[clone(items),...f]);setItems(history.at(-1));setHistory(h=>h.slice(0,-1))};
  const redo=()=>{if(!future.length)return;setHistory(h=>[...h,clone(items)]);setItems(future[0]);setFuture(f=>f.slice(1))};
  const addPlayer=t=>{let n=items.filter(x=>x.type==="player").length+1;commit([...items,{id:uid(),type:"player",team:t,x:450,y:t==="A"?445:230,label:String(n),name:`Jogador ${n}`,sprite:t==="A"?"back":"front",facing:t==="A"?"right":"left",visible:true}])};
- const addCoach=()=>commit([...items,{id:uid(),type:"coach",x:78,y:330,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}]);
+ const addCoach=()=>commit([...items,{id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}]);
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb120-items",JSON.stringify(items));localStorage.setItem("jb120-scenes",JSON.stringify(scenes));localStorage.setItem("jb120-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb121-items",JSON.stringify(items));localStorage.setItem("jb121-scenes",JSON.stringify(scenes));localStorage.setItem("jb121-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -104,13 +104,13 @@ export default function App(){
    const mirror=1;
 
    if(i.type==="coach"){
-     const cw=150,ch=205;
+     const cw=112,ch=154;
      return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
        {im&&<KImage image={im} x={-cw/2} y={-ch+48} width={cw} height={ch}/>}
      </Group>
    }
 
-   const sw=104,sh=168;
+   const sw=78,sh=126;
    return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
