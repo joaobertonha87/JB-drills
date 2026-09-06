@@ -22,18 +22,20 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb130-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/premium-court-3d.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb134-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb130-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb134-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
  const[drawColor,setDrawColor]=useState("#ffffff");
  const[drawWidth,setDrawWidth]=useState(5);
  const[smartDraw,setSmartDraw]=useState(true);
+ const[elementColor,setElementColor]=useState("#f4f72b");
+ const[viewStyle,setViewStyle]=useState("3d");
  const[toolFeedback,setToolFeedback]=useState("Selecionar ativo");
  const[fundamento,setFundamento]=useState("Saque");
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
@@ -53,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb130-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb134-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -81,7 +83,8 @@ export default function App(){
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Professor adicionado e selecionado");
  };
  const addSimple=t=>{
-   const obj={id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true};
+   const color=t==="ball"?"#f4f72b":t==="cone"?"#ff9f1a":elementColor;
+   const obj={id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",color,visible:true};
    commit([...items,obj]);setSelected(obj.id);activateMode("select",`${obj.name} adicionado e selecionado`);
  };
  const addStep=()=>{
@@ -93,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb130-items",JSON.stringify(items));localStorage.setItem("jb130-scenes",JSON.stringify(scenes));localStorage.setItem("jb130-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb134-items",JSON.stringify(items));localStorage.setItem("jb134-scenes",JSON.stringify(scenes));localStorage.setItem("jb134-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -211,8 +214,8 @@ export default function App(){
      </Group>
    </Group>
   }
-  if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
+  if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill={i.color||"#f4f72b"} stroke={active?"#ffffff":"#182024"} shadowColor="#000" shadowBlur={6} shadowOpacity={.35} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
+  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="step"){
    const r=i.size||30,stroke=active?"#ffffff":"#061014",fill=i.color||LIME;
@@ -270,7 +273,13 @@ export default function App(){
     <Tool icon={<UserRound/>} text="Jogador 3D" onClick={()=>addPlayer(teamTab==="B"?"B":"A")}/>
     <Tool icon={<GraduationCap/>} text="Professor" onClick={addCoach}/>
     <Tool icon={<CircleDot/>} text="Bola" onClick={()=>addSimple("ball")}/>
+    {(sel?.type==="ball")&&<div className="elementColorPicker">
+      {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a"].map(c=><button type="button" key={c} className={(sel.color||"#f4f72b")===c?"picked":""} style={{background:c}} onClick={()=>{patch(sel.id,{color:c});setElementColor(c);flash("Cor da bola alterada")}}></button>)}
+    </div>}
     <Tool icon={<Triangle/>} text="Cone" onClick={()=>addSimple("cone")}/>
+    {(sel?.type==="cone")&&<div className="elementColorPicker">
+      {["#ff9f1a","#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff"].map(c=><button type="button" key={c} className={(sel.color||"#ff9f1a")===c?"picked":""} style={{background:c}} onClick={()=>{patch(sel.id,{color:c});setElementColor(c);flash("Cor do cone alterada")}}></button>)}
+    </div>}
     <Tool icon={<ListOrdered/>} text="Passo / Número" onClick={addStep}/>
 
     <Tool active={mode==="freeDraw"} icon={<Pencil/>} text="Desenho livre" onClick={()=>activateMode(mode==="freeDraw"?"select":"freeDraw",mode==="freeDraw"?"Selecionar ativo":"Lápis ativo • desenhe na quadra")}/>
@@ -286,6 +295,12 @@ export default function App(){
         {smartDraw?"Smart Draw: ATIVO":"Smart Draw: DESATIVADO"}
       </button>
       {smartDraw&&<div className="smartHint">Solte o dedo/Pencil para reconhecer:<br/><b>reta → seta perfeita</b><br/><b>curva → seta curva perfeita</b><br/><b>círculo → círculo perfeito</b></div>}
+      <div className="colorLegend">
+        <div className="legendTitle">LEGENDA DAS CORES</div>
+        <div><i style={{background:"#f4f72b"}}></i><span><b>Amarelo</b> — trajetória da bola</span></div>
+        <div><i style={{background:"#54e600"}}></i><span><b>Verde</b> — movimentação do aluno</span></div>
+        <div><i style={{background:"#31b7ff"}}></i><span><b>Azul</b> — bola lançada pelo professor</span></div>
+      </div>
     </div>}
 
     <Tool active={mode==="arrow"} icon={<MoveRight/>} text="Seta" onClick={()=>activateMode("arrow","Seta ativa • arraste na quadra")}/>
@@ -305,7 +320,14 @@ export default function App(){
     <Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
    </aside>
 
-   <main className="center">
+   <main className={"center "+(viewStyle==="3d"?"view3d":"view2d")}>
+    <div className="viewModeToggle">
+      <button className={viewStyle==="3d"?"on":""} onClick={()=>{setViewStyle("3d");flash("Visual 3D Premium ativo")}}>3D</button>
+      <button className={viewStyle==="2d"?"on":""} onClick={()=>{setViewStyle("2d");flash("Visual 2D ativo")}}>2D</button>
+    </div>
+    <div className="arenaBrand">
+      <strong>JB TACTICS</strong><span>PLANEJE&nbsp;&nbsp;|&nbsp;&nbsp;TREINE&nbsp;&nbsp;|&nbsp;&nbsp;EVOLUA</span><strong>JB TACTICS</strong>
+    </div>
     <div className="courtBox" ref={boxRef} style={{height:H*scale}}>
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
@@ -353,6 +375,13 @@ export default function App(){
    <label>Tamanho
      <input type="range" min="22" max="48" step="1" value={sel.size||30} onChange={e=>patch(sel.id,{size:Number(e.target.value)})}/>
    </label>
+ </>:(sel.type==="ball"||sel.type==="cone")?<>
+   <label>Cor
+     <input type="color" value={sel.color||(sel.type==="ball"?"#f4f72b":"#ff9f1a")} onChange={e=>patch(sel.id,{color:e.target.value})}/>
+   </label>
+   <div className="arrowPalette">
+    {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a","#a855f7"].map(c=><button key={c} className={(sel.color||"")===c?"picked":""} style={{background:c}} onClick={()=>patch(sel.id,{color:c})}></button>)}
+   </div>
  </>:sel.type==="freeDraw"?<>
    <label>Cor do desenho
      <input type="color" value={sel.color||drawColor} onChange={e=>{setDrawColor(e.target.value);patch(sel.id,{color:e.target.value});flash("Cor do desenho alterada")}}/>

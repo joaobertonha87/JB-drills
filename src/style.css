@@ -762,3 +762,50 @@ body{color:var(--jb-text)}
   .studio{padding:8px;gap:7px}
   .top{grid-template-columns:245px 1fr 250px;padding:0 12px}
 }
+
+/* ===== V1.34 PREMIUM 3D EVOLUTION ===== */
+:root{
+ --jb-neon:#76ff00;
+ --jb-yellow:#f4f72b;
+ --jb-blue:#31b7ff;
+ --jb-panel:#07141a;
+ --jb-panel2:#0a1b22;
+ --jb-line:#17313a;
+}
+.top{height:76px;background:linear-gradient(180deg,#061017,#02070a);border-bottom:1px solid #17313a}
+.logo>b{font-size:52px;color:var(--jb-neon);letter-spacing:-8px;text-shadow:0 0 18px rgba(118,255,0,.20)}
+.logo strong{font-weight:950}
+.studio{padding:12px;gap:10px;max-width:1620px;grid-template-columns:250px minmax(660px,1fr) 300px}
+.left,.right{border-radius:14px!important}
+.left{background:linear-gradient(180deg,#07131a,#061017)}
+.center{border-radius:14px;background:#071117;overflow:hidden;border:1px solid #17333d;position:relative}
+.viewModeToggle{position:absolute;right:14px;top:14px;z-index:8;display:flex;background:#071218;border:1px solid #24414a;border-radius:9px;padding:3px}
+.viewModeToggle button{border:0;background:transparent;color:#a9b8bd;padding:8px 14px;border-radius:6px;font-weight:900}
+.viewModeToggle button.on{background:var(--jb-neon);color:#061006}
+.arenaBrand{height:58px;background:linear-gradient(180deg,#071114,#03080a);border-bottom:1px solid #25353a;display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;padding:0 26px;color:#eaf0f1;letter-spacing:.08em}
+.arenaBrand strong{font-size:13px}
+.arenaBrand strong:last-child{text-align:right}
+.arenaBrand span{text-align:center;font-size:10px;color:var(--jb-neon);letter-spacing:.28em}
+.courtBox{padding:10px 12px 14px}
+.courtBox>div{border-radius:10px;box-shadow:0 25px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06)}
+.view3d .courtBox>div{filter:saturate(1.04) contrast(1.03)}
+.view2d .arenaBrand{opacity:.82}
+.view2d .courtBox>div{filter:saturate(.85) brightness(1.04)}
+.tool{height:44px}
+.elementColorPicker{display:flex;gap:7px;padding:7px 10px 10px;margin:-2px 0 5px;background:#071117;border-radius:8px;border:1px solid #20363d}
+.elementColorPicker button{width:24px;height:24px;border-radius:50%;border:2px solid #2a3e44;box-shadow:0 0 0 1px #000}
+.elementColorPicker button.picked{border-color:#fff;transform:scale(1.08)}
+.colorLegend{margin-top:10px;background:linear-gradient(180deg,#08181f,#061118);border:1px solid #18343d;border-radius:10px;padding:10px;display:grid;gap:8px}
+.legendTitle{font-size:9px;letter-spacing:.14em;color:#d8e3e6;font-weight:950;margin-bottom:2px}
+.colorLegend>div:not(.legendTitle){display:flex;align-items:center;gap:8px;font-size:9px;line-height:1.35;color:#c0cdd1}
+.colorLegend i{width:13px;height:13px;border-radius:50%;flex:0 0 13px;box-shadow:0 0 0 2px rgba(255,255,255,.07)}
+.colorLegend b{color:#fff}
+.freeDrawControls{padding:10px!important}
+.freeDrawColors button{width:30px!important;height:30px!important;border-radius:50%!important}
+.fundamentoBar{margin:0 12px 12px;border:1px solid #1c3239!important;border-radius:10px!important}
+.info,.timeline,.view{background:linear-gradient(180deg,#08171d,#061116)}
+@media(max-width:1180px){
+ .arenaBrand{height:48px;padding:0 14px}
+ .arenaBrand span{font-size:8px;letter-spacing:.15em}
+ .studio{grid-template-columns:235px minmax(620px,1fr) 280px}
+}
