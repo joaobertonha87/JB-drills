@@ -22,19 +22,43 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach_reference.jpg");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb117-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb120-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb117-scenes"))||[]}catch{return[]}});
- const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(true),[showBrand,setShowBrand]=useState(true);
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb120-scenes"))||[]}catch{return[]}});
+ const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
  const[fundamento,setFundamento]=useState("Saque");
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
 
- useEffect(()=>{const r=()=>boxRef.current&&setScale(Math.min(1,boxRef.current.clientWidth/W));r();addEventListener("resize",r);return()=>removeEventListener("resize",r)},[]);
+ useEffect(()=>{
+  const r=()=>{
+    if(!boxRef.current)return;
+    const width=boxRef.current.clientWidth||W;
+    setScale(Math.min(1,Math.max(.48,width/W)));
+  };
+  r();
+  const ro=typeof ResizeObserver!=="undefined"?new ResizeObserver(r):null;
+  if(ro&&boxRef.current)ro.observe(boxRef.current);
+  window.addEventListener("resize",r,{passive:true});
+  window.addEventListener("orientationchange",r,{passive:true});
+  return()=>{ro?.disconnect();window.removeEventListener("resize",r);window.removeEventListener("orientationchange",r)};
+ },[]);
+ useEffect(()=>{
+  try{
+    const m=JSON.parse(localStorage.getItem("jb120-meta")||"null");
+    if(m){
+      if(m.title)setTitle(m.title);
+      if(m.category)setCategory(m.category);
+      if(m.level)setLevel(m.level);
+      if(m.desc)setDesc(m.desc);
+      if(m.fundamento)setFundamento(m.fundamento);
+    }
+  }catch{}
+ },[]);
  useEffect(()=>{if(!playing)return;const t=setInterval(()=>setProgress(p=>p>=100?(setPlaying(false),0):p+1),100);return()=>clearInterval(t)},[playing]);
  const sel=useMemo(()=>items.find(x=>x.id===selected),[items,selected]);
  const commit=n=>{setHistory(h=>[...h,clone(items)].slice(-40));setItems(n);setFuture([])};
@@ -46,8 +70,18 @@ export default function App(){
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb117-items",JSON.stringify(items));localStorage.setItem("jb117-scenes",JSON.stringify(scenes));localStorage.setItem("jb117-meta",JSON.stringify({title,category,level,desc,fundamento}))};
- const exportPNG=()=>{const a=document.createElement("a");a.href=stageRef.current.toDataURL({pixelRatio:2});a.download=title.replace(/\W+/g,"_")+".png";a.click()};
+ const save=()=>{localStorage.setItem("jb120-items",JSON.stringify(items));localStorage.setItem("jb120-scenes",JSON.stringify(scenes));localStorage.setItem("jb120-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const exportPNG=()=>{
+  const uri=stageRef.current?.toDataURL({pixelRatio:2});
+  if(!uri)return;
+  const name=title.replace(/\W+/g,"_")+".png";
+  const isiPad=/iPad|Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1;
+  if(isiPad){
+    const win=window.open();
+    if(win){win.document.write(`<title>${name}</title><img src="${uri}" style="max-width:100%;height:auto">`);win.document.close();return;}
+  }
+  const a=document.createElement("a");a.href=uri;a.download=name;document.body.appendChild(a);a.click();a.remove();
+ };
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
  const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
  const move=()=>{if(!draft)return;const p=point();if(!p)return;if(draft.type==="arrow")setDraft(d=>({...d,points:[d.points[0],d.points[1],p.x,p.y]}));else setDraft(d=>({...d,w:p.x-d.x,h:p.y-d.y}))};
@@ -57,9 +91,9 @@ export default function App(){
  const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
  const sprite=i=>{
   if(i.type==="coach") return coachImg;
-  if(i.facing==="down") return front;
-  if(i.facing==="up") return back;
-  return front;
+  if(i.facing==="left") return back;
+  if(i.facing==="right") return front;
+  return i.x < W/2 ? front : back;
 };
 
  const render=i=>{
@@ -67,35 +101,28 @@ export default function App(){
   if(i.type==="player"||i.type==="coach"){
    const im=sprite(i),col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
    const face=i.facing|| (i.team==="A"?"right":"left");
-   const mirror=face==="left"?-1:1;
+   const mirror=1;
 
    if(i.type==="coach"){
-     const cw=126,ch=164;
+     const cw=150,ch=205;
      return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-       <Rect x={-cw/2-5} y={-ch+48-5} width={cw+10} height={ch+10} cornerRadius={8} fill="#111b20" stroke={active?"#fff":"#263941"} strokeWidth={active?3:1}/>
        {im&&<KImage image={im} x={-cw/2} y={-ch+48} width={cw} height={ch}/>}
-       {showNums&&<><Circle x={45} y={-58} radius={16} fill="#14351b" stroke="#fff" strokeWidth={3}/><Text x={29} y={-65} width={32} align="center" text="P" fill="#fff" fontStyle="bold" fontSize={12}/></>}
      </Group>
    }
 
-   const sw=92,sh=150;
+   const sw=104,sh=168;
    return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-     <Group scaleX={mirror}>
-       {im&&<KImage image={im} x={mirror===-1?sw/2:-sw/2} y={-sh+48} width={sw} height={sh}/>}
+     <Group scaleX={1}>
+       {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
        {/* Racket is drawn separately so it can never disappear with sprite masking. */}
-       <Line points={[25,-44,42,-62]} stroke="#20262b" strokeWidth={5} lineCap="round"/>
-       <Circle x={49} y={-69} radius={15} scaleY={1.22} stroke="#151b20" strokeWidth={5}/>
-       <Line points={[39,-78,58,-60]} stroke="#59666c" strokeWidth={1}/>
-       <Line points={[39,-60,58,-78]} stroke="#59666c" strokeWidth={1}/>
      </Group>
-     {showNums&&<><Circle x={34} y={-55} radius={16} fill="#14351b" stroke={col} strokeWidth={3}/><Text x={18} y={-62} width={32} align="center" text={i.label} fill="#fff" fontStyle="bold" fontSize={12}/></>}
    </Group>
   }
-  if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
-  if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)}/>;
-  if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)}/>;
+  if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
+  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
+  if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
+  if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
+  if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
  };
 
  const playerList=items.filter(x=>teamTab==="P"?x.type==="coach":x.type==="player"&&x.team===teamTab);
@@ -103,8 +130,8 @@ export default function App(){
  return <div className="app">
   <header className="top">
    <div className="logo"><b>JB</b><div><strong>JB TACTICS</strong><small>BEACH TENNIS</small></div></div>
-   <nav className="navtabs"><button className="navactive"><Grid2X2/>Táticas</button><button><ClipboardList/>Exercícios</button><button><Library/>Biblioteca</button><button><Users/>Alunos</button><button><Settings/>Configurações</button></nav>
-   <div className="actions"><button className="cloud"><Cloud/></button><button className="save" onClick={save}><Save/>Salvar</button><button className="export" onClick={exportPNG}><Share2/>Exportar</button></div>
+   <nav className="navtabs"><button className="navactive"><Grid2X2/>Táticas</button><button disabled title="Em desenvolvimento"><ClipboardList/>Exercícios</button><button disabled title="Em desenvolvimento"><Library/>Biblioteca</button><button disabled title="Em desenvolvimento"><Users/>Alunos</button><button disabled title="Em desenvolvimento"><Settings/>Configurações</button></nav>
+   <div className="actions"><button className="cloud" disabled title="Sincronização em desenvolvimento"><Cloud/></button><button className="save" onClick={save}><Save/>Salvar</button><button className="export" onClick={exportPNG}><Share2/>Exportar</button></div>
   </header>
 
   <div className="studio">
@@ -124,7 +151,7 @@ export default function App(){
     <div className="sceneTop"><button onClick={()=>openScene(Math.max(0,scene-1))}><ChevronLeft/></button><div><b>{title}</b><span>{scene+1} / {Math.max(1,scenes.length)}</span></div><button onClick={()=>openScene(Math.min(scenes.length-1,scene+1))}><ChevronRight/></button></div>
     <div className="courtBox" ref={boxRef} style={{height:H*scale}}>
      <div style={{width:W*scale,height:H*scale}}>
-      <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onMouseDown={down} onTouchStart={down} onMouseMove={move} onTouchMove={move} onMouseUp={up} onTouchEnd={up}>
+      <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
         {court&&<KImage image={court} width={W} height={H}/>}
         
@@ -179,9 +206,9 @@ export default function App(){
     <button className="updateScene" onClick={updateScene}>Atualizar cena atual</button>
    </section>
 
-   <section className="view panel"><h3>VISUALIZAÇÃO</h3><Toggle text="Trajetória da bola" value={showPath} set={setShowPath}/><Toggle text="Zonas da quadra" value={showZones} set={setShowZones}/><Toggle text="Números dos jogadores" value={showNums} set={setShowNums}/><Toggle text="Logo e identidade" value={showBrand} set={setShowBrand}/></section>
+   <section className="view panel"><h3>VISUALIZAÇÃO</h3><Toggle text="Trajetória da bola" value={showPath} set={setShowPath}/><Toggle text="Zonas da quadra" value={showZones} set={setShowZones}/><Toggle text="Logo e identidade" value={showBrand} set={setShowBrand}/></section>
   </div>
  </div>
 }
-function Tool({icon,text,onClick,active}){return <button className={"tool "+(active?"active":"")} onClick={onClick}>{icon}<span>{text}</span></button>}
-function Toggle({text,value,set}){return <div className="toggleRow"><span>{text}</span><button className={value?"yes":""} onClick={()=>set(!value)}><i></i></button></div>}
+function Tool({icon,text,onClick,active}){return <button type="button" className={"tool "+(active?"active":"")} onClick={onClick}>{icon}<span>{text}</span></button>}
+function Toggle({text,value,set}){return <div className="toggleRow"><span>{text}</span><button type="button" className={value?"yes":""} onClick={()=>set(!value)}><i></i></button></div>}

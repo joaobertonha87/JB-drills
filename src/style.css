@@ -53,3 +53,161 @@
   .fundamentoBar{align-items:stretch;flex-direction:column}
   .fundamentoBar select{width:100%;min-width:0}
 }
+
+/* V1.20 — iPad / touch reliability */
+html{
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+body{
+  overscroll-behavior-y:none;
+  -webkit-overflow-scrolling:touch;
+}
+button, select, input, textarea{
+  -webkit-tap-highlight-color:transparent;
+}
+button{
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+  min-width:44px;
+  min-height:44px;
+  pointer-events:auto;
+}
+button:disabled{
+  cursor:default;
+  opacity:.38;
+}
+.navtabs button:disabled{
+  color:#66757c;
+}
+.konvajs-content,
+.konvajs-content canvas{
+  touch-action:none!important;
+}
+.courtBox,
+.courtBox>div{
+  touch-action:none;
+}
+.tool{
+  min-height:44px;
+}
+.seg button{
+  min-height:46px;
+}
+.playerRow{
+  min-height:52px;
+  height:auto;
+}
+.playerRow button{
+  min-width:44px;
+  min-height:44px;
+  height:44px;
+}
+.quickArrowColors button,.arrowPalette button{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+}
+.orientationButtons button{
+  min-height:44px;
+}
+.toggleRow button{
+  min-width:48px;
+  min-height:28px;
+}
+.sceneTop button{
+  min-width:48px;
+  min-height:48px;
+}
+.fundamentoBar select,
+.info input,.info select,.info textarea,.props input,.props select{
+  font-size:16px; /* prevents iOS Safari zoom-on-focus */
+}
+
+/* iPad landscape/portrait: preserve every functional panel instead of hiding them */
+@media (min-width: 768px) and (max-width: 1199px){
+  .top{
+    position:sticky;
+    top:0;
+    grid-template-columns:200px minmax(0,1fr) 210px;
+    height:72px;
+    padding:0 12px;
+  }
+  .logo>b{font-size:38px}
+  .logo strong{font-size:17px}
+  .logo small{font-size:8px}
+  .navtabs{gap:2px;overflow-x:auto;justify-content:flex-start}
+  .navtabs button{min-width:70px;font-size:11px;padding:0 6px}
+  .actions{gap:6px}
+  .actions button{height:44px;padding:0 12px;font-size:12px}
+  .studio{
+    display:grid;
+    grid-template-columns:180px minmax(0,1fr);
+    grid-template-areas:
+      "left center"
+      "right right"
+      "info info"
+      "timeline timeline"
+      "view view";
+    max-width:none;
+  }
+  .left{
+    grid-area:left;
+    display:block;
+    position:relative;
+    top:auto;
+    z-index:3;
+    padding:10px;
+    border-radius:0;
+  }
+  .left h3,.left .seg{display:flex}
+  .left h3{display:block}
+  .tool span{display:inline}
+  .center{grid-area:center;overflow:visible;min-width:0}
+  .right{
+    display:block;
+    grid-area:right;
+    border-radius:0;
+    padding:12px;
+  }
+  .right .players{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .info{
+    display:grid;
+    grid-area:info;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    align-items:end;
+    border-radius:0;
+  }
+  .info h3{grid-column:1/-1}
+  .timeline{grid-area:timeline;border-radius:0}
+  .view{
+    display:grid;
+    grid-area:view;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:0 20px;
+    border-radius:0;
+  }
+  .view h3{grid-column:1/-1}
+  .courtBox{max-width:100%;padding:0 4px}
+  .sceneTop{top:6px}
+  .fundamentoBar{margin:8px 8px 0}
+}
+
+/* iPad portrait / narrow touch layout */
+@media (max-width: 767px){
+  .top{position:relative}
+  .left{
+    position:relative!important;
+    top:auto!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+  .left .tool{min-height:48px}
+  .right{display:block;padding:12px}
+  .info{display:grid;padding:12px}
+  .view{display:block;padding:12px}
+  .center{overflow:visible}
+  .courtBox{overflow:hidden}
+  .fundamentoBar{margin:8px 0}
+}
