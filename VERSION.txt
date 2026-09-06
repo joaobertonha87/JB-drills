@@ -1,26 +1,9 @@
-JB Tactics V1.45 — CLEAN BUILD
+JB Tactics V1.46 — CLEAN HUMAN + BEACH NET FIX
 
-Clean build criada do zero a partir da versão funcional atual.
-
-Inclui somente:
-- src/main.jsx
-- src/App.jsx
-- src/style.css
-- index.html
-- vite.config.js
-- render.yaml
-- package.json
-- public/PWA icons + manifest + service worker
-- arena premium atual
-- professor atual
-- quatro jogadores humanos atuais
-
-Removidos:
-- quadras antigas
-- assets antigos de jogadores
-- manifests antigos/versionados
-- ícones versionados antigos
-- imagens de referência não usadas
-- arquivos obsoletos acumulados das versões anteriores
-
-Cache do Service Worker reiniciado para V1.45.
+- Removidos da imagem da arena os vestígios/pés de jogadores antigos.
+- Jogadores recortados novamente em PNG transparente, sem areia/linhas atrás.
+- Professor recortado novamente, completo e com cabeça preservada.
+- Controle funcional de tamanho individual para jogador e professor: 60% a 160%.
+- Rede única visualmente mais alta e proporcional ao Beach Tennis.
+- Formação humana e layout premium da Clean Build preservados.
+- Novo namespace local para evitar reaproveitar posições/objetos antigos do cache.

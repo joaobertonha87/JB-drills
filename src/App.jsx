@@ -13,11 +13,11 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:315,y:405,label:"1",name:"Jogador 1",visible:true},
- {id:uid(),type:"player",team:"A",x:685,y:405,label:"2",name:"Jogador 2",visible:true},
- {id:uid(),type:"player",team:"B",x:365,y:158,label:"3",name:"Jogador 3",visible:true},
+ {id:uid(),type:"player",team:"A",x:315,y:405,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:uid(),type:"player",team:"A",x:685,y:405,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:uid(),type:"player",team:"B",x:365,y:158,label:"3",name:"Jogador 3",visible:true,scale:100},
  {id:uid(),type:"player",team:"B",x:635,y:158,label:"4",name:"Jogador 4",visible:true},
- {id:uid(),type:"coach",x:92,y:350,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
+ {id:uid(),type:"coach",x:92,y:350,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true,scale:100}
 ];
 
 export default function App(){
@@ -28,11 +28,11 @@ export default function App(){
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb145-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb146-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb145-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb146-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -60,7 +60,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb145-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb146-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -88,28 +88,28 @@ export default function App(){
    ];
    const used=items.filter(x=>x.type==="player").length;
    const slot=slots[Math.min(used,3)]||{x:500,y:350,team:t};
-   const obj={id:uid(),type:"player",team:slot.team,x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true};
+   const obj={id:uid(),type:"player",team:slot.team,x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Jogador adicionado e selecionado");
  };
  const addCoach=()=>{
-   const obj={id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true};
+   const obj={id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Professor adicionado e selecionado");
  };
  const addSimple=t=>{
    const color=t==="ball"?"#f4f72b":t==="cone"?"#ff9f1a":elementColor;
-   const obj={id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",color,visible:true};
+   const obj={id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",color,visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select",`${obj.name} adicionado e selecionado`);
  };
  const addStep=()=>{
    const nums=items.filter(x=>x.type==="step").map(x=>Number(x.number)||0);
    const next=(nums.length?Math.max(...nums):0)+1;
    const col=next%2===0?BLUE:LIME;
-   const obj={id:uid(),type:"step",x:500,y:260,number:next,name:`Passo ${next}`,color:col,size:30,visible:true};
+   const obj={id:uid(),type:"step",x:500,y:260,number:next,name:`Passo ${next}`,color:col,size:30,visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select",`Passo ${next} adicionado ✓`);
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb145-items",JSON.stringify(items));localStorage.setItem("jb145-scenes",JSON.stringify(scenes));localStorage.setItem("jb145-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb146-items",JSON.stringify(items));localStorage.setItem("jb146-scenes",JSON.stringify(scenes));localStorage.setItem("jb146-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -212,14 +212,14 @@ export default function App(){
    const im=sprite(i),col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
 
    if(i.type==="coach"){
-     const cw=112,ch=154;
+     const sc=(i.scale||100)/100; const cw=112*sc,ch=190*sc;
      return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-       {im&&<KImage image={im} x={-cw/2} y={-ch+48} width={cw} height={ch}/>}
+       {im&&<KImage image={im} x={-cw/2} y={-ch+58} width={cw} height={ch}/>}
      </Group>
    }
 
    const isTop=i.y < COURT_H/2;
-   const sw=isTop?82:108, sh=isTop?120:160;
+   const sc=(i.scale||100)/100; const sw=(isTop?82:108)*sc, sh=(isTop?120:160)*sc;
    return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
@@ -340,6 +340,18 @@ export default function App(){
             Rede, linhas, iluminação e decoração pertencem ao cenário-base.
             Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
+        {/* V1.46: uma única rede visual, mais alta e proporcional ao Beach Tennis.
+            Esta camada cobre/alinha com a rede do cenário em vez de criar uma segunda rede separada. */}
+        <Group listening={false}>
+          <Rect x={205} y={198} width={590} height={77} fill="#171514" opacity={0.82}/>
+          {Array.from({length:9}).map((_,r)=><Line key={`nh${r}`} points={[207,201+r*8.6,793,201+r*8.6]} stroke="#b6aa91" strokeWidth={0.75} opacity={0.72}/>)}
+          {Array.from({length:48}).map((_,c)=><Line key={`nv${c}`} points={[208+c*12.2,199,208+c*12.2,274]} stroke="#b6aa91" strokeWidth={0.65} opacity={0.66}/>)}
+          <Rect x={201} y={193} width={598} height={8} cornerRadius={2} fill="#0b0d0e"/>
+          <Rect x={199} y={187} width={29} height={101} cornerRadius={4} fill="#111619"/>
+          <Rect x={772} y={187} width={29} height={101} cornerRadius={4} fill="#111619"/>
+          <Text x={202} y={228} width={23} align="center" text="JB" fill="#54e600" fontSize={12} fontStyle="bold"/>
+          <Text x={775} y={228} width={23} align="center" text="JB" fill="#54e600" fontSize={12} fontStyle="bold"/>
+        </Group>
 
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
@@ -416,7 +428,11 @@ export default function App(){
      </div>
    </label>
  </>:<label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label>}
- <label>Escala<input type="range" min="70" max="130" defaultValue="100"/></label><button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
+ {sel&&(sel.type==="player"||sel.type==="coach")&&
+ <label>Tamanho: {sel.scale||100}%
+   <input type="range" min="60" max="160" step="5" value={sel.scale||100}
+     onChange={e=>patch(sel.id,{scale:Number(e.target.value)})}/>
+ </label>}<button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
    </aside>
 
    <section className="info panel"><h3>INFORMAÇÕES DA TÁTICA</h3><label>Nome<input value={title} onChange={e=>setTitle(e.target.value)}/></label><label>Categoria<select value={category} onChange={e=>setCategory(e.target.value)}><option>Ofensiva</option><option>Defensiva</option><option>Construção</option><option>Transição</option></select></label><label>Nível<select value={level} onChange={e=>setLevel(e.target.value)}><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></label><label>Descrição<textarea value={desc} onChange={e=>setDesc(e.target.value)}/></label></section>
