@@ -437,3 +437,46 @@ body{
 .studio > :last-child{
   margin-bottom:calc(12px + env(safe-area-inset-bottom));
 }
+
+/* V1.23 — quadra limpa */
+.sceneTop{display:none!important;}
+
+/* V1.24 — desenho livre */
+.freeDrawControls{
+  padding:4px 8px 10px;
+  display:grid;
+  gap:8px;
+}
+.freeDrawColors{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.freeDrawColors button{
+  width:32px;
+  height:32px;
+  min-width:32px;
+  min-height:32px;
+  padding:0;
+  border-radius:50%;
+  border:2px solid #263c44;
+}
+.freeDrawColors button.picked{
+  border-color:#fff;
+  box-shadow:0 0 0 2px #54e600;
+}
+.drawWidthLabel{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:8px;
+  font-size:10px;
+  color:#aebbc0;
+}
+.drawWidthLabel input{
+  width:100%;
+  accent-color:#54e600;
+}
+.tool.active{
+  outline:1px solid #54e600;
+}
