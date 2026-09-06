@@ -1,10 +1,12 @@
-JB Tactics V1.24 — FREE DRAW
+JB Tactics V1.25 — SIDEBAR FUNCTIONAL
 
-Novo:
-- Botão "Desenho livre" com ícone de lápis.
-- Funciona com dedo, Apple Pencil e mouse.
-- Seletor rápido com 8 cores.
-- Controle de espessura de 2px a 14px.
-- O modo desenho livre permanece ativo para vários traços seguidos.
-- Cada traço pode ser selecionado, movido, excluído e ter cor/espessura alteradas.
-- Compatível com o sistema de desfazer/refazer e salvar.
+Correções:
+- Desenho Livre agora aparece de verdade no menu lateral.
+- Lápis funciona com dedo, Apple Pencil e mouse.
+- Paleta de 8 cores e controle de espessura aparecem quando o lápis está ativo.
+- Seta, Zona, Selecionar e Mover ficam visualmente destacados quando ativos.
+- Barra de feedback mostra a última ação/modo selecionado.
+- Jogador, professor, bola, cone e texto são adicionados e ficam selecionados imediatamente.
+- Excluir, Desfazer, Refazer e Orientar corpo dão resposta visual.
+- Paleta da seta aparece quando a ferramenta seta ou uma seta existente está selecionada.
+- Menu lateral continua com rolagem independente no iPad.
