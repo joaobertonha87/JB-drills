@@ -1,8 +1,7 @@
-JB Tactics V1.38 — EXACT PREMIUM LAYOUT
+JB Tactics V1.39 — PLAYER DRAG + ORIENTATION FIX
 
-- Perspectiva corrigida para a referência premium aprovada.
-- Rede horizontal integrada ao cenário 3D.
-- Removidas rede vertical e linhas vetoriais duplicadas que causavam o bug.
-- Areia, iluminação, plantas, alambrado e paredes fazem parte de um único cenário-base coerente.
-- Jogadores, professor, bolas, cones, setas, números e textos continuam como camadas interativas.
-- Mantidas ferramentas e legenda da versão anterior.
+- Corrigido bloqueio de arraste causado pelos eventos de ponteiro do Stage.
+- Jogadores e professor agora são sempre arrastáveis por mouse, toque e Apple Pencil.
+- Jogadores passam a se orientar automaticamente para o centro da quadra:
+  lado esquerdo olha para a direita; lado direito olha para a esquerda.
+- Cenário premium e perspectiva da V1.38 preservados.
