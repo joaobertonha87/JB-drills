@@ -1,12 +1,10 @@
-JB Tactics V1.25 — SIDEBAR FUNCTIONAL
+JB Tactics V1.26 — SMART DRAW
 
-Correções:
-- Desenho Livre agora aparece de verdade no menu lateral.
-- Lápis funciona com dedo, Apple Pencil e mouse.
-- Paleta de 8 cores e controle de espessura aparecem quando o lápis está ativo.
-- Seta, Zona, Selecionar e Mover ficam visualmente destacados quando ativos.
-- Barra de feedback mostra a última ação/modo selecionado.
-- Jogador, professor, bola, cone e texto são adicionados e ficam selecionados imediatamente.
-- Excluir, Desfazer, Refazer e Orientar corpo dão resposta visual.
-- Paleta da seta aparece quando a ferramenta seta ou uma seta existente está selecionada.
-- Menu lateral continua com rolagem independente no iPad.
+Novo reconhecimento inteligente no Desenho Livre:
+- Traço praticamente reto vira automaticamente uma seta profissional.
+- Círculo desenhado à mão vira automaticamente um círculo geométrico perfeito.
+- Se o desenho não corresponder a uma forma reconhecida, continua como desenho livre normal.
+- Reconhecimento inteligente pode ser ligado/desligado.
+- Cor e espessura escolhidas no lápis são preservadas na forma corrigida.
+- Círculos reconhecidos podem ser selecionados, movidos, redimensionados, recoloridos e excluídos.
+- Setas reconhecidas podem ser selecionadas, movidas, recoloridas e ter espessura alterada.
