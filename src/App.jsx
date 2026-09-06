@@ -13,11 +13,11 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:300,y:385,label:"1",name:"Jogador 1",sprite:"back",facing:"right",visible:true},
- {id:uid(),type:"player",team:"A",x:700,y:385,label:"2",name:"Jogador 2",sprite:"back",facing:"left",visible:true},
- {id:uid(),type:"player",team:"B",x:310,y:160,label:"3",name:"Jogador 3",sprite:"front",facing:"right",visible:true},
- {id:uid(),type:"player",team:"B",x:690,y:160,label:"4",name:"Jogador 4",sprite:"front",facing:"left",visible:true},
- {id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
+ {id:uid(),type:"player",team:"A",x:315,y:405,label:"1",name:"Jogador 1",visible:true},
+ {id:uid(),type:"player",team:"A",x:685,y:405,label:"2",name:"Jogador 2",visible:true},
+ {id:uid(),type:"player",team:"B",x:365,y:158,label:"3",name:"Jogador 3",visible:true},
+ {id:uid(),type:"player",team:"B",x:635,y:158,label:"4",name:"Jogador 4",visible:true},
+ {id:uid(),type:"coach",x:92,y:350,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
 ];
 
 export default function App(){
@@ -28,11 +28,11 @@ export default function App(){
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb143-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb144-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb143-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb144-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -60,7 +60,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb143-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb144-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -81,10 +81,10 @@ export default function App(){
  const addPlayer=t=>{
    let n=items.filter(x=>x.type==="player").length+1;
    const slots=[
-     {x:350,y:145,team:"B"},
-     {x:650,y:145,team:"B"},
-     {x:275,y:405,team:"A"},
-     {x:725,y:405,team:"A"}
+     {x:365,y:158,team:"B"},
+     {x:635,y:158,team:"B"},
+     {x:315,y:405,team:"A"},
+     {x:685,y:405,team:"A"}
    ];
    const used=items.filter(x=>x.type==="player").length;
    const slot=slots[Math.min(used,3)]||{x:500,y:350,team:t};
@@ -109,7 +109,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb143-items",JSON.stringify(items));localStorage.setItem("jb143-scenes",JSON.stringify(scenes));localStorage.setItem("jb143-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb144-items",JSON.stringify(items));localStorage.setItem("jb144-scenes",JSON.stringify(scenes));localStorage.setItem("jb144-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -219,7 +219,7 @@ export default function App(){
    }
 
    const isTop=i.y < COURT_H/2;
-   const sw=isTop?78:104, sh=isTop?112:154;
+   const sw=isTop?82:108, sh=isTop?120:160;
    return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
@@ -340,41 +340,6 @@ export default function App(){
             Rede, linhas, iluminação e decoração pertencem ao cenário-base.
             Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
-
-        {/* V1.43 — rede de Beach Tennis mais alta */}
-        <Group listening={false}>
-          {/* corpo da rede, cobrindo visualmente a rede baixa do cenário */}
-          <Rect x={118} y={214} width={764} height={92}
-            fill="#090c0d" opacity={0.72}
-            shadowColor="#000" shadowBlur={12} shadowOpacity={0.35}/>
-          {/* malha horizontal */}
-          {Array.from({length:10}).map((_,idx)=>(
-            <Line key={`bth-${idx}`}
-              points={[122,220+idx*8.2,878,220+idx*8.2]}
-              stroke="#c9c3ad" strokeWidth={0.8} opacity={0.50}/>
-          ))}
-          {/* malha vertical */}
-          {Array.from({length:50}).map((_,idx)=>(
-            <Line key={`btv-${idx}`}
-              points={[126+idx*15.2,218,126+idx*15.2,303]}
-              stroke="#bdb7a3" strokeWidth={0.7} opacity={0.42}/>
-          ))}
-          {/* fita superior e inferior */}
-          <Rect x={116} y={209} width={768} height={10} cornerRadius={3} fill="#111516"/>
-          <Rect x={116} y={302} width={768} height={6} cornerRadius={2} fill="#111516"/>
-
-          {/* postes mais altos */}
-          <Rect x={102} y={198} width={30} height={128} cornerRadius={6}
-            fill="#0a0f11" stroke="#263238" strokeWidth={2}
-            shadowColor="#000" shadowBlur={10} shadowOpacity={0.4}/>
-          <Rect x={868} y={198} width={30} height={128} cornerRadius={6}
-            fill="#0a0f11" stroke="#263238" strokeWidth={2}
-            shadowColor="#000" shadowBlur={10} shadowOpacity={0.4}/>
-          <Text x={106} y={248} width={22} align="center" text="JB"
-            fill="#76ff00" fontSize={13} fontStyle="bold"/>
-          <Text x={872} y={248} width={22} align="center" text="JB"
-            fill="#76ff00" fontSize={13} fontStyle="bold"/>
-        </Group>
 
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}

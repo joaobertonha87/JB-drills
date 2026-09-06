@@ -1,7 +1,10 @@
-JB Tactics V1.43 — BEACH TENNIS NET HEIGHT
+JB Tactics V1.44 — SINGLE NET + HUMAN PLAYER LAYOUT
 
-- Rede visualmente mais alta, com proporção de Beach Tennis.
-- Postes aumentados para acompanhar a nova altura.
-- Malha redesenhada em camada própria sobre a arena.
-- Jogadores e professor continuam independentes e arrastáveis.
-- Layout premium, iluminação, areia, plantas e posições da V1.42 preservados.
+- Volta à base V1.42 para eliminar completamente a segunda rede adicionada na V1.43.
+- Mantém apenas a rede única integrada ao cenário premium.
+- Restaura os quatro jogadores humanos como elementos independentes.
+- Formação inicial ajustada para a referência aprovada:
+  dois jogadores na parte superior voltados ao centro;
+  dois jogadores na parte inferior voltados para cima/centro.
+- Jogadores inferiores maiores e superiores menores para respeitar a perspectiva da quadra.
+- Jogadores e professor continuam arrastáveis.
