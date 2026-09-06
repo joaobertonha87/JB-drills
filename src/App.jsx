@@ -23,11 +23,11 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb127-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb128-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb127-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb128-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -53,7 +53,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb127-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb128-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -86,7 +86,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb127-items",JSON.stringify(items));localStorage.setItem("jb127-scenes",JSON.stringify(scenes));localStorage.setItem("jb127-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb128-items",JSON.stringify(items));localStorage.setItem("jb128-scenes",JSON.stringify(scenes));localStorage.setItem("jb128-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -113,6 +113,22 @@ export default function App(){
    let avg=0,max=0;for(const q of p){const d=Math.abs(dy*q.x-dx*q.y+b.x*a.y-b.y*a.x)/den;avg+=d;max=Math.max(max,d)}avg/=p.length;
    if((direct/path>.72&&avg<Math.max(15,direct*.11))||max<Math.max(20,direct*.14))
     return {id:uid(),type:"arrow",points:[a.x,a.y,b.x,b.y],color,width:Math.max(4,width),smart:true,visible:true};
+  }
+  // SETA CURVA: reconhece um gesto aberto com curvatura consistente.
+  if(p.length>=6 && direct>24 && path/direct>1.08 && path/direct<3.8){
+   const ax=b.x-a.x,ay=b.y-a.y,den=Math.hypot(ax,ay)||1;
+   let best=p[Math.floor(p.length/2)],bestDev=0,sign=0,same=0,total=0;
+   for(let k=1;k<p.length-1;k++){
+    const q=p[k];
+    const cross=ax*(q.y-a.y)-ay*(q.x-a.x);
+    const dev=Math.abs(cross)/den;
+    if(dev>bestDev){bestDev=dev;best=q}
+    if(Math.abs(cross)>den*3){const sg=Math.sign(cross);if(!sign)sign=sg;if(sg===sign)same++;total++}
+   }
+   const consistency=total?same/total:0;
+   if(bestDev>Math.max(12,direct*.08) && consistency>.68){
+    return {id:uid(),type:"curvedArrow",points:[a.x,a.y,best.x,best.y,b.x,b.y],color,width:Math.max(4,width),smart:true,visible:true};
+   }
   }
   if(p.length>=8&&diag>28&&direct<Math.max(60,diag*.5)&&bw>15&&bh>15&&bw/bh>.45&&bw/bh<2.2){
    const cx=(minX+maxX)/2,cy=(minY+maxY)/2,rs=p.map(q=>Math.hypot(q.x-cx,q.y-cy));
@@ -150,7 +166,7 @@ export default function App(){
    }else if(draft.type==="freeDraw"){
      if(draft.points.length>=4){
        const obj=smartDraw?recognizeStroke(draft.points,draft.color||drawColor,draft.width||drawWidth):null;
-       if(obj){commit([...items,obj]);setSelected(obj.id);flash(obj.type==="smartCircle"?"Círculo reconhecido ✓":"Seta reconhecida ✓")}
+       if(obj){commit([...items,obj]);setSelected(obj.id);flash(obj.type==="smartCircle"?"Círculo reconhecido ✓":obj.type==="curvedArrow"?"Seta curva reconhecida ✓":"Seta reconhecida ✓")}
        else{const free={id:uid(),type:"freeDraw",points:draft.points,color:draft.color||drawColor,width:draft.width||drawWidth,visible:true};commit([...items,free]);setSelected(free.id);flash("Desenho livre criado")}
      }
      setDraft(null);
@@ -193,6 +209,19 @@ export default function App(){
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
+  if(i.type==="curvedArrow"){
+   const [x1,y1,cx,cy,x2,y2]=i.points;
+   const d=`M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+   const ang=Math.atan2(y2-cy,x2-cx), ah=16+(i.width||5);
+   const a1x=x2-ah*Math.cos(ang-.55),a1y=y2-ah*Math.sin(ang-.55);
+   const a2x=x2-ah*Math.cos(ang+.55),a2y=y2-ah*Math.sin(ang+.55);
+   return <React.Fragment key={i.id}>
+    <Path data={d} stroke={active?"#fff":i.color} strokeWidth={i.width||5} fill="transparent" lineCap="round" lineJoin="round"
+      onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>
+    <Line points={[a1x,a1y,x2,y2,a2x,a2y]} stroke={active?"#fff":i.color} strokeWidth={i.width||5} lineCap="round" lineJoin="round"
+      onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>
+   </React.Fragment>;
+  }
   if(i.type==="smartCircle")return <Circle key={i.id} x={i.x} y={i.y} radius={i.radius} fill="rgba(0,0,0,0)" stroke={active?"#fff":i.color} strokeWidth={i.width||5} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="freeDraw")return <Line key={i.id} points={i.points} stroke={active?"#ffffff":i.color||"#ffffff"} strokeWidth={i.width||5} lineCap="round" lineJoin="round" draggable={mode==="select"||mode==="move"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>{const dx=e.target.x(),dy=e.target.y();patch(i.id,{points:i.points.map((v,idx)=>v+(idx%2===0?dx:dy))});e.target.position({x:0,y:0})}}/>;
  };
@@ -234,7 +263,7 @@ export default function App(){
       <button type="button" className={"smartDrawToggle "+(smartDraw?"on":"")} onClick={()=>{setSmartDraw(v=>!v);flash(!smartDraw?"Smart Draw ativado":"Smart Draw desativado")}}>
         {smartDraw?"Smart Draw: ATIVO":"Smart Draw: DESATIVADO"}
       </button>
-      {smartDraw&&<div className="smartHint">Solte o dedo/Pencil para reconhecer:<br/><b>reta → seta perfeita</b><br/><b>círculo → círculo perfeito</b></div>}
+      {smartDraw&&<div className="smartHint">Solte o dedo/Pencil para reconhecer:<br/><b>reta → seta perfeita</b><br/><b>curva → seta curva perfeita</b><br/><b>círculo → círculo perfeito</b></div>}
     </div>}
 
     <Tool active={mode==="arrow"} icon={<MoveRight/>} text="Seta" onClick={()=>activateMode("arrow","Seta ativa • arraste na quadra")}/>
