@@ -1,10 +1,11 @@
-JB Tactics V1.17 — CLEAN PLAYERS + FUNDAMENTO
+JB Tactics V1.18 — 3D CLEAN
 
-Correções:
-- Jogadores refeitos a partir do design limpo aprovado, sem blocos verdes.
-- Raquete desenhada separadamente no editor para nunca desaparecer.
-- Professor usa a referência completa com raquete + cesto de bolas, sem recorte quebrado.
-- Professor fica fora da quadra, do lado esquerdo.
-- Mantida quadra horizontal com rede vertical.
-- Adicionado seletor de FUNDAMENTO abaixo da quadra, fora do canvas.
-- Fundamentos disponíveis: saque, smash, bandeja, voleios, curta, gancho, anômalo, rainbow, defesa, topspin, slice, drive, flat, swing volley e fast hands.
+- Mantém o layout funcional da V1.17.
+- Personagens sem números sobre o corpo.
+- Jogadores da direita iniciam voltados para a esquerda.
+- Jogadores da esquerda iniciam voltados para a direita.
+- Jogadores e professor no conceito visual descalço.
+- Raquetes permanecem visíveis no editor.
+- Professor permanece com área própria e cesto de bolas.
+- Seletor de fundamento continua abaixo da quadra.
+- Quadra horizontal com rede vertical.
