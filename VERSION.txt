@@ -1,1 +1,6 @@
-JB Tactics V1.27 SMART DRAW FIXED — reconhecimento mais tolerante para dedo e Apple Pencil; reta vira seta; círculo vira círculo perfeito; feedback visual.
+JB Tactics V1.28 — SMART DRAW CURVED ARROW
+- Linha reta desenhada -> seta reta perfeita.
+- Traço curvo aberto -> seta curva vetorial perfeita.
+- Círculo fechado -> círculo perfeito.
+- Reconhecimento tolerante para dedo e Apple Pencil no iPad.
+- A ponta da seta curva acompanha a direção final do gesto.
