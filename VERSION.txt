@@ -1,22 +1,8 @@
-JB Tactics V1.51 — CLEAN SCENE BUILDER
-
-CLEAN BUILD sem cache antigo.
+JB Tactics V1.52 — COURT LINES + TOP PLAYER CLEAN
 
 CORREÇÕES
-- Arena limpa sem a rede incorporada no fundo.
-- Somente uma rede funcional.
-- Rede mais alta, compatível visualmente com Beach Tennis.
-- Jogadores do fundo ficam atrás da rede quando aproximados.
-- Jogadores superiores iniciam mais recuados.
-- Opção de rotacionar removida.
-- Cache, Service Worker e localStorage antigos eliminados.
-
-CRIADOR DE CENAS
-- Novo botão principal “Criar cena”.
-- A nova cena copia automaticamente a cena anterior.
-- Cena 1: professor lança a bola.
-- Cena 2: aluno rebate e direciona.
-- Cena 3: outro jogador se movimenta e rebate.
-- Cada cena mantém suas próprias posições, setas, bolas, cones, textos e passos.
-- “Atualizar cena atual” salva a etapa selecionada.
-- Miniaturas numeradas permitem navegar pelo passo a passo.
+- Linhas externas da quadra redesenhadas por cima do cenário para ficarem 100% visíveis.
+- Nenhuma linha horizontal interna adicionada.
+- Jogadora superior direita usa novo sprite limpo, sem a linha branca residual atrás do corpo.
+- Rede continua única e sobrepõe os jogadores do fundo quando aproximados.
+- Cache de estado separado em jb152-* e assets com versionamento ?v=152.
