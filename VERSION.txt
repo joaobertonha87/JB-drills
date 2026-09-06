@@ -1,12 +1,10 @@
-JB Tactics V1.15 — HORIZONTAL + BODY ORIENTATION
+JB Tactics V1.16 — VERTICAL NET COURT
 
-- Quadra redesenhada em formato horizontal.
-- Novos sprites limpos extraídos de referência sem manchas verdes.
-- Removidos definitivamente os fundos/artefatos verdes.
-- Sem bases luminosas amarelas.
-- Botão Girar substituído por "Virar corpo".
-- O corpo não é mais rotacionado de ponta-cabeça.
-- Direções disponíveis: baixo, cima, esquerda e direita.
-- Jogadores 3 e 4 iniciam virados para baixo.
-- Jogadores 1 e 2 iniciam virados para cima.
-- Professor inicia virado para a direita.
+- Quadra mantida em formato horizontal.
+- Rede agora fica na vertical, centralizada.
+- Jogadores reposicionados para os dois lados da rede.
+- Jogadores da esquerda iniciam voltados para a direita.
+- Jogadores da direita iniciam voltados para a esquerda.
+- Professor permanece fora da quadra, voltado para os alunos.
+- Mantidos controles de orientação corporal sem virar personagem de ponta cabeça.
+- Mantidas areia 2D, setas coloridas e layout Premium Studio.
