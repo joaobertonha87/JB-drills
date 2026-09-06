@@ -836,3 +836,10 @@ body{color:var(--jb-text)}
   box-shadow:0 30px 80px rgba(0,0,0,.62),0 0 0 1px rgba(118,255,0,.10);
 }
 .center.view3d .courtBox{background:#04090b}
+
+/* ===== V1.38 — EXACT PREMIUM LAYOUT ===== */
+.center.view3d .courtBox>div{
+  background:#02090d;
+  box-shadow:0 30px 85px rgba(0,0,0,.66),0 0 0 1px rgba(118,255,0,.10);
+}
+.center .courtBox{padding:0 10px 10px}

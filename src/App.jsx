@@ -22,12 +22,12 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-3d-realistic-v137.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb137-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/arena-exact-premium-v138.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb138-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb137-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb138-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -55,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb137-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb138-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -96,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb137-items",JSON.stringify(items));localStorage.setItem("jb137-scenes",JSON.stringify(scenes));localStorage.setItem("jb137-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb138-items",JSON.stringify(items));localStorage.setItem("jb138-scenes",JSON.stringify(scenes));localStorage.setItem("jb138-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -323,21 +323,10 @@ export default function App(){
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
-        {/* Arena 3D realista baseada no visual aprovado */}
+        {/* V1.38: arena premium em perspectiva aprovada.
+            Rede, linhas, iluminação e decoração pertencem ao cenário-base.
+            Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
-
-        {/* Linhas oficiais mantidas como camada limpa sobre a areia realista */}
-        <Line points={[78,112,922,112,952,472,48,472,78,112]}
-          stroke="#ffffff" strokeWidth={5} closed lineJoin="round" opacity={.96}/>
-
-        {/* Rede vertical premium e interativa visualmente integrada */}
-        <Rect x={488} y={88} width={24} height={402} fill="#091013" shadowColor="#000" shadowBlur={10} shadowOpacity={.48}/>
-        <Rect x={496} y={94} width={8} height={390} fill="#394348"/>
-        {Array.from({length:29}).map((_,idx)=><Line key={`net-${idx}`} points={[491,103+idx*13,509,103+idx*13]} stroke="#cbd0d1" strokeWidth={1} opacity={.48}/>)}
-        <Rect x={483} y={82} width={34} height={20} cornerRadius={5} fill="#080d0f" stroke="#27383e" strokeWidth={2}/>
-        <Text x={489} y={85} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
-        <Rect x={483} y={476} width={34} height={22} cornerRadius={5} fill="#080d0f" stroke="#27383e" strokeWidth={2}/>
-        <Text x={489} y={480} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
 
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}

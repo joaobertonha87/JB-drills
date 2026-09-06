@@ -1,9 +1,8 @@
-JB Tactics V1.37 — REALISTIC 3D ARENA
+JB Tactics V1.38 — EXACT PREMIUM LAYOUT
 
-- Cenário 3D refeito com base visual realista.
-- Areia fotográfica/texturizada no lugar do preenchimento vetorial simples.
-- Parede premium, iluminação quente e plantas integradas ao cenário.
-- Jogadores e professor continuam como elementos separados e arrastáveis.
-- Nenhum jogador, professor, seta ou número foi incorporado ao fundo.
-- Rede e linhas continuam em camadas funcionais sobre o cenário.
-- Legenda exportável e ferramentas anteriores preservadas.
+- Perspectiva corrigida para a referência premium aprovada.
+- Rede horizontal integrada ao cenário 3D.
+- Removidas rede vertical e linhas vetoriais duplicadas que causavam o bug.
+- Areia, iluminação, plantas, alambrado e paredes fazem parte de um único cenário-base coerente.
+- Jogadores, professor, bolas, cones, setas, números e textos continuam como camadas interativas.
+- Mantidas ferramentas e legenda da versão anterior.
