@@ -279,3 +279,161 @@ button:disabled{
   .tool{width:100%;justify-content:flex-start}
   .tool span{display:inline!important}
 }
+
+/* V1.22 — iPad full layout / correção de corte inferior */
+
+/* A página inteira precisa poder crescer e rolar; Safari não deve prender a altura. */
+html, body, #root{
+  width:100%;
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden;
+}
+body{
+  overflow-y:auto!important;
+  position:static!important;
+}
+.app{
+  min-height:100%!important;
+  height:auto!important;
+  overflow:visible!important;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+}
+
+/* Nunca esconder a parte inferior do editor. */
+.studio{
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+  align-items:start;
+  padding-bottom:calc(18px + env(safe-area-inset-bottom));
+}
+.center,
+.timeline,
+.info,
+.view{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+
+/* A quadra pode encolher, mas não deve impor altura fixa à página. */
+.courtBox{
+  width:100%;
+  min-width:0;
+  height:auto;
+}
+.courtBox>div{
+  max-width:100%;
+}
+
+/* Sidebar: rolagem própria sem usar 100vh, que corta com a barra do Safari. */
+.left{
+  top:72px;
+  height:auto!important;
+  max-height:calc(100dvh - 82px - env(safe-area-inset-bottom))!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Fallback para Safari antigo sem dvh. */
+@supports not (height: 100dvh){
+  .left{
+    max-height:calc(100vh - 100px)!important;
+  }
+}
+
+/* iPad paisagem */
+@media (min-width:768px) and (max-width:1199px) and (orientation:landscape){
+  .top{
+    position:sticky;
+    top:0;
+    z-index:30;
+  }
+  .studio{
+    grid-template-columns:176px minmax(0,1fr);
+    grid-template-areas:
+      "left center"
+      "right right"
+      "info info"
+      "timeline timeline"
+      "view view";
+    grid-auto-rows:auto;
+  }
+  .left{
+    position:sticky!important;
+    top:72px!important;
+    max-height:calc(100dvh - 82px - env(safe-area-inset-bottom))!important;
+  }
+  .center{
+    padding-bottom:8px;
+  }
+  .fundamentoBar{
+    position:relative!important;
+    bottom:auto!important;
+    margin-bottom:8px!important;
+  }
+  .right,.info,.timeline,.view{
+    display:block!important;
+    position:relative!important;
+    bottom:auto!important;
+  }
+  .timeline{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;
+  }
+}
+
+/* iPad retrato */
+@media (min-width:768px) and (max-width:1199px) and (orientation:portrait){
+  .top{
+    position:relative!important;
+  }
+  .studio{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%;
+  }
+  .left{
+    position:relative!important;
+    top:auto!important;
+    width:100%;
+    max-height:300px!important;
+    overflow-y:auto!important;
+    order:1;
+  }
+  .center{order:2;width:100%;overflow:visible!important}
+  .right{order:3;display:block!important;width:100%}
+  .info{order:4;display:grid!important;width:100%}
+  .timeline{order:5;display:block!important;width:100%}
+  .view{order:6;display:block!important;width:100%;padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+  .courtBox{
+    width:100%;
+    max-width:100%;
+  }
+  .fundamentoBar{
+    margin:8px 10px!important;
+  }
+}
+
+/* iPad Pro larguras maiores */
+@media (min-width:1200px) and (max-width:1400px){
+  .studio{
+    max-width:none;
+    grid-template-columns:210px minmax(0,1fr) 260px;
+  }
+  .left{
+    max-height:calc(100dvh - 82px - env(safe-area-inset-bottom))!important;
+  }
+  .timeline,.info,.view{
+    padding-bottom:calc(14px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Garante que o último controle nunca fique colado na borda do iPad. */
+.timeline:last-child,
+.view:last-child,
+.studio > :last-child{
+  margin-bottom:calc(12px + env(safe-area-inset-bottom));
+}
