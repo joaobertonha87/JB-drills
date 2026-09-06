@@ -23,11 +23,11 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court-3d.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb135-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb136-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb135-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb136-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -55,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb135-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb136-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -96,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb135-items",JSON.stringify(items));localStorage.setItem("jb135-scenes",JSON.stringify(scenes));localStorage.setItem("jb135-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb136-items",JSON.stringify(items));localStorage.setItem("jb136-scenes",JSON.stringify(scenes));localStorage.setItem("jb136-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -319,10 +319,7 @@ export default function App(){
       <button className={viewStyle==="3d"?"on":""} onClick={()=>{setViewStyle("3d");flash("Visual 3D Premium ativo")}}>3D</button>
       <button className={viewStyle==="2d"?"on":""} onClick={()=>{setViewStyle("2d");flash("Visual 2D ativo")}}>2D</button>
     </div>
-    <div className="arenaBrand">
-      <strong>JB TACTICS</strong><span>PLANEJE&nbsp;&nbsp;|&nbsp;&nbsp;TREINE&nbsp;&nbsp;|&nbsp;&nbsp;EVOLUA</span><strong>JB TACTICS</strong>
-    </div>
-    <div className="courtBox" ref={boxRef} style={{height:H*scale}}>
+<div className="courtBox" ref={boxRef} style={{height:H*scale}}>
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
@@ -330,12 +327,27 @@ export default function App(){
         <Rect x={0} y={0} width={W} height={COURT_H}
           fillLinearGradientStartPoint={{x:0,y:0}}
           fillLinearGradientEndPoint={{x:0,y:COURT_H}}
-          fillLinearGradientColorStops={[0,"#b9854d",0.12,"#d0a36b",0.55,"#e0bd84",1,"#c9975d"]}/>
+          fillLinearGradientColorStops={[0,"#b67c3e",0.10,"#d5a05c",0.48,"#e2b873",1,"#c98e50"]}/>
+        {/* iluminação quente da arena */}
+        <Rect x={18} y={67} width={964} height={12} fill="#ffc45c" opacity={.28} shadowColor="#ffc45c" shadowBlur={24}/>
+        {/* vasos e plantas decorativas estilizadas */}
+        <Group x={42} y={73}>
+          <Rect x={0} y={22} width={26} height={32} cornerRadius={6} fill="#f3eee1"/>
+          <Line points={[13,24,4,-6,13,10,20,-12,17,13,34,-4,20,19,42,7]} stroke="#294f2a" strokeWidth={6} lineCap="round" lineJoin="round"/>
+        </Group>
+        <Group x={932} y={73}>
+          <Rect x={0} y={22} width={26} height={32} cornerRadius={6} fill="#f3eee1"/>
+          <Line points={[13,24,4,-6,13,10,20,-12,17,13,34,-4,20,19,42,7]} stroke="#294f2a" strokeWidth={6} lineCap="round" lineJoin="round"/>
+        </Group>
         <Rect x={0} y={0} width={W} height={64} fill="#071014"/>
         <Rect x={0} y={62} width={W} height={3} fill="#76ff00" opacity={.78}/>
-        <Text x={64} y={20} text="JB TACTICS" fill="#ffffff" fontSize={18} fontStyle="bold"/>
-        <Text x={395} y={22} text="PLANEJE  |  TREINE  |  EVOLUA" fill="#76ff00" fontSize={11} letterSpacing={3}/>
-        <Text x={830} y={20} text="JB TACTICS" fill="#ffffff" fontSize={18} fontStyle="bold"/>
+        <Text x={82} y={18} text="JB" fill="#76ff00" fontSize={26} fontStyle="bold italic"/>
+        <Text x={125} y={20} text="TACTICS" fill="#ffffff" fontSize={16} fontStyle="bold"/>
+        <Text x={125} y={39} text="BEACH TENNIS" fill="#76ff00" fontSize={7} letterSpacing={2}/>
+        <Text x={363} y={24} width={274} align="center" text="PLANEJE  |  TREINE  |  EVOLUA" fill="#76ff00" fontSize={11} letterSpacing={3}/>
+        <Text x={790} y={18} text="JB" fill="#76ff00" fontSize={26} fontStyle="bold italic"/>
+        <Text x={833} y={20} text="TACTICS" fill="#ffffff" fontSize={16} fontStyle="bold"/>
+        <Text x={833} y={39} text="BEACH TENNIS" fill="#76ff00" fontSize={7} letterSpacing={2}/>
 
         <Line points={[52,102,948,102,972,485,28,485,52,102]}
           stroke="#6a4f31" strokeWidth={13} opacity={.22} closed/>

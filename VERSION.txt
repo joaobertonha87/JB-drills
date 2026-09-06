@@ -1,25 +1,14 @@
-JB Tactics V1.35 — COURT + EXPORT LEGEND FIX
+JB Tactics V1.36 — APPROVED PREMIUM REFERENCE
 
-CORREÇÕES
-- A quadra não depende mais de uma imagem externa para aparecer.
-- Quadra premium agora é desenhada diretamente no canvas Konva.
-- Areia, linhas externas, parede superior, branding e rede central permanecem visíveis mesmo se algum asset falhar.
-- Mantida a disposição vertical da rede e o visual premium/3D.
-
-LEGENDA
-- O card de legenda saiu do menu lateral.
-- Agora fica permanentemente exposto abaixo da quadra.
-- A legenda faz parte do próprio canvas.
-- Portanto, aparece automaticamente ao Exportar PNG.
-
-LEGENDA PADRÃO
-- Amarelo: trajetória da bola.
-- Verde: movimentação do aluno.
-- Azul: bola lançada pelo professor.
-
-MANTIDO
-- Smart Draw.
-- Setas curvas.
-- Passo/Número.
-- Seletor de cores de Bola e Cone.
-- PWA / ícone do aplicativo.
+- Evolução visual baseada no layout premium aprovado.
+- Removida a faixa duplicada JB Tactics / Planeje | Treine | Evolua.
+- Mantida somente a identidade integrada à arena.
+- Quadra com areia mais quente e premium.
+- Iluminação ambiente adicionada.
+- Plantas/vasos decorativos adicionados aos cantos superiores.
+- Branding JB Tactics integrado à parede da arena.
+- Rede vertical premium mantida.
+- Jogadores e professor continuam interativos.
+- Legenda das cores permanece abaixo da quadra e faz parte da exportação.
+- Seletor de cores para bola e cone mantido.
+- Smart Draw, passos/números e PWA mantidos.
