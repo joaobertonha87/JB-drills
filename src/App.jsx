@@ -23,16 +23,17 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb125-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb127-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb125-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb127-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
  const[drawColor,setDrawColor]=useState("#ffffff");
  const[drawWidth,setDrawWidth]=useState(5);
+ const[smartDraw,setSmartDraw]=useState(true);
  const[toolFeedback,setToolFeedback]=useState("Selecionar ativo");
  const[fundamento,setFundamento]=useState("Saque");
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
@@ -52,7 +53,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb125-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb127-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -85,7 +86,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb125-items",JSON.stringify(items));localStorage.setItem("jb125-scenes",JSON.stringify(scenes));localStorage.setItem("jb125-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb127-items",JSON.stringify(items));localStorage.setItem("jb127-scenes",JSON.stringify(scenes));localStorage.setItem("jb127-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -97,22 +98,48 @@ export default function App(){
   }
   const a=document.createElement("a");a.href=uri;a.download=name;document.body.appendChild(a);a.click();a.remove();
  };
+ const recognizeStroke=(pts,color,width)=>{
+  if(!pts||pts.length<6)return null;
+  const raw=[];for(let i=0;i<pts.length;i+=2)raw.push({x:pts[i],y:pts[i+1]});
+  const p=[raw[0]];
+  for(let i=1;i<raw.length;i++){const a=p[p.length-1],b=raw[i];if(Math.hypot(b.x-a.x,b.y-a.y)>=2)p.push(b)}
+  if(p.length<3)return null;
+  let path=0;for(let i=1;i<p.length;i++)path+=Math.hypot(p[i].x-p[i-1].x,p[i].y-p[i-1].y);
+  const a=p[0],b=p[p.length-1],direct=Math.hypot(b.x-a.x,b.y-a.y);
+  const xs=p.map(q=>q.x),ys=p.map(q=>q.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  const bw=maxX-minX,bh=maxY-minY,diag=Math.hypot(bw,bh);
+  if(direct>22){
+   const dx=b.x-a.x,dy=b.y-a.y,den=Math.hypot(dx,dy)||1;
+   let avg=0,max=0;for(const q of p){const d=Math.abs(dy*q.x-dx*q.y+b.x*a.y-b.y*a.x)/den;avg+=d;max=Math.max(max,d)}avg/=p.length;
+   if((direct/path>.72&&avg<Math.max(15,direct*.11))||max<Math.max(20,direct*.14))
+    return {id:uid(),type:"arrow",points:[a.x,a.y,b.x,b.y],color,width:Math.max(4,width),smart:true,visible:true};
+  }
+  if(p.length>=8&&diag>28&&direct<Math.max(60,diag*.5)&&bw>15&&bh>15&&bw/bh>.45&&bw/bh<2.2){
+   const cx=(minX+maxX)/2,cy=(minY+maxY)/2,rs=p.map(q=>Math.hypot(q.x-cx,q.y-cy));
+   const mean=rs.reduce((x,y)=>x+y,0)/rs.length,sd=Math.sqrt(rs.reduce((x,y)=>x+(y-mean)**2,0)/rs.length);
+   if(sd/(mean||1)<.52)return {id:uid(),type:"smartCircle",x:cx,y:cy,radius:Math.max(12,(bw+bh)/4),color,width:Math.max(3,width),visible:true};
+  }
+  return null;
+ };
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
- const down=()=>{
+ const down=(e)=>{
+   e?.evt?.preventDefault?.();
    if(!["arrow","zone","freeDraw"].includes(mode))return;
    const p=point();if(!p)return;
    if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});
    else if(mode==="zone")setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0});
    else setDraft({type:"freeDraw",points:[p.x,p.y],color:drawColor,width:drawWidth});
  };
- const move=()=>{
+ const move=(e)=>{
+   e?.evt?.preventDefault?.();
    if(!draft)return;
    const p=point();if(!p)return;
    if(draft.type==="arrow")setDraft(d=>({...d,points:[d.points[0],d.points[1],p.x,p.y]}));
    else if(draft.type==="zone")setDraft(d=>({...d,w:p.x-d.x,h:p.y-d.y}));
    else if(draft.type==="freeDraw")setDraft(d=>({...d,points:[...d.points,p.x,p.y]}));
  };
- const up=()=>{
+ const up=(e)=>{
+   e?.evt?.preventDefault?.();
    if(!draft)return;
    if(draft.type==="arrow"){
      const obj={id:uid(),type:"arrow",points:draft.points,color:draft.color||arrowColor,visible:true};
@@ -122,8 +149,9 @@ export default function App(){
      commit([...items,obj]);setSelected(obj.id);activateMode("select","Zona criada e selecionada");
    }else if(draft.type==="freeDraw"){
      if(draft.points.length>=4){
-       const obj={id:uid(),type:"freeDraw",points:draft.points,color:draft.color||drawColor,width:draft.width||drawWidth,visible:true};
-       commit([...items,obj]);setSelected(obj.id);flash("Traço criado • lápis continua ativo");
+       const obj=smartDraw?recognizeStroke(draft.points,draft.color||drawColor,draft.width||drawWidth):null;
+       if(obj){commit([...items,obj]);setSelected(obj.id);flash(obj.type==="smartCircle"?"Círculo reconhecido ✓":"Seta reconhecida ✓")}
+       else{const free={id:uid(),type:"freeDraw",points:draft.points,color:draft.color||drawColor,width:draft.width||drawWidth,visible:true};commit([...items,free]);setSelected(free.id);flash("Desenho livre criado")}
      }
      setDraft(null);
    }
@@ -163,8 +191,9 @@ export default function App(){
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill="#f5f7e9" stroke={active?LIME:"#65747a"} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={16} fill="#f4a51c"/><Text x={-9} y={-9} text="▲" fill="#fff" fontSize={18}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
+  if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
+  if(i.type==="smartCircle")return <Circle key={i.id} x={i.x} y={i.y} radius={i.radius} fill="rgba(0,0,0,0)" stroke={active?"#fff":i.color} strokeWidth={i.width||5} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="freeDraw")return <Line key={i.id} points={i.points} stroke={active?"#ffffff":i.color||"#ffffff"} strokeWidth={i.width||5} lineCap="round" lineJoin="round" draggable={mode==="select"||mode==="move"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>{const dx=e.target.x(),dy=e.target.y();patch(i.id,{points:i.points.map((v,idx)=>v+(idx%2===0?dx:dy))});e.target.position({x:0,y:0})}}/>;
  };
 
@@ -202,6 +231,10 @@ export default function App(){
       <label className="drawWidthLabel">Espessura
         <input type="range" min="2" max="14" step="1" value={drawWidth} onChange={e=>setDrawWidth(Number(e.target.value))}/>
       </label>
+      <button type="button" className={"smartDrawToggle "+(smartDraw?"on":"")} onClick={()=>{setSmartDraw(v=>!v);flash(!smartDraw?"Smart Draw ativado":"Smart Draw desativado")}}>
+        {smartDraw?"Smart Draw: ATIVO":"Smart Draw: DESATIVADO"}
+      </button>
+      {smartDraw&&<div className="smartHint">Solte o dedo/Pencil para reconhecer:<br/><b>reta → seta perfeita</b><br/><b>círculo → círculo perfeito</b></div>}
     </div>}
 
     <Tool active={mode==="arrow"} icon={<MoveRight/>} text="Seta" onClick={()=>activateMode("arrow","Seta ativa • arraste na quadra")}/>
@@ -230,7 +263,7 @@ export default function App(){
         
         
         {items.map(render)}
-        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
+        {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
         {draft?.type==="freeDraw"&&<Line points={draft.points} stroke={draft.color||drawColor} strokeWidth={draft.width||drawWidth} lineCap="round" lineJoin="round"/>}
        </Layer>
