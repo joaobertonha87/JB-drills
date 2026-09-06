@@ -853,3 +853,12 @@ body{color:var(--jb-text)}
 .fundamentoBar{
   border-top:1px solid rgba(84,230,0,.10);
 }
+
+/* ===== V1.51 CLEAN SCENE BUILDER ===== */
+.sceneWorkflow{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(84,230,0,.2);background:linear-gradient(180deg,rgba(84,230,0,.07),rgba(3,13,18,.3));border-radius:12px}
+.sceneWorkflow>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sceneWorkflow strong{font-size:12px;letter-spacing:1.4px;color:#fff}
+.sceneWorkflow span{font-size:11px;color:#9eb0b7;line-height:1.35}
+.createSceneMain{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:10px 14px;border-radius:9px;border:1px solid #54e600;background:#54e600;color:#061014;font-weight:900}
+.createSceneMain svg{width:16px;height:16px}
+@media(max-width:900px){.sceneWorkflow{align-items:flex-start;flex-direction:column}.createSceneMain{width:100%;justify-content:center}}

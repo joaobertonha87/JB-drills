@@ -13,25 +13,25 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:"p-top-left",type:"player",team:"B",side:"top",x:350,y:145,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:"p-top-right",type:"player",team:"B",side:"top",x:650,y:145,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:"p-top-left",type:"player",team:"B",side:"top",x:350,y:118,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:"p-top-right",type:"player",team:"B",side:"top",x:650,y:118,label:"2",name:"Jogador 2",visible:true,scale:100},
  {id:"p-bottom-left",type:"player",team:"A",side:"bottom",x:330,y:410,label:"3",name:"Jogador 3",visible:true,scale:100},
  {id:"p-bottom-right",type:"player",team:"A",side:"bottom",x:670,y:410,label:"4",name:"Jogador 4",visible:true,scale:100}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-exact-premium-v138.jpg"),
+ const court=useAsset("/assets/arena-clean-no-net-v151.jpg"),
  topMale=useAsset("/assets/player_top_male_v142.png"),
  topFemale=useAsset("/assets/player_top_female_v142.png"),
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb150-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb151-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb150-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb151-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -44,9 +44,11 @@ export default function App(){
  const[fundamento,setFundamento]=useState("Saque");
  useEffect(()=>{
   try{
-   Object.keys(localStorage).filter(k=>/^jb1(3[0-9]|4[0-9])-/.test(k)).forEach(k=>localStorage.removeItem(k));
+   Object.keys(localStorage)
+    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb151-"))
+    .forEach(k=>localStorage.removeItem(k));
    if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
-   navigator.serviceWorker?.getRegistrations?.().then(rs=>rs.forEach(r=>r.update()));
+   if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
   }catch{}
  },[]);
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
@@ -66,7 +68,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb150-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb151-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -87,8 +89,8 @@ export default function App(){
  const addPlayer=t=>{
    let n=items.filter(x=>x.type==="player").length+1;
    const slots=[
-     {x:365,y:158,team:"B"},
-     {x:635,y:158,team:"B"},
+     {x:365,y:128,team:"B"},
+     {x:635,y:128,team:"B"},
      {x:315,y:405,team:"A"},
      {x:685,y:405,team:"A"}
    ];
@@ -115,7 +117,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb150-items",JSON.stringify(items));localStorage.setItem("jb150-scenes",JSON.stringify(scenes));localStorage.setItem("jb150-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb151-items",JSON.stringify(items));localStorage.setItem("jb151-scenes",JSON.stringify(scenes));localStorage.setItem("jb151-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -201,9 +203,31 @@ export default function App(){
      setDraft(null);
    }
  };
- const newScene=()=>{const next=[...scenes,{id:uid(),title:`Cena ${scenes.length+1}`,items:clone(items)}];setScenes(next);setScene(next.length-1)};
- const updateScene=()=>{let n=[...scenes],s={id:n[scene]?.id||uid(),title:`Cena ${scene+1}`,items:clone(items)};if(!n.length)n=[s];else n[scene]=s;setScenes(n)};
- const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
+ const createScene=()=>{
+   const current={id:scenes[scene]?.id||uid(),title:scenes[scene]?.title||`Cena ${scene+1}`,items:clone(items)};
+   let base=scenes.length?[...scenes]:[current];
+   if(scenes.length)base[scene]=current;
+   const next={id:uid(),title:`Cena ${base.length+1}`,items:clone(items)};
+   const all=[...base,next];
+   setScenes(all);setScene(all.length-1);setItems(clone(next.items));
+   localStorage.setItem("jb151-scenes",JSON.stringify(all));
+   flash(`Cena ${all.length} criada a partir da anterior ✓`);
+ };
+ const updateScene=()=>{
+   const current={id:scenes[scene]?.id||uid(),title:scenes[scene]?.title||`Cena ${scene+1}`,items:clone(items)};
+   let n=scenes.length?[...scenes]:[current];
+   if(scenes.length)n[scene]=current;
+   setScenes(n);localStorage.setItem("jb151-scenes",JSON.stringify(n));
+   flash(`Cena ${scene+1} atualizada ✓`);
+ };
+ const openScene=i=>{
+   if(!scenes[i])return;
+   const n=[...scenes];
+   if(n[scene])n[scene]={...n[scene],items:clone(items)};
+   setScenes(n);setScene(i);setItems(clone(n[i].items));
+   localStorage.setItem("jb151-scenes",JSON.stringify(n));
+   flash(`Cena ${i+1} aberta`);
+ };
  const sprite=i=>{
   if(i.type==="coach") return coachImg;
   const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
@@ -219,14 +243,14 @@ export default function App(){
 
    if(i.type==="coach"){
      const sc=(i.scale||100)/100; const cw=104*sc,ch=184*sc;
-     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
        {im&&<KImage image={im} x={-cw/2} y={-ch+52} width={cw} height={ch}/>}
      </Group>
    }
 
    const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
    const sc=(i.scale||100)/100; const sw=(isTop?76:104)*sc, sh=(isTop?112:154)*sc;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
        {/* Racket is drawn separately so it can never disappear with sprite masking. */}
@@ -234,11 +258,11 @@ export default function App(){
    </Group>
   }
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill={i.color||"#f4f72b"} stroke={active?"#ffffff":"#182024"} shadowColor="#000" shadowBlur={6} shadowOpacity={.35} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
+  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="step"){
    const r=i.size||30,stroke=active?"#ffffff":"#061014",fill=i.color||LIME;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Circle radius={r} fill="#061014" opacity={.30}/>
      <Circle radius={r-3} fill={fill} stroke={stroke} strokeWidth={active?4:3} shadowColor="#000" shadowBlur={10} shadowOpacity={.35}/>
      <Circle radius={r-8} fill="#071318" opacity={.92}/>
@@ -350,13 +374,13 @@ export default function App(){
 
         {/* Uma única rede funcional em primeiro plano sobre os jogadores do fundo. */}
         <Group listening={false}>
-          <Rect x={205} y={218} width={590} height={72} fill="rgba(8,13,14,.10)" stroke="#151b1d" strokeWidth={5}/>
-          {Array.from({length:34}).map((_,k)=><Line key={"nv"+k} points={[210+k*17.2,222,210+k*17.2,286]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
-          {Array.from({length:8}).map((_,k)=><Line key={"nh"+k} points={[208,224+k*8.2,792,224+k*8.2]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
-          <Rect x={195} y={207} width={24} height={96} cornerRadius={4} fill="#11191b"/>
-          <Rect x={781} y={207} width={24} height={96} cornerRadius={4} fill="#11191b"/>
-          <Text x={198} y={242} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
-          <Text x={784} y={242} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
+          <Rect x={205} y={205} width={590} height={88} fill="rgba(8,13,14,.05)" stroke="#111719" strokeWidth={5}/>
+          {Array.from({length:34}).map((_,k)=><Line key={"nv"+k} points={[210+k*17.2,210,210+k*17.2,289]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
+          {Array.from({length:8}).map((_,k)=><Line key={"nh"+k} points={[208,212+k*10.5,792,212+k*10.5]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
+          <Rect x={195} y={193} width={24} height={112} cornerRadius={4} fill="#11191b"/>
+          <Rect x={781} y={193} width={24} height={112} cornerRadius={4} fill="#11191b"/>
+          <Text x={198} y={236} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
+          <Text x={784} y={236} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
         </Group>
 
         {items.filter(i=>(i.type==="player"||i.type==="coach") && (i.side||((i.y<COURT_H/2)?"top":"bottom"))!=="top").map(render)}
@@ -430,14 +454,7 @@ export default function App(){
      <input type="range" min="2" max="14" step="1" value={sel.width||5} onChange={e=>patch(sel.id,{width:Number(e.target.value)})}/>
    </label>
  </>:(sel.type==="player"||sel.type==="coach")?<>
-   <label>Direção do corpo
-     <div className="orientationButtons">
-       <button type="button" className={(sel.facing||"down")==="down"?"chosen":""} onClick={()=>patch(sel.id,{facing:"down"})}>↓ Baixo</button>
-       <button type="button" className={sel.facing==="up"?"chosen":""} onClick={()=>patch(sel.id,{facing:"up"})}>↑ Cima</button>
-       <button type="button" className={sel.facing==="left"?"chosen":""} onClick={()=>patch(sel.id,{facing:"left"})}>← Esquerda</button>
-       <button type="button" className={sel.facing==="right"?"chosen":""} onClick={()=>patch(sel.id,{facing:"right"})}>Direita →</button>
-     </div>
-   </label>
+   
  </>:<label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label>}
  {sel&&(sel.type==="player"||sel.type==="coach")&&
  <label>Tamanho: {sel.scale||100}%
@@ -449,8 +466,12 @@ export default function App(){
    <section className="info panel"><h3>INFORMAÇÕES DA TÁTICA</h3><label>Nome<input value={title} onChange={e=>setTitle(e.target.value)}/></label><label>Categoria<select value={category} onChange={e=>setCategory(e.target.value)}><option>Ofensiva</option><option>Defensiva</option><option>Construção</option><option>Transição</option></select></label><label>Nível<select value={level} onChange={e=>setLevel(e.target.value)}><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></label><label>Descrição<textarea value={desc} onChange={e=>setDesc(e.target.value)}/></label></section>
 
    <section className="timeline panel">
+    <div className="sceneWorkflow">
+      <div><strong>PASSO A PASSO DO TREINO</strong><span>Monte a Cena 1, clique em Criar cena e continue a jogada na Cena 2, Cena 3...</span></div>
+      <button type="button" className="createSceneMain" onClick={createScene}><Plus/>Criar cena</button>
+    </div>
     <div className="playbar"><button className="play" onClick={()=>setPlaying(!playing)}>{playing?<StopSquare/>:<Play/>}</button><span>1.0x</span><div className="track"><i style={{width:`${progress}%`}}></i><b style={{left:`${progress}%`}}></b></div><small>00:00 / 00:10</small></div>
-    <div className="scenes">{(scenes.length?scenes:[{id:"current",items}]).map((s,i)=><button className={"thumb "+(i===scene?"chosen":"")} key={s.id} onClick={()=>s.id!=="current"&&openScene(i)}><em>{i+1}</em><div></div><span>{i+1}</span></button>)}<button className="addScene" onClick={newScene}><Plus/><span>Adicionar cena</span></button></div>
+    <div className="scenes">{(scenes.length?scenes:[{id:"current",items}]).map((s,i)=><button className={"thumb "+(i===scene?"chosen":"")} key={s.id} onClick={()=>s.id!=="current"&&openScene(i)}><em>{i+1}</em><div></div><span>{i+1}</span></button>)}<button className="addScene" onClick={createScene}><Plus/><span>Criar cena</span></button></div>
     <button className="updateScene" onClick={updateScene}>Atualizar cena atual</button>
    </section>
 
