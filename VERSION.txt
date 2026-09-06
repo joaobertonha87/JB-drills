@@ -1,10 +1,9 @@
-JB Tactics V1.11 — FLAT SAND + ARROW COLORS
+JB Tactics V1.12 — BAREFOOT 3D
 
-Correções:
-- Areia em 2D limpa, sem textura pesada.
-- Quadra mantém somente areia, linhas e uma rede.
-- Paleta rápida de cores para setas.
-- A cor escolhida passa a ser usada nas novas setas.
-- Ao selecionar uma seta já criada, mudar a cor altera apenas aquela seta.
-- A cor de cada seta é salva individualmente.
-- A seleção de outra seta mostra e mantém a cor própria dela.
+Atualizações:
+- Jogadores refeitos com visual 3D, corpo inteiro, raquete e pés descalços.
+- Professor 3D descalço com raquete e cesto de bolas integrado.
+- Removidas todas as bases luminosas sob os pés.
+- Mantida numeração separada e editável pelo JB Tactics.
+- Mantida areia 2D limpa.
+- Mantidas cores independentes e editáveis para cada seta.
