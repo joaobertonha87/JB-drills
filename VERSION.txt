@@ -1,13 +1,11 @@
-JB Tactics V1.20 — IPAD READY
+JB Tactics V1.21 — IPAD SCROLL + SCALE
 
-Principais correções para iPad:
-- Stage migrado para Pointer Events (dedo, Apple Pencil e mouse no mesmo fluxo).
-- Canvas com touch-action correto para desenhar e arrastar sem conflito com Safari.
-- Botões com área mínima de toque de 44px.
-- Inputs em 16px para impedir zoom automático do Safari.
-- Layout específico para iPad landscape e portrait.
-- Painel de propriedades e visualização não desaparecem mais no iPad.
-- ResizeObserver recalcula a quadra ao girar o iPad.
-- Exportar PNG tem fallback específico para iPad.
-- Save usa localStorage consistente na V1.20.
-- Botões ainda não implementados aparecem desativados em vez de parecerem quebrados.
+Ajustes:
+- Menu lateral esquerdo com rolagem vertical independente.
+- Rolar o menu não desloca a quadra.
+- Comportamento otimizado para Safari/iPad com overscroll containment.
+- Barra lateral sticky em landscape.
+- Barra lateral com área de rolagem própria em portrait.
+- Jogadores reduzidos para aproximadamente 75% do tamanho anterior.
+- Professor e cesto reduzidos proporcionalmente.
+- Posições iniciais ajustadas para melhor proporção com a quadra.
