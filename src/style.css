@@ -830,3 +830,9 @@ body{color:var(--jb-text)}
 .left{background:linear-gradient(180deg,#06151c,#041017)}
 .top{background:linear-gradient(180deg,#031017,#02080c)}
 .fundamentoBar{margin-top:8px}
+
+/* ===== V1.37 — REALISTIC 3D ARENA ===== */
+.center.view3d .courtBox>div{
+  box-shadow:0 30px 80px rgba(0,0,0,.62),0 0 0 1px rgba(118,255,0,.10);
+}
+.center.view3d .courtBox{background:#04090b}

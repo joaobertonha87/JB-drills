@@ -22,12 +22,12 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/premium-court-3d.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb136-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/arena-3d-realistic-v137.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb137-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb136-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb137-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -55,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb136-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb137-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -96,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb136-items",JSON.stringify(items));localStorage.setItem("jb136-scenes",JSON.stringify(scenes));localStorage.setItem("jb136-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb137-items",JSON.stringify(items));localStorage.setItem("jb137-scenes",JSON.stringify(scenes));localStorage.setItem("jb137-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -323,37 +323,14 @@ export default function App(){
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
-        {/* Quadra premium vetorial: não depende de asset externo */}
-        <Rect x={0} y={0} width={W} height={COURT_H}
-          fillLinearGradientStartPoint={{x:0,y:0}}
-          fillLinearGradientEndPoint={{x:0,y:COURT_H}}
-          fillLinearGradientColorStops={[0,"#b67c3e",0.10,"#d5a05c",0.48,"#e2b873",1,"#c98e50"]}/>
-        {/* iluminação quente da arena */}
-        <Rect x={18} y={67} width={964} height={12} fill="#ffc45c" opacity={.28} shadowColor="#ffc45c" shadowBlur={24}/>
-        {/* vasos e plantas decorativas estilizadas */}
-        <Group x={42} y={73}>
-          <Rect x={0} y={22} width={26} height={32} cornerRadius={6} fill="#f3eee1"/>
-          <Line points={[13,24,4,-6,13,10,20,-12,17,13,34,-4,20,19,42,7]} stroke="#294f2a" strokeWidth={6} lineCap="round" lineJoin="round"/>
-        </Group>
-        <Group x={932} y={73}>
-          <Rect x={0} y={22} width={26} height={32} cornerRadius={6} fill="#f3eee1"/>
-          <Line points={[13,24,4,-6,13,10,20,-12,17,13,34,-4,20,19,42,7]} stroke="#294f2a" strokeWidth={6} lineCap="round" lineJoin="round"/>
-        </Group>
-        <Rect x={0} y={0} width={W} height={64} fill="#071014"/>
-        <Rect x={0} y={62} width={W} height={3} fill="#76ff00" opacity={.78}/>
-        <Text x={82} y={18} text="JB" fill="#76ff00" fontSize={26} fontStyle="bold italic"/>
-        <Text x={125} y={20} text="TACTICS" fill="#ffffff" fontSize={16} fontStyle="bold"/>
-        <Text x={125} y={39} text="BEACH TENNIS" fill="#76ff00" fontSize={7} letterSpacing={2}/>
-        <Text x={363} y={24} width={274} align="center" text="PLANEJE  |  TREINE  |  EVOLUA" fill="#76ff00" fontSize={11} letterSpacing={3}/>
-        <Text x={790} y={18} text="JB" fill="#76ff00" fontSize={26} fontStyle="bold italic"/>
-        <Text x={833} y={20} text="TACTICS" fill="#ffffff" fontSize={16} fontStyle="bold"/>
-        <Text x={833} y={39} text="BEACH TENNIS" fill="#76ff00" fontSize={7} letterSpacing={2}/>
+        {/* Arena 3D realista baseada no visual aprovado */}
+        {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
 
-        <Line points={[52,102,948,102,972,485,28,485,52,102]}
-          stroke="#6a4f31" strokeWidth={13} opacity={.22} closed/>
+        {/* Linhas oficiais mantidas como camada limpa sobre a areia realista */}
         <Line points={[78,112,922,112,952,472,48,472,78,112]}
-          stroke="#ffffff" strokeWidth={6} closed lineJoin="round" opacity={.98}/>
+          stroke="#ffffff" strokeWidth={5} closed lineJoin="round" opacity={.96}/>
 
+        {/* Rede vertical premium e interativa visualmente integrada */}
         <Rect x={488} y={88} width={24} height={402} fill="#091013" shadowColor="#000" shadowBlur={10} shadowOpacity={.48}/>
         <Rect x={496} y={94} width={8} height={390} fill="#394348"/>
         {Array.from({length:29}).map((_,idx)=><Line key={`net-${idx}`} points={[491,103+idx*13,509,103+idx*13]} stroke="#cbd0d1" strokeWidth={1} opacity={.48}/>)}
@@ -361,8 +338,7 @@ export default function App(){
         <Text x={489} y={85} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
         <Rect x={483} y={476} width={34} height={22} cornerRadius={5} fill="#080d0f" stroke="#27383e" strokeWidth={2}/>
         <Text x={489} y={480} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
-        
-        
+
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}

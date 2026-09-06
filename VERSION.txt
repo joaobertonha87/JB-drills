@@ -1,14 +1,9 @@
-JB Tactics V1.36 — APPROVED PREMIUM REFERENCE
+JB Tactics V1.37 — REALISTIC 3D ARENA
 
-- Evolução visual baseada no layout premium aprovado.
-- Removida a faixa duplicada JB Tactics / Planeje | Treine | Evolua.
-- Mantida somente a identidade integrada à arena.
-- Quadra com areia mais quente e premium.
-- Iluminação ambiente adicionada.
-- Plantas/vasos decorativos adicionados aos cantos superiores.
-- Branding JB Tactics integrado à parede da arena.
-- Rede vertical premium mantida.
-- Jogadores e professor continuam interativos.
-- Legenda das cores permanece abaixo da quadra e faz parte da exportação.
-- Seletor de cores para bola e cone mantido.
-- Smart Draw, passos/números e PWA mantidos.
+- Cenário 3D refeito com base visual realista.
+- Areia fotográfica/texturizada no lugar do preenchimento vetorial simples.
+- Parede premium, iluminação quente e plantas integradas ao cenário.
+- Jogadores e professor continuam como elementos separados e arrastáveis.
+- Nenhum jogador, professor, seta ou número foi incorporado ao fundo.
+- Rede e linhas continuam em camadas funcionais sobre o cenário.
+- Legenda exportável e ferramentas anteriores preservadas.
