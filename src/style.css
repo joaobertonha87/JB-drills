@@ -21,3 +21,35 @@
 .orientationButtons button{border:1px solid #24424d;background:#0b2530;color:#fff;border-radius:7px;padding:9px 6px;font-size:10px;font-weight:800}
 .orientationButtons button.chosen{border-color:#54e600;color:#54e600;background:#12311d}
 .center{overflow:hidden}
+
+/* V1.17 — professor estável + raquetes + fundamento abaixo da quadra */
+.center{padding-bottom:10px}
+.fundamentoBar{
+  max-width:1000px;
+  margin:10px auto 0;
+  min-height:58px;
+  background:#071a22;
+  border:1px solid #173640;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:9px 12px;
+}
+.fundamentoLabel{display:flex;flex-direction:column;gap:2px}
+.fundamentoLabel span{font-size:9px;letter-spacing:.14em;color:#7f929a;font-weight:900}
+.fundamentoLabel strong{font-size:15px;color:#fff}
+.fundamentoBar select{
+  min-width:220px;
+  background:#0c2933;
+  border:1px solid #28505d;
+  color:#fff;
+  border-radius:8px;
+  padding:10px 12px;
+  font-weight:800;
+}
+@media(max-width:850px){
+  .fundamentoBar{align-items:stretch;flex-direction:column}
+  .fundamentoBar select{width:100%;min-width:0}
+}

@@ -1,10 +1,10 @@
-JB Tactics V1.16 — VERTICAL NET COURT
+JB Tactics V1.17 — CLEAN PLAYERS + FUNDAMENTO
 
-- Quadra mantida em formato horizontal.
-- Rede agora fica na vertical, centralizada.
-- Jogadores reposicionados para os dois lados da rede.
-- Jogadores da esquerda iniciam voltados para a direita.
-- Jogadores da direita iniciam voltados para a esquerda.
-- Professor permanece fora da quadra, voltado para os alunos.
-- Mantidos controles de orientação corporal sem virar personagem de ponta cabeça.
-- Mantidas areia 2D, setas coloridas e layout Premium Studio.
+Correções:
+- Jogadores refeitos a partir do design limpo aprovado, sem blocos verdes.
+- Raquete desenhada separadamente no editor para nunca desaparecer.
+- Professor usa a referência completa com raquete + cesto de bolas, sem recorte quebrado.
+- Professor fica fora da quadra, do lado esquerdo.
+- Mantida quadra horizontal com rede vertical.
+- Adicionado seletor de FUNDAMENTO abaixo da quadra, fora do canvas.
+- Fundamentos disponíveis: saque, smash, bandeja, voleios, curta, gancho, anômalo, rainbow, defesa, topspin, slice, drive, flat, swing volley e fast hands.
