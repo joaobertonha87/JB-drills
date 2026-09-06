@@ -1,0 +1,26 @@
+JB Tactics V1.45 — CLEAN BUILD
+
+Clean build criada do zero a partir da versão funcional atual.
+
+Inclui somente:
+- src/main.jsx
+- src/App.jsx
+- src/style.css
+- index.html
+- vite.config.js
+- render.yaml
+- package.json
+- public/PWA icons + manifest + service worker
+- arena premium atual
+- professor atual
+- quatro jogadores humanos atuais
+
+Removidos:
+- quadras antigas
+- assets antigos de jogadores
+- manifests antigos/versionados
+- ícones versionados antigos
+- imagens de referência não usadas
+- arquivos obsoletos acumulados das versões anteriores
+
+Cache do Service Worker reiniciado para V1.45.
