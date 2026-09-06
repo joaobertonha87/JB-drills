@@ -1,8 +1,19 @@
-JB Tactics V1.29 — CURVED ARROW FIX
+JB Tactics V1.30 — PREMIUM STEPS
 
-Correção crítica:
-- O componente Path agora é importado corretamente; isso eliminava o travamento/tela sumindo ao reconhecer seta curva.
-- Setas curvas agora têm proteção contra pontos inválidos.
-- Setas curvas podem ser selecionadas e movidas.
-- Cor e espessura da seta curva podem ser editadas nas propriedades.
-- Mantido reconhecimento Smart Draw de reta, curva e círculo.
+NOVO — PASSO / NÚMERO
+- Botão “Passo / Número” no menu lateral.
+- Cada toque cria automaticamente o próximo passo: 1, 2, 3, 4...
+- Marcadores grandes, circulares e premium para demarcar sequência de jogadas.
+- Marcadores podem ser arrastados livremente pela quadra.
+- Número, cor e tamanho podem ser alterados no painel Propriedades.
+- A sequência continua automaticamente pelo maior número já existente.
+
+VISUAL PREMIUM
+- Layout redesenhado com identidade escura, branco e verde-limão inspirada no JB Play.
+- Painéis mais limpos, cards com bordas discretas e contraste mais forte.
+- Botões ativos com destaque verde-limão.
+- Cabeçalho, navegação, propriedades e ferramentas receberam acabamento mais premium.
+- Otimização mantida para uso em iPad.
+
+CORREÇÃO EXTRA
+- Corrigido preview da ferramenta Seta que ainda possuía referência inválida e poderia causar travamento.
