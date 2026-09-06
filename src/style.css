@@ -809,3 +809,14 @@ body{color:var(--jb-text)}
  .arenaBrand span{font-size:8px;letter-spacing:.15em}
  .studio{grid-template-columns:235px minmax(620px,1fr) 280px}
 }
+
+/* ===== V1.35 — COURT + EXPORT LEGEND FIX ===== */
+.center .courtBox{padding:10px 12px 12px}
+.center .courtBox>div{background:#071116;border-radius:12px;overflow:hidden}
+.center.view3d .courtBox>div{
+  box-shadow:0 26px 70px rgba(0,0,0,.58),0 0 0 1px rgba(118,255,0,.08);
+}
+.colorLegend{display:none!important}
+@media(max-width:1180px){
+  .center .courtBox{padding:8px}
+}

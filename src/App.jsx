@@ -8,7 +8,7 @@ import{
  Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
 }from"lucide-react";
 
-const W=1000,H=520, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
+const W=1000,COURT_H=520,LEGEND_H=104,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
 const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
@@ -23,11 +23,11 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court-3d.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb134-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb135-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb134-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb135-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -55,7 +55,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb134-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb135-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -96,7 +96,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb134-items",JSON.stringify(items));localStorage.setItem("jb134-scenes",JSON.stringify(scenes));localStorage.setItem("jb134-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb135-items",JSON.stringify(items));localStorage.setItem("jb135-scenes",JSON.stringify(scenes));localStorage.setItem("jb135-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -295,12 +295,6 @@ export default function App(){
         {smartDraw?"Smart Draw: ATIVO":"Smart Draw: DESATIVADO"}
       </button>
       {smartDraw&&<div className="smartHint">Solte o dedo/Pencil para reconhecer:<br/><b>reta → seta perfeita</b><br/><b>curva → seta curva perfeita</b><br/><b>círculo → círculo perfeito</b></div>}
-      <div className="colorLegend">
-        <div className="legendTitle">LEGENDA DAS CORES</div>
-        <div><i style={{background:"#f4f72b"}}></i><span><b>Amarelo</b> — trajetória da bola</span></div>
-        <div><i style={{background:"#54e600"}}></i><span><b>Verde</b> — movimentação do aluno</span></div>
-        <div><i style={{background:"#31b7ff"}}></i><span><b>Azul</b> — bola lançada pelo professor</span></div>
-      </div>
     </div>}
 
     <Tool active={mode==="arrow"} icon={<MoveRight/>} text="Seta" onClick={()=>activateMode("arrow","Seta ativa • arraste na quadra")}/>
@@ -332,13 +326,46 @@ export default function App(){
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
-        {court&&<KImage image={court} width={W} height={H}/>}
+        {/* Quadra premium vetorial: não depende de asset externo */}
+        <Rect x={0} y={0} width={W} height={COURT_H}
+          fillLinearGradientStartPoint={{x:0,y:0}}
+          fillLinearGradientEndPoint={{x:0,y:COURT_H}}
+          fillLinearGradientColorStops={[0,"#b9854d",0.12,"#d0a36b",0.55,"#e0bd84",1,"#c9975d"]}/>
+        <Rect x={0} y={0} width={W} height={64} fill="#071014"/>
+        <Rect x={0} y={62} width={W} height={3} fill="#76ff00" opacity={.78}/>
+        <Text x={64} y={20} text="JB TACTICS" fill="#ffffff" fontSize={18} fontStyle="bold"/>
+        <Text x={395} y={22} text="PLANEJE  |  TREINE  |  EVOLUA" fill="#76ff00" fontSize={11} letterSpacing={3}/>
+        <Text x={830} y={20} text="JB TACTICS" fill="#ffffff" fontSize={18} fontStyle="bold"/>
+
+        <Line points={[52,102,948,102,972,485,28,485,52,102]}
+          stroke="#6a4f31" strokeWidth={13} opacity={.22} closed/>
+        <Line points={[78,112,922,112,952,472,48,472,78,112]}
+          stroke="#ffffff" strokeWidth={6} closed lineJoin="round" opacity={.98}/>
+
+        <Rect x={488} y={88} width={24} height={402} fill="#091013" shadowColor="#000" shadowBlur={10} shadowOpacity={.48}/>
+        <Rect x={496} y={94} width={8} height={390} fill="#394348"/>
+        {Array.from({length:29}).map((_,idx)=><Line key={`net-${idx}`} points={[491,103+idx*13,509,103+idx*13]} stroke="#cbd0d1" strokeWidth={1} opacity={.48}/>)}
+        <Rect x={483} y={82} width={34} height={20} cornerRadius={5} fill="#080d0f" stroke="#27383e" strokeWidth={2}/>
+        <Text x={489} y={85} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
+        <Rect x={483} y={476} width={34} height={22} cornerRadius={5} fill="#080d0f" stroke="#27383e" strokeWidth={2}/>
+        <Text x={489} y={480} width={22} align="center" text="JB" fill="#76ff00" fontSize={11} fontStyle="bold"/>
         
         
         {items.map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
         {draft?.type==="freeDraw"&&<Line points={draft.points} stroke={draft.color||drawColor} strokeWidth={draft.width||drawWidth} lineCap="round" lineJoin="round"/>}
+
+        {/* Card de legenda faz parte do canvas e aparece na exportação */}
+        <Rect x={0} y={COURT_H} width={W} height={LEGEND_H} fill="#071116"/>
+        <Rect x={18} y={COURT_H+14} width={964} height={76} cornerRadius={12} fill="#0b1b22" stroke="#203840" strokeWidth={2}/>
+        <Text x={38} y={COURT_H+27} text="LEGENDA DAS CORES" fill="#ffffff" fontSize={12} fontStyle="bold" letterSpacing={2}/>
+        <Circle x={56} y={COURT_H+60} radius={9} fill="#f4f72b"/>
+        <Text x={76} y={COURT_H+52} text="TRAJETÓRIA DA BOLA" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
+        <Circle x={374} y={COURT_H+60} radius={9} fill="#54e600"/>
+        <Text x={394} y={COURT_H+52} text="MOVIMENTAÇÃO DO ALUNO" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
+        <Circle x={721} y={COURT_H+60} radius={9} fill="#31b7ff"/>
+        <Text x={741} y={COURT_H+52} text="BOLA LANÇADA PELO PROFESSOR" fill="#dbe5e8" fontSize={12} fontStyle="bold"/>
        </Layer>
       </Stage>
      </div>
