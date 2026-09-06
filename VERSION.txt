@@ -1,11 +1,13 @@
-JB Tactics V1.18 — 3D CLEAN
+JB Tactics V1.20 — IPAD READY
 
-- Mantém o layout funcional da V1.17.
-- Personagens sem números sobre o corpo.
-- Jogadores da direita iniciam voltados para a esquerda.
-- Jogadores da esquerda iniciam voltados para a direita.
-- Jogadores e professor no conceito visual descalço.
-- Raquetes permanecem visíveis no editor.
-- Professor permanece com área própria e cesto de bolas.
-- Seletor de fundamento continua abaixo da quadra.
-- Quadra horizontal com rede vertical.
+Principais correções para iPad:
+- Stage migrado para Pointer Events (dedo, Apple Pencil e mouse no mesmo fluxo).
+- Canvas com touch-action correto para desenhar e arrastar sem conflito com Safari.
+- Botões com área mínima de toque de 44px.
+- Inputs em 16px para impedir zoom automático do Safari.
+- Layout específico para iPad landscape e portrait.
+- Painel de propriedades e visualização não desaparecem mais no iPad.
+- ResizeObserver recalcula a quadra ao girar o iPad.
+- Exportar PNG tem fallback específico para iPad.
+- Save usa localStorage consistente na V1.20.
+- Botões ainda não implementados aparecem desativados em vez de parecerem quebrados.
