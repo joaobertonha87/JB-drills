@@ -1,6 +1,6 @@
 
 import React,{useEffect,useMemo,useRef,useState}from"react";
-import{Stage,Layer,Image as KImage,Circle,Text,Group,Arrow,Rect,Line}from"react-konva";
+import{Stage,Layer,Image as KImage,Circle,Text,Group,Arrow,Rect,Line,Path}from"react-konva";
 import{
  Grid2X2,ClipboardList,Library,Users,Settings,Cloud,Save,Share2,UserRound,GraduationCap,
  CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,RotateCw,Trash2,Undo2,Redo2,
@@ -23,11 +23,11 @@ const starter=()=>[
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_left.png"),back=useAsset("/assets/player_right.png"),coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb128-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb129-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb128-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb129-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -53,7 +53,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb128-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb129-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -86,7 +86,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb128-items",JSON.stringify(items));localStorage.setItem("jb128-scenes",JSON.stringify(scenes));localStorage.setItem("jb128-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb129-items",JSON.stringify(items));localStorage.setItem("jb129-scenes",JSON.stringify(scenes));localStorage.setItem("jb129-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -210,17 +210,22 @@ export default function App(){
   if(i.type==="arrow"&&showPath)return <Arrow key={i.id} points={i.points} stroke={active?"#fff":i.color||YELLOW} fill={active?"#fff":i.color||YELLOW} strokeWidth={i.width||6} dash={i.smart?[]:[13,8]} pointerLength={17} pointerWidth={17} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="zone"&&showZones)return <Rect key={i.id} x={i.x} y={i.y} width={i.w} height={i.h} fill="rgba(84,230,0,.12)" stroke={active?"#fff":i.color||LIME} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>;
   if(i.type==="curvedArrow"){
+   if(!Array.isArray(i.points)||i.points.length<6)return null;
    const [x1,y1,cx,cy,x2,y2]=i.points;
+   const stroke=active?"#fff":(i.color||drawColor||"#fff");
    const d=`M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
    const ang=Math.atan2(y2-cy,x2-cx), ah=16+(i.width||5);
    const a1x=x2-ah*Math.cos(ang-.55),a1y=y2-ah*Math.sin(ang-.55);
    const a2x=x2-ah*Math.cos(ang+.55),a2y=y2-ah*Math.sin(ang+.55);
-   return <React.Fragment key={i.id}>
-    <Path data={d} stroke={active?"#fff":i.color} strokeWidth={i.width||5} fill="transparent" lineCap="round" lineJoin="round"
-      onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>
-    <Line points={[a1x,a1y,x2,y2,a2x,a2y]} stroke={active?"#fff":i.color} strokeWidth={i.width||5} lineCap="round" lineJoin="round"
-      onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}/>
-   </React.Fragment>;
+   return <Group key={i.id} draggable={mode==="select"||mode==="move"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)}
+     onDragEnd={e=>{
+       const dx=e.target.x(),dy=e.target.y();
+       patch(i.id,{points:i.points.map((v,idx)=>v+(idx%2===0?dx:dy))});
+       e.target.position({x:0,y:0});
+     }}>
+     <Path data={d} stroke={stroke} strokeWidth={i.width||5} fill="transparent" lineCap="round" lineJoin="round" hitStrokeWidth={22}/>
+     <Line points={[a1x,a1y,x2,y2,a2x,a2y]} stroke={stroke} strokeWidth={i.width||5} lineCap="round" lineJoin="round" hitStrokeWidth={22}/>
+   </Group>;
   }
   if(i.type==="smartCircle")return <Circle key={i.id} x={i.x} y={i.y} radius={i.radius} fill="rgba(0,0,0,0)" stroke={active?"#fff":i.color} strokeWidth={i.width||5} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="freeDraw")return <Line key={i.id} points={i.points} stroke={active?"#ffffff":i.color||"#ffffff"} strokeWidth={i.width||5} lineCap="round" lineJoin="round" draggable={mode==="select"||mode==="move"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>{const dx=e.target.x(),dy=e.target.y();patch(i.id,{points:i.points.map((v,idx)=>v+(idx%2===0?dx:dy))});e.target.position({x:0,y:0})}}/>;
