@@ -1,19 +1,9 @@
-JB Tactics V1.30 — PREMIUM STEPS
+JB Tactics V1.31 — PWA / APP ICON
 
-NOVO — PASSO / NÚMERO
-- Botão “Passo / Número” no menu lateral.
-- Cada toque cria automaticamente o próximo passo: 1, 2, 3, 4...
-- Marcadores grandes, circulares e premium para demarcar sequência de jogadas.
-- Marcadores podem ser arrastados livremente pela quadra.
-- Número, cor e tamanho podem ser alterados no painel Propriedades.
-- A sequência continua automaticamente pelo maior número já existente.
-
-VISUAL PREMIUM
-- Layout redesenhado com identidade escura, branco e verde-limão inspirada no JB Play.
-- Painéis mais limpos, cards com bordas discretas e contraste mais forte.
-- Botões ativos com destaque verde-limão.
-- Cabeçalho, navegação, propriedades e ferramentas receberam acabamento mais premium.
-- Otimização mantida para uso em iPad.
-
-CORREÇÃO EXTRA
-- Corrigido preview da ferramenta Seta que ainda possuía referência inválida e poderia causar travamento.
+- Ícone oficial JB Tactics na Tela de Início.
+- apple-touch-icon para iPhone/iPad.
+- Ícones PWA 192x192 e 512x512.
+- manifest.webmanifest configurado como JB Tactics.
+- Modo standalone para abrir como aplicativo.
+- Tema escuro no padrão JB.
+- Service Worker para instalação/cache do app shell.
