@@ -8,26 +8,26 @@ import{
  Copy,ImageDown,PanelTop,FolderOpen
 }from"lucide-react";
 
-const W=900,H=600, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
+const W=1000,H=520, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
 const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:uid(),type:"player",team:"A",x:330,y:430,label:"1",name:"Jogador 1",sprite:"back",rotation:0,visible:true},
- {id:uid(),type:"player",team:"A",x:595,y:430,label:"2",name:"Jogador 2",sprite:"back",rotation:0,visible:true},
- {id:uid(),type:"player",team:"B",x:340,y:225,label:"3",name:"Jogador 3",sprite:"front",rotation:0,visible:true},
- {id:uid(),type:"player",team:"B",x:585,y:225,label:"4",name:"Jogador 4",sprite:"front",rotation:0,visible:true},
- {id:uid(),type:"coach",x:120,y:410,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}
+ {id:uid(),type:"player",team:"A",x:330,y:390,label:"1",name:"Jogador 1",sprite:"back",facing:"up",visible:true},
+ {id:uid(),type:"player",team:"A",x:680,y:390,label:"2",name:"Jogador 2",sprite:"back",facing:"up",visible:true},
+ {id:uid(),type:"player",team:"B",x:330,y:155,label:"3",name:"Jogador 3",sprite:"front",facing:"down",visible:true},
+ {id:uid(),type:"player",team:"B",x:680,y:155,label:"4",name:"Jogador 4",sprite:"front",facing:"down",visible:true},
+ {id:uid(),type:"coach",x:115,y:330,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
  const court=useAsset("/assets/premium-court.jpg"),front=useAsset("/assets/player_front.png"),back=useAsset("/assets/player_back.png"),coachImg=useAsset("/assets/coach.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb114-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb115-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb114-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb115-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(true),[showBrand,setShowBrand]=useState(true);
  const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -39,12 +39,12 @@ export default function App(){
  const patch=(id,p)=>setItems(v=>v.map(x=>x.id===id?{...x,...p}:x));
  const undo=()=>{if(!history.length)return;setFuture(f=>[clone(items),...f]);setItems(history.at(-1));setHistory(h=>h.slice(0,-1))};
  const redo=()=>{if(!future.length)return;setHistory(h=>[...h,clone(items)]);setItems(future[0]);setFuture(f=>f.slice(1))};
- const addPlayer=t=>{let n=items.filter(x=>x.type==="player").length+1;commit([...items,{id:uid(),type:"player",team:t,x:450,y:t==="A"?445:230,label:String(n),name:`Jogador ${n}`,sprite:t==="A"?"back":"front",visible:true}])};
+ const addPlayer=t=>{let n=items.filter(x=>x.type==="player").length+1;commit([...items,{id:uid(),type:"player",team:t,x:450,y:t==="A"?445:230,label:String(n),name:`Jogador ${n}`,sprite:t==="A"?"back":"front",facing:t==="A"?"up":"down",visible:true}])};
  const addCoach=()=>commit([...items,{id:uid(),type:"coach",x:115,y:410,label:"P",name:"Professor",sprite:"coach",rotation:0,visible:true}]);
  const addSimple=t=>commit([...items,{id:uid(),type:t,x:450,y:350,name:t==="ball"?"Bola":t==="cone"?"Cone":"Texto",text:t==="text"?"Observação":"",visible:true}]);
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null)}};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb114-items",JSON.stringify(items));localStorage.setItem("jb114-scenes",JSON.stringify(scenes));localStorage.setItem("jb114-meta",JSON.stringify({title,category,level,desc}))};
+ const save=()=>{localStorage.setItem("jb115-items",JSON.stringify(items));localStorage.setItem("jb115-scenes",JSON.stringify(scenes));localStorage.setItem("jb115-meta",JSON.stringify({title,category,level,desc}))};
  const exportPNG=()=>{const a=document.createElement("a");a.href=stageRef.current.toDataURL({pixelRatio:2});a.download=title.replace(/\W+/g,"_")+".png";a.click()};
  const point=()=>{const p=stageRef.current?.getPointerPosition();return p?{x:p.x/scale,y:p.y/scale}:null};
  const down=()=>{if(!["arrow","zone"].includes(mode))return;const p=point();if(!p)return;if(mode==="arrow")setDraft({type:"arrow",points:[p.x,p.y,p.x,p.y],color:arrowColor});else setDraft({type:"zone",x:p.x,y:p.y,w:0,h:0})};
@@ -53,15 +53,22 @@ export default function App(){
  const newScene=()=>{const next=[...scenes,{id:uid(),title:`Cena ${scenes.length+1}`,items:clone(items)}];setScenes(next);setScene(next.length-1)};
  const updateScene=()=>{let n=[...scenes],s={id:n[scene]?.id||uid(),title:`Cena ${scene+1}`,items:clone(items)};if(!n.length)n=[s];else n[scene]=s;setScenes(n)};
  const openScene=i=>{if(scenes[i]){setScene(i);setItems(clone(scenes[i].items))}};
- const sprite=i=>i.sprite==="front"?front:i.sprite==="back"?back:coachImg;
+ const sprite=i=>{
+  if(i.type==="coach") return coachImg;
+  if(i.facing==="down") return front;
+  if(i.facing==="up") return back;
+  return front;
+};
 
  const render=i=>{
   if(i.visible===false)return null;const active=i.id===selected;
   if(i.type==="player"||i.type==="coach"){
-   const im=sprite(i),sw=i.type==="coach"?88:76,sh=i.type==="coach"?148:136,col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
+   const im=sprite(i),sw=i.type==="coach"?116:82,sh=i.type==="coach"?170:138,col=i.type==="coach"?"#fff":i.team==="A"?LIME:"#14aee8";
+   const face=i.facing|| (i.team==="A"?"up":"down");
+   const mirror=face==="left"?-1:1;
    return <Group key={i.id} x={i.x} y={i.y} draggable={mode==="select"} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
-     <Group rotation={i.rotation||0}>
-       {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
+     <Group scaleX={mirror}>
+       {im&&<KImage image={im} x={mirror===-1?sw/2:-sw/2} y={-sh+48} width={sw} height={sh}/>}
      </Group>
      {showNums&&<><Circle x={31} y={-50} radius={16} fill="#14351b" stroke={col} strokeWidth={3}/><Text x={15} y={-57} width={32} align="center" text={i.label} fill="#fff" fontStyle="bold" fontSize={12}/></>}
    </Group>
@@ -92,7 +99,7 @@ export default function App(){
     </div>
     <Tool icon={<Square/>} text="Área / Zona" onClick={()=>setMode("zone")}/><Tool icon={<Type/>} text="Texto" onClick={()=>addSimple("text")}/>
     <h3>FERRAMENTAS</h3>
-    <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>setMode("select")}/><Tool icon={<Move/>} text="Mover" onClick={()=>setMode("select")}/><Tool icon={<RotateCw/>} text="Girar +15°" onClick={()=>{if(sel&&(sel.type==="player"||sel.type==="coach"))patch(sel.id,{rotation:((sel.rotation||0)+15)%360})}}/><Tool icon={<Trash2/>} text="Excluir" onClick={del}/><Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/><Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
+    <Tool active={mode==="select"} icon={<MousePointer2/>} text="Selecionar" onClick={()=>setMode("select")}/><Tool icon={<Move/>} text="Mover" onClick={()=>setMode("select")}/><Tool icon={<RotateCw/>} text="Virar corpo" onClick={()=>{if(sel&&(sel.type==="player"||sel.type==="coach")){const order=["down","right","up","left"];const n=(order.indexOf(sel.facing||"down")+1)%order.length;patch(sel.id,{facing:order[n]})}}}/><Tool icon={<Trash2/>} text="Excluir" onClick={del}/><Tool icon={<Undo2/>} text="Desfazer" onClick={undo}/><Tool icon={<Redo2/>} text="Refazer" onClick={redo}/>
    </aside>
 
    <main className="center">
@@ -125,15 +132,13 @@ export default function App(){
    {["#f4f72b","#54e600","#31b7ff","#ff4d4f","#ffffff","#ff9f1a","#a855f7"].map(c=><button key={c} title={c} className={(sel.color||arrowColor)===c?"picked":""} style={{background:c}} onClick={()=>{setArrowColor(c);patch(sel.id,{color:c})}}></button>)}
  </div>
  </>:(sel.type==="player"||sel.type==="coach")?<>
-   <label>Rotação
-     <div className="rotationButtons">
-       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)-15+360)%360})}>−15°</button>
-       <button type="button" onClick={()=>patch(sel.id,{rotation:0})}>0°</button>
-       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)+15)%360})}>+15°</button>
-       <button type="button" onClick={()=>patch(sel.id,{rotation:((sel.rotation||0)+180)%360})}>Virar</button>
+   <label>Direção do corpo
+     <div className="orientationButtons">
+       <button type="button" className={(sel.facing||"down")==="down"?"chosen":""} onClick={()=>patch(sel.id,{facing:"down"})}>↓ Baixo</button>
+       <button type="button" className={sel.facing==="up"?"chosen":""} onClick={()=>patch(sel.id,{facing:"up"})}>↑ Cima</button>
+       <button type="button" className={sel.facing==="left"?"chosen":""} onClick={()=>patch(sel.id,{facing:"left"})}>← Esquerda</button>
+       <button type="button" className={sel.facing==="right"?"chosen":""} onClick={()=>patch(sel.id,{facing:"right"})}>Direita →</button>
      </div>
-     <input type="range" min="0" max="359" step="1" value={sel.rotation||0} onChange={e=>patch(sel.id,{rotation:Number(e.target.value)})}/>
-     <span className="rotationValue">{Math.round(sel.rotation||0)}°</span>
    </label>
  </>:<label>Cor da base <input type="color" value={sel.color||YELLOW} onChange={e=>patch(sel.id,{color:e.target.value})}/></label>}
  <label>Escala<input type="range" min="70" max="130" defaultValue="100"/></label><button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}

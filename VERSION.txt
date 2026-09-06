@@ -1,8 +1,12 @@
-JB Tactics V1.14 — PLAYER ROTATION
+JB Tactics V1.15 — HORIZONTAL + BODY ORIENTATION
 
-- Botão Girar +15° na barra de ferramentas.
-- Ao selecionar jogador/professor, aparecem controles −15°, 0°, +15° e Virar (180°).
-- Slider permite rotação livre de 0° a 359°.
-- Cada jogador e o professor guardam sua própria rotação.
-- O número do jogador permanece sempre reto/legível enquanto o personagem gira.
-- Removida a base luminosa amarela do render dos personagens.
+- Quadra redesenhada em formato horizontal.
+- Novos sprites limpos extraídos de referência sem manchas verdes.
+- Removidos definitivamente os fundos/artefatos verdes.
+- Sem bases luminosas amarelas.
+- Botão Girar substituído por "Virar corpo".
+- O corpo não é mais rotacionado de ponta-cabeça.
+- Direções disponíveis: baixo, cima, esquerda e direita.
+- Jogadores 3 e 4 iniciam virados para baixo.
+- Jogadores 1 e 2 iniciam virados para cima.
+- Professor inicia virado para a direita.
