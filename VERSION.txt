@@ -1,17 +1,14 @@
-JB Tactics V1.32 — ICON CACHE FIX
+JB Tactics V1.33 — iOS HOME SCREEN ICON FIX
 
-- Novos nomes de arquivo para o ícone, forçando Safari/iOS a baixar a versão nova.
-- apple-touch-icon explícito em 180x180.
-- Manifesto versionado.
-- Ícones PWA 192x192 e 512x512 versionados.
-- Service Worker atualizado para cache v1.32.
-- Headers no Render para evitar cache antigo do ícone/manifest/service worker.
+Correção focada em iPhone/iPad:
+- apple-touch-icon.png no nome exato esperado pelo iOS.
+- apple-touch-icon-precomposed.png incluído.
+- versões 152x152, 167x167 e 180x180 incluídas.
+- favicon.ico e favicon.png incluídos como fallback.
+- Manifesto simplificado com ícones 192 e 512.
+- Service Worker não reutiliza cache antigo de ícones.
+- Headers do Render desabilitam cache para ícone/manifest/service worker.
 
-IMPORTANTE NO IPAD/IPHONE:
-O iOS não atualiza o ícone de um atalho que já está na Tela de Início.
-Depois de publicar a V1.32:
-1. Apague o atalho JB Tactics antigo da Tela de Início.
-2. Abra o endereço novamente no Safari.
-3. Atualize a página uma vez.
-4. Compartilhar > Adicionar à Tela de Início.
-5. Confirme JB Tactics.
+IMPORTANTE:
+Depois do deploy, apague o atalho antigo da Tela de Início.
+Abra o endereço no Safari e adicione novamente.

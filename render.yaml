@@ -7,12 +7,18 @@ services:
     pullRequestPreviewsEnabled: true
 
     headers:
-      - path: /apple-touch-icon-v132.png
+      - path: /apple-touch-icon.png
         name: Cache-Control
-        value: no-store, no-cache, must-revalidate
-      - path: /manifest-v132.webmanifest
+        value: no-cache, no-store, must-revalidate
+      - path: /apple-touch-icon-precomposed.png
         name: Cache-Control
-        value: no-store, no-cache, must-revalidate
+        value: no-cache, no-store, must-revalidate
+      - path: /manifest.webmanifest
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /favicon.ico
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
       - path: /sw.js
         name: Cache-Control
-        value: no-store, no-cache, must-revalidate
+        value: no-cache, no-store, must-revalidate
