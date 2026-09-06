@@ -1,9 +1,7 @@
-JB Tactics V1.40 — OFFICIAL APPROVED LAYOUT
+JB Tactics V1.43 — BEACH TENNIS NET HEIGHT
 
-- Layout premium aprovado mantido como direção visual oficial.
-- Jogadores da parte inferior usam visão de costas e ficam orientados para cima/centro.
-- Jogadores da parte superior usam visão frontal e ficam orientados para baixo/centro.
-- Todos os jogadores usam exatamente a mesma dimensão visual.
-- Orientação troca automaticamente ao atravessar o meio da quadra.
-- Arraste por mouse/toque preservado para jogadores e professor.
-- Cenário, iluminação, areia, plantas, rede e identidade premium preservados.
+- Rede visualmente mais alta, com proporção de Beach Tennis.
+- Postes aumentados para acompanhar a nova altura.
+- Malha redesenhada em camada própria sobre a arena.
+- Jogadores e professor continuam independentes e arrastáveis.
+- Layout premium, iluminação, areia, plantas e posições da V1.42 preservados.
