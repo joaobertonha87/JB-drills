@@ -1,6 +1,11 @@
-JB Tactics V1.53 — CLEAN COURT SOURCE
+JB Tactics V1.54 — SMART PLAY BUILDER — FULL CLEAN REPLACEMENT
 
-- Fundo da quadra reconstruído sem linhas internas antigas.
-- Somente o perímetro oficial é desenhado pelo app.
-- Rede única mantida como camada independente.
-- Cache/estado versionado em jb153-* e asset ?v=153.
+- Build completa para substituir todos os arquivos antigos.
+- Remove do rodapé o Criar Cena e o Play antigos.
+- Novo Criador de Jogadas por texto.
+- Interpreta conectores como “próximo golpe”, “depois”, “em seguida” e “após”.
+- Reconhece fundamentos como Anômalo, Smash, Rainbow, Gancho, Voleios, Curta, Bandeja, Saque e Defesa.
+- Reconhece linha dos 3m/4m/6m, lado direito/esquerdo, recuperação, avanço, professor lançando e cone.
+- Gera uma etapa por jogada com setas de movimentação, trajetória da bola, números e rótulos.
+- Etapas podem ser abertas, editadas, salvas e excluídas.
+- Cache/localStorage versionados em V1.54.

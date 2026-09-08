@@ -862,3 +862,21 @@ body{color:var(--jb-text)}
 .createSceneMain{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:10px 14px;border-radius:9px;border:1px solid #54e600;background:#54e600;color:#061014;font-weight:900}
 .createSceneMain svg{width:16px;height:16px}
 @media(max-width:900px){.sceneWorkflow{align-items:flex-start;flex-direction:column}.createSceneMain{width:100%;justify-content:center}}
+
+/* ===== V1.54 SMART PLAY BUILDER ===== */
+.timeline,.sceneWorkflow,.playbar,.scenes{display:none!important}
+.smartBuilder{padding:14px}
+.smartHead h3{margin:0 0 4px;font-size:12px;letter-spacing:1.25px;color:#fff}
+.smartHead p{margin:0 0 10px;font-size:11px;color:#8fa3aa}
+.playPrompt{width:100%;min-height:92px;resize:vertical;background:#061116;border:1px solid #20343c;border-radius:10px;color:#fff;padding:12px;line-height:1.45;box-sizing:border-box}
+.playPrompt:focus{outline:none;border-color:#54e600;box-shadow:0 0 0 2px rgba(84,230,0,.08)}
+.generatePlay{margin-top:10px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#54e600;color:#061014;border:0;border-radius:10px;padding:12px;font-weight:900}
+.generatePlay svg{width:18px;height:18px}
+.generatedSteps{display:grid;gap:8px;margin-top:12px}
+.stepCard{display:flex;align-items:center;gap:10px;text-align:left;background:#071318;border:1px solid #1c3038;border-radius:10px;padding:9px;color:#fff}
+.stepCard.active{border-color:#54e600;background:rgba(84,230,0,.07)}
+.stepCard>b{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:#54e600;color:#061014}
+.stepCard>span{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.stepCard strong{font-size:12px}.stepCard small{font-size:10px;color:#91a4ab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stepCard>i{display:grid;place-items:center;padding:5px}.stepCard>i svg{width:15px;height:15px}
+.updateStep{border:1px solid #2b434c;background:#0b1b21;color:#fff;border-radius:9px;padding:10px;font-weight:700}

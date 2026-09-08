@@ -4,7 +4,7 @@ import{Stage,Layer,Image as KImage,Circle,Text,Group,Arrow,Rect,Line,Path}from"r
 import{
  Grid2X2,ClipboardList,Library,Users,Settings,Cloud,Save,Share2,UserRound,GraduationCap,
  CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,Trash2,Undo2,Redo2,
- Eye,EyeOff,Play,Square as StopSquare,Plus,Pencil,ChevronLeft,ChevronRight,Download,
+ Eye,EyeOff,Plus,Pencil,ChevronLeft,ChevronRight,Download,
  Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
 }from"lucide-react";
 
@@ -21,19 +21,19 @@ const starter=()=>[
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-sand-clean-v153.jpg?v=153"),
+ const court=useAsset("/assets/arena-sand-clean-v153.jpg?v=154"),
  topMale=useAsset("/assets/player_top_male_v142.png"),
  topFemale=useAsset("/assets/player_top_female_v152.png?v=152"),
  bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
  bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
  coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb153-items"))||starter()}catch{return starter()}});
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb154-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb153-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb154-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
- const[playing,setPlaying]=useState(false),[progress,setProgress]=useState(0),[courtMode,setCourtMode]=useState("full");
+ const[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
  const[drawColor,setDrawColor]=useState("#ffffff");
  const[drawWidth,setDrawWidth]=useState(5);
@@ -42,10 +42,13 @@ export default function App(){
  const[viewStyle,setViewStyle]=useState("3d");
  const[toolFeedback,setToolFeedback]=useState("Selecionar ativo");
  const[fundamento,setFundamento]=useState("Saque");
+ const[playText,setPlayText]=useState("");
+ const[steps,setSteps]=useState([]);
+ const[stepIndex,setStepIndex]=useState(0);
  useEffect(()=>{
   try{
    Object.keys(localStorage)
-    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb153-"))
+    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb154-"))
     .forEach(k=>localStorage.removeItem(k));
    if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
@@ -68,7 +71,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb153-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb154-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -78,7 +81,6 @@ export default function App(){
     }
   }catch{}
  },[]);
- useEffect(()=>{if(!playing)return;const t=setInterval(()=>setProgress(p=>p>=100?(setPlaying(false),0):p+1),100);return()=>clearInterval(t)},[playing]);
  const sel=useMemo(()=>items.find(x=>x.id===selected),[items,selected]);
  const activateMode=(next,label)=>{setMode(next);setDraft(null);setToolFeedback(label)};
  const flash=(label)=>setToolFeedback(label);
@@ -117,7 +119,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb153-items",JSON.stringify(items));localStorage.setItem("jb153-scenes",JSON.stringify(scenes));localStorage.setItem("jb153-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb154-items",JSON.stringify(items));localStorage.setItem("jb154-scenes",JSON.stringify(scenes));localStorage.setItem("jb154-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -203,30 +205,83 @@ export default function App(){
      setDraft(null);
    }
  };
- const createScene=()=>{
-   const current={id:scenes[scene]?.id||uid(),title:scenes[scene]?.title||`Cena ${scene+1}`,items:clone(items)};
-   let base=scenes.length?[...scenes]:[current];
-   if(scenes.length)base[scene]=current;
-   const next={id:uid(),title:`Cena ${base.length+1}`,items:clone(items)};
-   const all=[...base,next];
-   setScenes(all);setScene(all.length-1);setItems(clone(next.items));
-   localStorage.setItem("jb153-scenes",JSON.stringify(all));
-   flash(`Cena ${all.length} criada a partir da anterior ✓`);
+ const splitPlayText=text=>{
+   const normalized=text.replace(/\r/g," ").replace(/\n+/g," ").trim();
+   if(!normalized)return[];
+   return normalized
+    .split(/(?:\.\s+|;\s*|\bpr[oó]ximo golpe\b|\bem seguida\b|\bdepois\b|\bap[oó]s isso\b|\bpor [uú]ltimo\b)/i)
+    .map(x=>x.trim()).filter(x=>x.length>8);
  };
- const updateScene=()=>{
-   const current={id:scenes[scene]?.id||uid(),title:scenes[scene]?.title||`Cena ${scene+1}`,items:clone(items)};
-   let n=scenes.length?[...scenes]:[current];
-   if(scenes.length)n[scene]=current;
-   setScenes(n);localStorage.setItem("jb153-scenes",JSON.stringify(n));
-   flash(`Cena ${scene+1} atualizada ✓`);
+ const detectFundamento=t=>{
+   const defs=[["Voleio Anômalo",/an[oô]mal/i],["Rainbow",/rainbow/i],["Smash",/smash/i],["Gancho",/gancho/i],
+    ["Voleio FH",/voleio.*(?:direita|fh|forehand)/i],["Voleio BH",/voleio.*(?:esquerda|bh|backhand)/i],
+    ["Curta",/curta/i],["Bandeja",/bandeja/i],["Saque",/saque/i],["Defesa",/defesa/i]];
+   return defs.find(([,r])=>r.test(t))?.[0]||"Jogada";
  };
- const openScene=i=>{
-   if(!scenes[i])return;
-   const n=[...scenes];
-   if(n[scene])n[scene]={...n[scene],items:clone(items)};
-   setScenes(n);setScene(i);setItems(clone(n[i].items));
-   localStorage.setItem("jb153-scenes",JSON.stringify(n));
-   flash(`Cena ${i+1} aberta`);
+ const lineY=m=>Math.max(75,Math.min(COURT_H-65,COURT_H-(m/8)*(COURT_H-120)));
+ const buildStep=(text,idx,previous)=>{
+   const base=clone(previous||starter());
+   const f=detectFundamento(text);
+   const right=/lado direito|direita da quadra/i.test(text),left=/lado esquerdo|esquerda da quadra/i.test(text);
+   const meter=Number(text.match(/linha (?:dos?|de)?\s*(\d)\s*m/i)?.[1]||0);
+   let player=base.find(x=>x.type==="player"&&(x.side==="bottom"||x.y>COURT_H/2))||base.find(x=>x.type==="player");
+   if(player){
+     const from={x:player.x,y:player.y};
+     let tx=right?690:left?310:player.x, ty=meter?lineY(meter):Math.max(280,player.y-55);
+     if(/recuper|linha de base/i.test(text))ty=lineY(meter||3);
+     if(/avan[cç]/i.test(text))ty=Math.max(245,ty-35);
+     player.x=tx;player.y=ty;player.side=ty<COURT_H/2?"top":"bottom";
+     base.push({id:uid(),type:"arrow",points:[from.x,from.y,tx,ty],color:LIME,width:6,visible:true,name:"Movimentação"});
+   }
+   if(/professor.*lan[cç]|lan[cç].*professor/i.test(text)){
+     let coach=base.find(x=>x.type==="coach");
+     if(!coach){coach={id:uid(),type:"coach",x:92,y:335,name:"Professor",visible:true,scale:100};base.push(coach)}
+     const target=player||{x:420,y:320};
+     base.push({id:uid(),type:"arrow",points:[coach.x+25,coach.y-40,target.x,target.y-25],color:BLUE,width:6,visible:true,name:"Bola lançada"});
+     base.push({id:uid(),type:"ball",x:target.x,y:target.y-25,color:YELLOW,visible:true,name:"Bola"});
+   }
+   if(/cone/i.test(text)){
+     const cone={id:uid(),type:"cone",x:500,y:330,color:"#ff9f1a",visible:true,name:"Cone central",scale:100};base.push(cone);
+     if(player&&/dar a volta|contorn/i.test(text)){
+       base.push({id:uid(),type:"curvedArrow",points:[player.x,player.y,500,390,left?310:690,player.y-40],color:LIME,width:6,visible:true,name:"Contorno do cone"});
+     }
+   }
+   if(player){
+     const endX=right?850:left?150:(player.x<500?180:820);
+     const high=/rainbow|lob|bola alta/i.test(text);
+     base.push({id:uid(),type:high?"curvedArrow":"arrow",
+       points:high?[player.x,player.y-35,(player.x+endX)/2,Math.max(70,player.y-150),endX,Math.max(100,player.y-80)]:[player.x,player.y-35,endX,Math.max(100,player.y-70)],
+       color:YELLOW,width:6,visible:true,name:`Trajetória — ${f}`});
+     base.push({id:uid(),type:"step",x:player.x+35,y:player.y-55,number:idx+1,name:`Etapa ${idx+1}`,color:LIME,size:30,visible:true});
+     base.push({id:uid(),type:"text",x:Math.max(30,player.x-90),y:Math.max(25,player.y-105),text:f,name:f,color:"#ffffff",visible:true});
+   }
+   return {id:uid(),title:`${idx+1}. ${f}`,description:text,fundamento:f,items:base};
+ };
+ const generatePlay=()=>{
+   const parts=splitPlayText(playText);
+   if(!parts.length){flash("Descreva o treino antes de gerar");return}
+   let previous=starter();
+   const generated=parts.map((part,idx)=>{const st=buildStep(part,idx,previous);previous=clone(st.items);return st});
+   setSteps(generated);setScenes(generated);setStepIndex(0);setScene(0);setItems(clone(generated[0].items));
+   localStorage.setItem("jb154-scenes",JSON.stringify(generated));
+   flash(`${generated.length} etapas criadas automaticamente ✓`);
+ };
+ const openStep=i=>{
+   if(!steps[i])return;
+   const n=[...steps];
+   if(n[stepIndex])n[stepIndex]={...n[stepIndex],items:clone(items)};
+   setSteps(n);setScenes(n);setStepIndex(i);setScene(i);setItems(clone(n[i].items));
+   localStorage.setItem("jb154-scenes",JSON.stringify(n));
+ };
+ const updateStep=()=>{
+   if(!steps.length)return;
+   const n=[...steps];n[stepIndex]={...n[stepIndex],items:clone(items)};
+   setSteps(n);setScenes(n);localStorage.setItem("jb154-scenes",JSON.stringify(n));flash(`Etapa ${stepIndex+1} atualizada ✓`);
+ };
+ const deleteStep=i=>{
+   const n=steps.filter((_,k)=>k!==i);
+   setSteps(n);setScenes(n);const ni=Math.max(0,Math.min(stepIndex,n.length-1));setStepIndex(ni);setScene(ni);
+   setItems(n[ni]?clone(n[ni].items):starter());localStorage.setItem("jb154-scenes",JSON.stringify(n));
  };
  const sprite=i=>{
   if(i.type==="coach") return coachImg;
@@ -469,14 +524,18 @@ export default function App(){
 
    <section className="info panel"><h3>INFORMAÇÕES DA TÁTICA</h3><label>Nome<input value={title} onChange={e=>setTitle(e.target.value)}/></label><label>Categoria<select value={category} onChange={e=>setCategory(e.target.value)}><option>Ofensiva</option><option>Defensiva</option><option>Construção</option><option>Transição</option></select></label><label>Nível<select value={level} onChange={e=>setLevel(e.target.value)}><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></label><label>Descrição<textarea value={desc} onChange={e=>setDesc(e.target.value)}/></label></section>
 
-   <section className="timeline panel">
-    <div className="sceneWorkflow">
-      <div><strong>PASSO A PASSO DO TREINO</strong><span>Monte a Cena 1, clique em Criar cena e continue a jogada na Cena 2, Cena 3...</span></div>
-      <button type="button" className="createSceneMain" onClick={createScene}><Plus/>Criar cena</button>
-    </div>
-    <div className="playbar"><button className="play" onClick={()=>setPlaying(!playing)}>{playing?<StopSquare/>:<Play/>}</button><span>1.0x</span><div className="track"><i style={{width:`${progress}%`}}></i><b style={{left:`${progress}%`}}></b></div><small>00:00 / 00:10</small></div>
-    <div className="scenes">{(scenes.length?scenes:[{id:"current",items}]).map((s,i)=><button className={"thumb "+(i===scene?"chosen":"")} key={s.id} onClick={()=>s.id!=="current"&&openScene(i)}><em>{i+1}</em><div></div><span>{i+1}</span></button>)}<button className="addScene" onClick={createScene}><Plus/><span>Criar cena</span></button></div>
-    <button className="updateScene" onClick={updateScene}>Atualizar cena atual</button>
+   <section className="smartBuilder panel">
+    <div className="smartHead"><div><h3>CRIADOR DE JOGADAS — PASSO A PASSO</h3><p>Descreva o treino. O JB Tactics separa os golpes e cria cada etapa em sequência.</p></div></div>
+    <textarea className="playPrompt" value={playText} onChange={e=>setPlayText(e.target.value)}
+      placeholder="Ex.: Professor lança a bola para o aluno que sai da linha dos 6m, avança e faz voleio anômalo no lado direito. Próximo golpe, recupera na linha dos 3m e faz smash na linha dos 4m. Próximo golpe, dá a volta no cone central, vai para o lado esquerdo e executa um rainbow."/>
+    <button className="generatePlay" onClick={generatePlay}><ListOrdered/>Gerar jogada passo a passo</button>
+    {!!steps.length&&<div className="generatedSteps">
+      {steps.map((st,i)=><button key={st.id} className={"stepCard "+(i===stepIndex?"active":"")} onClick={()=>openStep(i)}>
+        <b>{i+1}</b><span><strong>{st.fundamento}</strong><small>{st.description}</small></span>
+        <i onClick={e=>{e.stopPropagation();deleteStep(i)}}><Trash2/></i>
+      </button>)}
+      <button className="updateStep" onClick={updateStep}>Salvar alterações da etapa {stepIndex+1}</button>
+    </div>}
    </section>
 
    <section className="view panel"><h3>VISUALIZAÇÃO</h3><Toggle text="Trajetória da bola" value={showPath} set={setShowPath}/><Toggle text="Zonas da quadra" value={showZones} set={setShowZones}/><Toggle text="Logo e identidade" value={showBrand} set={setShowBrand}/></section>

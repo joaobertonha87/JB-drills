@@ -1,9 +1,4 @@
-const CACHE="jb-tactics-v1-51-clean";
+const CACHE="jb-tactics-v1-54-clean";
 self.addEventListener("install",()=>self.skipWaiting());
-self.addEventListener("activate",event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
-});
-self.addEventListener("fetch",event=>{
-  if(event.request.method!=="GET")return;
-  event.respondWith(fetch(event.request,{cache:"no-store"}));
-});
+self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
+self.addEventListener("fetch",e=>{if(e.request.method==="GET")e.respondWith(fetch(e.request,{cache:"no-store"}))});
