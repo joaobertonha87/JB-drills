@@ -1,11 +1,12 @@
-JB Tactics V1.54 — SMART PLAY BUILDER — FULL CLEAN REPLACEMENT
+JB Tactics V1.54.2 — OFFICIAL VERTICAL LAYOUT — FULL REPLACEMENT
 
-- Build completa para substituir todos os arquivos antigos.
-- Remove do rodapé o Criar Cena e o Play antigos.
-- Novo Criador de Jogadas por texto.
-- Interpreta conectores como “próximo golpe”, “depois”, “em seguida” e “após”.
-- Reconhece fundamentos como Anômalo, Smash, Rainbow, Gancho, Voleios, Curta, Bandeja, Saque e Defesa.
-- Reconhece linha dos 3m/4m/6m, lado direito/esquerdo, recuperação, avanço, professor lançando e cone.
-- Gera uma etapa por jogada com setas de movimentação, trajetória da bola, números e rótulos.
-- Etapas podem ser abertas, editadas, salvas e excluídas.
-- Cache/localStorage versionados em V1.54.
+- Nova quadra baseada na referência oficial enviada pelo usuário.
+- Rede vertical central.
+- Visão superior/premium.
+- Apenas linhas externas da quadra.
+- 4 novos recortes de jogadores derivados da referência, transparentes e arrastáveis.
+- Professor + carrinho de bolas atualizado e arrastável à esquerda.
+- Smart Play Builder preservado.
+- Card Informações da Tática removido.
+- Scroll independente no menu esquerdo e direito.
+- Cache e localStorage versionados.

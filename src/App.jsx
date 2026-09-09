@@ -8,30 +8,31 @@ import{
  Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
 }from"lucide-react";
 
-const W=1000,COURT_H=520,LEGEND_H=146,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
+const W=1000,COURT_H=580,LEGEND_H=146,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
 const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:"p-top-left",type:"player",team:"B",side:"top",x:350,y:118,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:"p-top-right",type:"player",team:"B",side:"top",x:650,y:118,label:"2",name:"Jogador 2",visible:true,scale:100},
- {id:"p-bottom-left",type:"player",team:"A",side:"bottom",x:330,y:410,label:"3",name:"Jogador 3",visible:true,scale:100},
- {id:"p-bottom-right",type:"player",team:"A",side:"bottom",x:670,y:410,label:"4",name:"Jogador 4",visible:true,scale:100}
+ {id:"p-left-top",type:"player",team:"A",side:"left",sprite:"leftTop",x:350,y:275,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:"p-left-bottom",type:"player",team:"A",side:"left",sprite:"leftBottom",x:330,y:455,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:"p-right-top",type:"player",team:"B",side:"right",sprite:"rightTop",x:705,y:275,label:"3",name:"Jogador 3",visible:true,scale:100},
+ {id:"p-right-bottom",type:"player",team:"B",side:"right",sprite:"rightBottom",x:785,y:465,label:"4",name:"Jogador 4",visible:true,scale:100},
+ {id:"coach-official",type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",visible:true,scale:100}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-sand-clean-v153.jpg?v=154"),
- topMale=useAsset("/assets/player_top_male_v142.png"),
- topFemale=useAsset("/assets/player_top_female_v152.png?v=152"),
- bottomMale=useAsset("/assets/player_bottom_male_v142.png"),
- bottomFemale=useAsset("/assets/player_bottom_female_v142.png"),
- coachImg=useAsset("/assets/coach_clean.png");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb154-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/arena-official-vertical-v1542.jpg?v=1542"),
+ leftTop=useAsset("/assets/player_left_top_v1542.png?v=1542"),
+ leftBottom=useAsset("/assets/player_left_bottom_v1542.png?v=1542"),
+ rightTop=useAsset("/assets/player_right_top_v1542.png?v=1542"),
+ rightBottom=useAsset("/assets/player_right_bottom_v1542.png?v=1542"),
+ coachImg=useAsset("/assets/coach_cart_v1542.png?v=1542");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1542-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb154-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1542-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -48,7 +49,7 @@ export default function App(){
  useEffect(()=>{
   try{
    Object.keys(localStorage)
-    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb154-"))
+    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb1542-"))
     .forEach(k=>localStorage.removeItem(k));
    if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
@@ -71,7 +72,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb154-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb1542-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -91,18 +92,18 @@ export default function App(){
  const addPlayer=t=>{
    let n=items.filter(x=>x.type==="player").length+1;
    const slots=[
-     {x:365,y:128,team:"B"},
-     {x:635,y:128,team:"B"},
-     {x:315,y:405,team:"A"},
-     {x:685,y:405,team:"A"}
+     {x:350,y:275,team:"A",side:"left",sprite:"leftTop"},
+     {x:330,y:455,team:"A",side:"left",sprite:"leftBottom"},
+     {x:705,y:275,team:"B",side:"right",sprite:"rightTop"},
+     {x:785,y:465,team:"B",side:"right",sprite:"rightBottom"}
    ];
    const used=items.filter(x=>x.type==="player").length;
-   const slot=slots[Math.min(used,3)]||{x:500,y:350,team:t};
-   const obj={id:uid(),type:"player",team:slot.team,side:slot.y<260?"top":"bottom",x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true,scale:100};
+   const slot=slots[Math.min(used,3)]||{x:350,y:350,team:t,side:"left",sprite:"leftTop"};
+   const obj={id:uid(),type:"player",team:slot.team,side:slot.side,sprite:slot.sprite,x:slot.x,y:slot.y,label:String(n),name:`Jogador ${n}`,visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Jogador adicionado e selecionado");
  };
  const addCoach=()=>{
-   const obj={id:uid(),type:"coach",x:92,y:335,label:"P",name:"Professor",sprite:"coach",facing:"right",visible:true,scale:100};
+   const obj={id:uid(),type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",sprite:"coach",visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Professor adicionado e selecionado");
  };
  const addSimple=t=>{
@@ -119,7 +120,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb154-items",JSON.stringify(items));localStorage.setItem("jb154-scenes",JSON.stringify(scenes));localStorage.setItem("jb154-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb1542-items",JSON.stringify(items));localStorage.setItem("jb1542-scenes",JSON.stringify(scenes));localStorage.setItem("jb1542-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -218,19 +219,19 @@ export default function App(){
     ["Curta",/curta/i],["Bandeja",/bandeja/i],["Saque",/saque/i],["Defesa",/defesa/i]];
    return defs.find(([,r])=>r.test(t))?.[0]||"Jogada";
  };
- const lineY=m=>Math.max(75,Math.min(COURT_H-65,COURT_H-(m/8)*(COURT_H-120)));
+ const lineY=m=>Math.max(190,Math.min(COURT_H-45,520-(m/8)*260));
  const buildStep=(text,idx,previous)=>{
    const base=clone(previous||starter());
    const f=detectFundamento(text);
    const right=/lado direito|direita da quadra/i.test(text),left=/lado esquerdo|esquerda da quadra/i.test(text);
    const meter=Number(text.match(/linha (?:dos?|de)?\s*(\d)\s*m/i)?.[1]||0);
-   let player=base.find(x=>x.type==="player"&&(x.side==="bottom"||x.y>COURT_H/2))||base.find(x=>x.type==="player");
+   let player=base.find(x=>x.type==="player"&&x.side==="left")||base.find(x=>x.type==="player");
    if(player){
      const from={x:player.x,y:player.y};
-     let tx=right?690:left?310:player.x, ty=meter?lineY(meter):Math.max(280,player.y-55);
+     let tx=right?430:left?250:player.x, ty=meter?lineY(meter):Math.max(255,player.y-55);
      if(/recuper|linha de base/i.test(text))ty=lineY(meter||3);
      if(/avan[cç]/i.test(text))ty=Math.max(245,ty-35);
-     player.x=tx;player.y=ty;player.side=ty<COURT_H/2?"top":"bottom";
+     player.x=tx;player.y=ty;player.side=tx<500?"left":"right";
      base.push({id:uid(),type:"arrow",points:[from.x,from.y,tx,ty],color:LIME,width:6,visible:true,name:"Movimentação"});
    }
    if(/professor.*lan[cç]|lan[cç].*professor/i.test(text)){
@@ -247,7 +248,7 @@ export default function App(){
      }
    }
    if(player){
-     const endX=right?850:left?150:(player.x<500?180:820);
+     const endX=player.x<500?760:240;
      const high=/rainbow|lob|bola alta/i.test(text);
      base.push({id:uid(),type:high?"curvedArrow":"arrow",
        points:high?[player.x,player.y-35,(player.x+endX)/2,Math.max(70,player.y-150),endX,Math.max(100,player.y-80)]:[player.x,player.y-35,endX,Math.max(100,player.y-70)],
@@ -263,7 +264,7 @@ export default function App(){
    let previous=starter();
    const generated=parts.map((part,idx)=>{const st=buildStep(part,idx,previous);previous=clone(st.items);return st});
    setSteps(generated);setScenes(generated);setStepIndex(0);setScene(0);setItems(clone(generated[0].items));
-   localStorage.setItem("jb154-scenes",JSON.stringify(generated));
+   localStorage.setItem("jb1542-scenes",JSON.stringify(generated));
    flash(`${generated.length} etapas criadas automaticamente ✓`);
  };
  const openStep=i=>{
@@ -271,26 +272,26 @@ export default function App(){
    const n=[...steps];
    if(n[stepIndex])n[stepIndex]={...n[stepIndex],items:clone(items)};
    setSteps(n);setScenes(n);setStepIndex(i);setScene(i);setItems(clone(n[i].items));
-   localStorage.setItem("jb154-scenes",JSON.stringify(n));
+   localStorage.setItem("jb1542-scenes",JSON.stringify(n));
  };
  const updateStep=()=>{
    if(!steps.length)return;
    const n=[...steps];n[stepIndex]={...n[stepIndex],items:clone(items)};
-   setSteps(n);setScenes(n);localStorage.setItem("jb154-scenes",JSON.stringify(n));flash(`Etapa ${stepIndex+1} atualizada ✓`);
+   setSteps(n);setScenes(n);localStorage.setItem("jb1542-scenes",JSON.stringify(n));flash(`Etapa ${stepIndex+1} atualizada ✓`);
  };
  const deleteStep=i=>{
    const n=steps.filter((_,k)=>k!==i);
    setSteps(n);setScenes(n);const ni=Math.max(0,Math.min(stepIndex,n.length-1));setStepIndex(ni);setScene(ni);
-   setItems(n[ni]?clone(n[ni].items):starter());localStorage.setItem("jb154-scenes",JSON.stringify(n));
+   setItems(n[ni]?clone(n[ni].items):starter());localStorage.setItem("jb1542-scenes",JSON.stringify(n));
  };
  const sprite=i=>{
-  if(i.type==="coach") return coachImg;
-  const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
-  const isRight=i.x >= W/2;
-  if(isTop) return isRight ? topFemale : topMale;
-  return isRight ? bottomFemale : bottomMale;
-};
-
+  if(i.type==="coach")return coachImg;
+  if(i.sprite==="leftTop")return leftTop;
+  if(i.sprite==="leftBottom")return leftBottom;
+  if(i.sprite==="rightTop")return rightTop;
+  if(i.sprite==="rightBottom")return rightBottom;
+  return i.team==="A"?leftTop:rightTop;
+ };
  const render=i=>{
   if(i.visible===false)return null;const active=i.id===selected;
   if(i.type==="player"||i.type==="coach"){
@@ -298,14 +299,14 @@ export default function App(){
 
    if(i.type==="coach"){
      const sc=(i.scale||100)/100; const cw=104*sc,ch=184*sc;
-     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+     return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.x()<500?"left":"right"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
        {im&&<KImage image={im} x={-cw/2} y={-ch+52} width={cw} height={ch}/>}
      </Group>
    }
 
    const isTop=(i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top";
    const sc=(i.scale||100)/100; const sw=(isTop?76:104)*sc, sh=(isTop?112:154)*sc;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.x()<500?"left":"right"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Group scaleX={1}>
        {im&&<KImage image={im} x={-sw/2} y={-sh+48} width={sw} height={sh}/>}
        {/* Racket is drawn separately so it can never disappear with sprite masking. */}
@@ -313,11 +314,11 @@ export default function App(){
    </Group>
   }
   if(i.type==="ball")return <Circle key={i.id} x={i.x} y={i.y} radius={11} fill={i.color||"#f4f72b"} stroke={active?"#ffffff":"#182024"} shadowColor="#000" shadowBlur={6} shadowOpacity={.35} strokeWidth={3} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
-  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
+  if(i.type==="cone")return <Group key={i.id} x={i.x} y={i.y} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.x()<500?"left":"right"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}><Circle radius={17} fill="#101719" stroke={active?"#fff":"#293438"} strokeWidth={3}/><Text x={-12} y={-13} width={24} align="center" text="▲" fill={i.color||"#ff9f1a"} fontStyle="bold" fontSize={24}/></Group>;
   if(i.type==="text")return <Text key={i.id} x={i.x} y={i.y} text={i.text||"Texto"} fill="#fff" fontSize={18} draggable onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}/>;
   if(i.type==="step"){
    const r=i.size||30,stroke=active?"#ffffff":"#061014",fill=i.color||LIME;
-   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.y()<COURT_H/2?"top":"bottom"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
+   return <Group key={i.id} x={i.x} y={i.y} draggable={true} onMouseDown={()=>setSelected(i.id)} onTouchStart={()=>setSelected(i.id)} onClick={()=>setSelected(i.id)} onTap={()=>setSelected(i.id)} onDragMove={e=>patch(i.id,{x:e.target.x(),y:e.target.y(),side:e.target.x()<500?"left":"right"})} onDragEnd={e=>patch(i.id,{x:e.target.x(),y:e.target.y()})}>
      <Circle radius={r} fill="#061014" opacity={.30}/>
      <Circle radius={r-3} fill={fill} stroke={stroke} strokeWidth={active?4:3} shadowColor="#000" shadowBlur={10} shadowOpacity={.35}/>
      <Circle radius={r-8} fill="#071318" opacity={.92}/>
@@ -425,24 +426,24 @@ export default function App(){
             Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
 
-        {/* V1.52: demarcação oficial limpa — somente perímetro da quadra, sem linhas horizontais internas. */}
-        <Line points={[128,497,872,497,708,151,292,151,128,497]} stroke="#ffffff" strokeWidth={4} lineJoin="round" lineCap="round" listening={false}/>
+        {/* V1.54.2: layout oficial — somente linhas externas e rede vertical central. */}
+        <Line points={[166,548,834,548,776,195,224,195,166,548]} stroke="#ffffff" strokeWidth={4} lineJoin="round" lineCap="round" listening={false}/>
 
+        {items.filter(i=>!(i.type==="player"||i.type==="coach")).map(render)}
+        {items.filter(i=>(i.type==="player"||i.type==="coach") && (i.side||((i.x<500)?"left":"right"))==="left").map(render)}
 
-        {items.filter(i=>!(i.type==="player"||i.type==="coach") || (i.side||((i.y<COURT_H/2)?"top":"bottom"))==="top").map(render)}
-
-        {/* Uma única rede funcional em primeiro plano sobre os jogadores do fundo. */}
+        {/* Rede única vertical central, como na referência oficial. */}
         <Group listening={false}>
-          <Rect x={205} y={205} width={590} height={88} fill="rgba(8,13,14,.05)" stroke="#111719" strokeWidth={5}/>
-          {Array.from({length:34}).map((_,k)=><Line key={"nv"+k} points={[210+k*17.2,210,210+k*17.2,289]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
-          {Array.from({length:8}).map((_,k)=><Line key={"nh"+k} points={[208,212+k*10.5,792,212+k*10.5]} stroke="rgba(20,25,25,.72)" strokeWidth={1}/>)}
-          <Rect x={195} y={193} width={24} height={112} cornerRadius={4} fill="#11191b"/>
-          <Rect x={781} y={193} width={24} height={112} cornerRadius={4} fill="#11191b"/>
-          <Text x={198} y={236} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
-          <Text x={784} y={236} width={18} align="center" text="JB" fill={LIME} fontSize={11} fontStyle="bold"/>
+          <Rect x={492} y={156} width={16} height={405} fill="rgba(6,12,14,.78)" stroke="#182126" strokeWidth={3}/>
+          {Array.from({length:34}).map((_,k)=><Line key={"nh"+k} points={[494,164+k*11.5,506,164+k*11.5]} stroke="rgba(150,160,160,.58)" strokeWidth={1}/>)}
+          {Array.from({length:5}).map((_,k)=><Line key={"nv"+k} points={[495+k*2.5,160,495+k*2.5,555]} stroke="rgba(110,120,120,.45)" strokeWidth={1}/>)}
+          <Rect x={482} y={139} width={36} height={44} cornerRadius={5} fill="#11191b" stroke="#273238" strokeWidth={2}/>
+          <Rect x={482} y={540} width={36} height={40} cornerRadius={5} fill="#11191b" stroke="#273238" strokeWidth={2}/>
+          <Text x={486} y={153} width={28} align="center" text="JB" fill={LIME} fontSize={12} fontStyle="bold"/>
+          <Text x={486} y={552} width={28} align="center" text="JB" fill={LIME} fontSize={12} fontStyle="bold"/>
         </Group>
 
-        {items.filter(i=>(i.type==="player"||i.type==="coach") && (i.side||((i.y<COURT_H/2)?"top":"bottom"))!=="top").map(render)}
+        {items.filter(i=>(i.type==="player"||i.type==="coach") && (i.side||((i.x<500)?"left":"right"))==="right").map(render)}
         {draft?.type==="arrow"&&<Arrow points={draft.points} stroke={draft.color||arrowColor} fill={draft.color||arrowColor} strokeWidth={6} dash={[13,8]} pointerLength={17} pointerWidth={17}/>}
         {draft?.type==="zone"&&<Rect x={draft.x} y={draft.y} width={draft.w} height={draft.h} fill="rgba(84,230,0,.12)" stroke={LIME} strokeWidth={3}/>}
         {draft?.type==="freeDraw"&&<Line points={draft.points} stroke={draft.color||drawColor} strokeWidth={draft.width||drawWidth} lineCap="round" lineJoin="round"/>}
@@ -521,8 +522,6 @@ export default function App(){
      onChange={e=>patch(sel.id,{scale:Number(e.target.value)})}/>
  </label>}<button className="dup" onClick={duplicate}><Copy/>Duplicar</button></div>}
    </aside>
-
-   <section className="info panel"><h3>INFORMAÇÕES DA TÁTICA</h3><label>Nome<input value={title} onChange={e=>setTitle(e.target.value)}/></label><label>Categoria<select value={category} onChange={e=>setCategory(e.target.value)}><option>Ofensiva</option><option>Defensiva</option><option>Construção</option><option>Transição</option></select></label><label>Nível<select value={level} onChange={e=>setLevel(e.target.value)}><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></label><label>Descrição<textarea value={desc} onChange={e=>setDesc(e.target.value)}/></label></section>
 
    <section className="smartBuilder panel">
     <div className="smartHead"><div><h3>CRIADOR DE JOGADAS — PASSO A PASSO</h3><p>Descreva o treino. O JB Tactics separa os golpes e cria cada etapa em sequência.</p></div></div>
