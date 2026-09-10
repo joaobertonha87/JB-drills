@@ -13,26 +13,26 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:"p-left-top",type:"player",team:"A",side:"left",sprite:"leftTop",x:350,y:275,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:"p-left-bottom",type:"player",team:"A",side:"left",sprite:"leftBottom",x:330,y:455,label:"2",name:"Jogador 2",visible:true,scale:100},
- {id:"p-right-top",type:"player",team:"B",side:"right",sprite:"rightTop",x:705,y:275,label:"3",name:"Jogador 3",visible:true,scale:100},
- {id:"p-right-bottom",type:"player",team:"B",side:"right",sprite:"rightBottom",x:785,y:465,label:"4",name:"Jogador 4",visible:true,scale:100},
- {id:"coach-official",type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",visible:true,scale:100}
+ {id:"p-left-top",type:"player",team:"A",side:"left",sprite:"leftTop",x:350,y:330,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:"p-left-bottom",type:"player",team:"A",side:"left",sprite:"leftBottom",x:320,y:500,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:"p-right-top",type:"player",team:"B",side:"right",sprite:"rightTop",x:715,y:325,label:"3",name:"Jogador 3",visible:true,scale:100},
+ {id:"p-right-bottom",type:"player",team:"B",side:"right",sprite:"rightBottom",x:790,y:500,label:"4",name:"Jogador 4",visible:true,scale:100},
+ {id:"coach-official",type:"coach",side:"left",x:80,y:405,label:"P",name:"Professor",visible:true,scale:100}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-official-vertical-v1542.jpg?v=1543"),
- leftTop=useAsset("/assets/player_left_top_v1542.png?v=1543"),
- leftBottom=useAsset("/assets/player_left_bottom_v1542.png?v=1543"),
- rightTop=useAsset("/assets/player_right_top_v1542.png?v=1543"),
- rightBottom=useAsset("/assets/player_right_bottom_v1542.png?v=1543"),
- coachImg=useAsset("/assets/coach_cart_v1542.png?v=1543");
- const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1543-items"))||starter()}catch{return starter()}});
+ const court=useAsset("/assets/arena-clean-premium-v1544.jpg?v=1544"),
+ leftTop=useAsset("/assets/player_left_top_v1544.png?v=1544"),
+ leftBottom=useAsset("/assets/player_left_bottom_v1544.png?v=1544"),
+ rightTop=useAsset("/assets/player_right_top_v1544.png?v=1544"),
+ rightBottom=useAsset("/assets/player_right_bottom_v1544.png?v=1544"),
+ coachImg=useAsset("/assets/coach_cart_v1544.png?v=1544");
+ const[items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1544-items"))||starter()}catch{return starter()}});
  const[selected,setSelected]=useState(null),[teamTab,setTeamTab]=useState("A"),[mode,setMode]=useState("select"),[draft,setDraft]=useState(null);
  const[history,setHistory]=useState([]),[future,setFuture]=useState([]),[scale,setScale]=useState(1);
  const[title,setTitle]=useState("Saque + subida"),[category,setCategory]=useState("Ofensiva"),[level,setLevel]=useState("Intermediário"),[desc,setDesc]=useState("Saque profundo no meio + subida para a rede.");
- const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1543-scenes"))||[]}catch{return[]}});
+ const[scenes,setScenes]=useState(()=>{try{return JSON.parse(localStorage.getItem("jb1544-scenes"))||[]}catch{return[]}});
  const[scene,setScene]=useState(0),[showPath,setShowPath]=useState(true),[showZones,setShowZones]=useState(true),[showNums,setShowNums]=useState(false),[showBrand,setShowBrand]=useState(true);
  const[courtMode,setCourtMode]=useState("full");
  const[arrowColor,setArrowColor]=useState("#f4f72b");
@@ -49,7 +49,7 @@ export default function App(){
  useEffect(()=>{
   try{
    Object.keys(localStorage)
-    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb1543-"))
+    .filter(k=>/^jb1\d{2}-/.test(k) && !k.startsWith("jb1544-"))
     .forEach(k=>localStorage.removeItem(k));
    if("caches" in window)caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
@@ -72,7 +72,7 @@ export default function App(){
  },[]);
  useEffect(()=>{
   try{
-    const m=JSON.parse(localStorage.getItem("jb1543-meta")||"null");
+    const m=JSON.parse(localStorage.getItem("jb1544-meta")||"null");
     if(m){
       if(m.title)setTitle(m.title);
       if(m.category)setCategory(m.category);
@@ -92,10 +92,10 @@ export default function App(){
  const addPlayer=t=>{
    let n=items.filter(x=>x.type==="player").length+1;
    const slots=[
-     {x:350,y:275,team:"A",side:"left",sprite:"leftTop"},
-     {x:330,y:455,team:"A",side:"left",sprite:"leftBottom"},
-     {x:705,y:275,team:"B",side:"right",sprite:"rightTop"},
-     {x:785,y:465,team:"B",side:"right",sprite:"rightBottom"}
+     {x:350,y:330,team:"A",side:"left",sprite:"leftTop"},
+     {x:320,y:500,team:"A",side:"left",sprite:"leftBottom"},
+     {x:715,y:325,team:"B",side:"right",sprite:"rightTop"},
+     {x:790,y:500,team:"B",side:"right",sprite:"rightBottom"}
    ];
    const used=items.filter(x=>x.type==="player").length;
    const slot=slots[Math.min(used,3)]||{x:350,y:350,team:t,side:"left",sprite:"leftTop"};
@@ -103,7 +103,7 @@ export default function App(){
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Jogador adicionado e selecionado");
  };
  const addCoach=()=>{
-   const obj={id:uid(),type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",sprite:"coach",visible:true,scale:100};
+   const obj={id:uid(),type:"coach",side:"left",x:80,y:405,label:"P",name:"Professor",sprite:"coach",visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Professor adicionado e selecionado");
  };
  const addSimple=t=>{
@@ -120,7 +120,7 @@ export default function App(){
  };
  const del=()=>{if(sel){commit(items.filter(x=>x.id!==sel.id));setSelected(null);flash("Elemento excluído")}else flash("Selecione um elemento para excluir")};
  const duplicate=()=>{if(!sel)return;const c={...clone(sel),id:uid(),x:(sel.x||0)+22,y:(sel.y||0)+22};commit([...items,c])};
- const save=()=>{localStorage.setItem("jb1543-items",JSON.stringify(items));localStorage.setItem("jb1543-scenes",JSON.stringify(scenes));localStorage.setItem("jb1543-meta",JSON.stringify({title,category,level,desc,fundamento}))};
+ const save=()=>{localStorage.setItem("jb1544-items",JSON.stringify(items));localStorage.setItem("jb1544-scenes",JSON.stringify(scenes));localStorage.setItem("jb1544-meta",JSON.stringify({title,category,level,desc,fundamento}))};
  const exportPNG=()=>{
   const uri=stageRef.current?.toDataURL({pixelRatio:2});
   if(!uri)return;
@@ -264,7 +264,7 @@ export default function App(){
    let previous=starter();
    const generated=parts.map((part,idx)=>{const st=buildStep(part,idx,previous);previous=clone(st.items);return st});
    setSteps(generated);setScenes(generated);setStepIndex(0);setScene(0);setItems(clone(generated[0].items));
-   localStorage.setItem("jb1543-scenes",JSON.stringify(generated));
+   localStorage.setItem("jb1544-scenes",JSON.stringify(generated));
    flash(`${generated.length} etapas criadas automaticamente ✓`);
  };
  const openStep=i=>{
@@ -272,17 +272,17 @@ export default function App(){
    const n=[...steps];
    if(n[stepIndex])n[stepIndex]={...n[stepIndex],items:clone(items)};
    setSteps(n);setScenes(n);setStepIndex(i);setScene(i);setItems(clone(n[i].items));
-   localStorage.setItem("jb1543-scenes",JSON.stringify(n));
+   localStorage.setItem("jb1544-scenes",JSON.stringify(n));
  };
  const updateStep=()=>{
    if(!steps.length)return;
    const n=[...steps];n[stepIndex]={...n[stepIndex],items:clone(items)};
-   setSteps(n);setScenes(n);localStorage.setItem("jb1543-scenes",JSON.stringify(n));flash(`Etapa ${stepIndex+1} atualizada ✓`);
+   setSteps(n);setScenes(n);localStorage.setItem("jb1544-scenes",JSON.stringify(n));flash(`Etapa ${stepIndex+1} atualizada ✓`);
  };
  const deleteStep=i=>{
    const n=steps.filter((_,k)=>k!==i);
    setSteps(n);setScenes(n);const ni=Math.max(0,Math.min(stepIndex,n.length-1));setStepIndex(ni);setScene(ni);
-   setItems(n[ni]?clone(n[ni].items):starter());localStorage.setItem("jb1543-scenes",JSON.stringify(n));
+   setItems(n[ni]?clone(n[ni].items):starter());localStorage.setItem("jb1544-scenes",JSON.stringify(n));
  };
  const sprite=i=>{
   if(i.type==="coach")return coachImg;
@@ -421,12 +421,10 @@ export default function App(){
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
-        {/* V1.38: arena premium em perspectiva aprovada.
-            Rede, linhas, iluminação e decoração pertencem ao cenário-base.
-            Somente os elementos táticos interativos são desenhados acima. */}
+        {/* V1.54.4: fundo premium LIMPO — sem jogadores, professor, rede, setas ou areia antiga sobreposta. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
 
-        {/* V1.54.2: layout oficial — somente linhas externas e rede vertical central. */}
+        {/* V1.54.4: somente linhas externas e uma rede vertical central interativa/limpa. */}
         <Line points={[166,548,834,548,776,195,224,195,166,548]} stroke="#ffffff" strokeWidth={4} lineJoin="round" lineCap="round" listening={false}/>
 
         {items.filter(i=>!(i.type==="player"||i.type==="coach")).map(render)}

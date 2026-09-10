@@ -1,9 +1,25 @@
-JB Tactics V1.54.3 CLEAN BUILD VISUAL FIX
+JB Tactics V1.54.4 — CLEAN VISUAL RESET — FULL REPLACEMENT
 
-Base: V1.54.2 uploaded by user.
+Base: ZIP V1.54.3 enviado pelo usuário.
 
-Changes:
-- New cache/service worker version.
-- Asset cache bust changed from v1542 to v1543.
-- Prepared as clean replacement build.
-- Keeps official vertical layout assets.
+CORREÇÕES VISUAIS REAIS:
+- Removidos do pacote todos os assets V1.54.2 que estavam azulados.
+- Novos jogadores com cores humanas naturais, derivados da referência visual aprovada.
+- Novo professor/carrinho com cores naturais.
+- Nova arena premium limpa, sem blocos/tijolos da areia antiga.
+- A arena-base não contém jogadores, professor, rede ou setas interativas.
+- Linhas externas e rede vertical são renderizadas somente pelo app.
+- Filtros CSS que poderiam alterar a cor dos personagens foram neutralizados.
+
+LIMPEZA:
+- Storage atualizado para jb1544-*.
+- Service Worker V1.54.4 limpa caches anteriores.
+- Assets usam nomes novos + query ?v=1544.
+- Pacote completo para substituir todo o conteúdo do repositório.
+
+FUNÇÕES PRESERVADAS:
+- Smart Play Builder.
+- Ferramentas táticas.
+- Legenda.
+- Redimensionamento de jogadores/professor.
+- Scroll independente dos menus.

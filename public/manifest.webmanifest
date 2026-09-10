@@ -1,9 +1,9 @@
 {
-  "id": "/",
+  "id": "/?v=1544",
   "name": "JB Tactics",
   "short_name": "JB Tactics",
   "description": "Quadro tático de Beach Tennis",
-  "start_url": "/",
+  "start_url": "/?v=1544",
   "scope": "/",
   "display": "standalone",
   "background_color": "#050708",
