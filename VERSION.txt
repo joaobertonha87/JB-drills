@@ -1,0 +1,9 @@
+JB Tactics V1.54.3 CLEAN BUILD VISUAL FIX
+
+Base: V1.54.2 uploaded by user.
+
+Changes:
+- New cache/service worker version.
+- Asset cache bust changed from v1542 to v1543.
+- Prepared as clean replacement build.
+- Keeps official vertical layout assets.
