@@ -1,0 +1,10 @@
+JB Tactics V1.54.7 - ARENA SINGLE SOURCE FIX
+
+Base: JB-drills-main.zip recebido.
+
+Correções:
+- remove referência da arena vertical antiga v1542.
+- usa uma única arena limpa como fonte visual.
+- invalida estado salvo antigo de itens.
+- remove assets v1542 para evitar fallback.
+- mantém sprites v1547.
