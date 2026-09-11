@@ -1,25 +1,12 @@
-JB Tactics V1.54.4 — CLEAN VISUAL RESET — FULL REPLACEMENT
+JB Tactics V1.54.4 — HUMAN SPRITES FIX — FULL REPLACEMENT
 
-Base: ZIP V1.54.3 enviado pelo usuário.
+Base: JB_Tactics_V1_54_3_CLEAN_BUILD_VISUAL_FIX(2).zip
 
-CORREÇÕES VISUAIS REAIS:
-- Removidos do pacote todos os assets V1.54.2 que estavam azulados.
-- Novos jogadores com cores humanas naturais, derivados da referência visual aprovada.
-- Novo professor/carrinho com cores naturais.
-- Nova arena premium limpa, sem blocos/tijolos da areia antiga.
-- A arena-base não contém jogadores, professor, rede ou setas interativas.
-- Linhas externas e rede vertical são renderizadas somente pelo app.
-- Filtros CSS que poderiam alterar a cor dos personagens foram neutralizados.
-
-LIMPEZA:
-- Storage atualizado para jb1544-*.
-- Service Worker V1.54.4 limpa caches anteriores.
-- Assets usam nomes novos + query ?v=1544.
-- Pacote completo para substituir todo o conteúdo do repositório.
-
-FUNÇÕES PRESERVADAS:
-- Smart Play Builder.
-- Ferramentas táticas.
-- Legenda.
-- Redimensionamento de jogadores/professor.
-- Scroll independente dos menus.
+Correções:
+- 4 sprites humanos substituídos por arquivos V1.54.4.
+- Professor/carrinho substituído por arquivo V1.54.4.
+- Assets V1.54.2 defeituosos removidos do pacote.
+- Referências do App atualizadas para ?v=1544.
+- Namespace localStorage atualizado para jb1544-*.
+- Service Worker limpa caches anteriores e usa no-store.
+- Demais funções da V1.54.3 preservadas.

@@ -13,16 +13,16 @@ const uid=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const clone=o=>JSON.parse(JSON.stringify(o));
 function useAsset(src){const[i,setI]=useState(null);useEffect(()=>{const x=new Image();x.src=src;x.onload=()=>setI(x)},[src]);return i}
 const starter=()=>[
- {id:"p-left-top",type:"player",team:"A",side:"left",sprite:"leftTop",x:350,y:330,label:"1",name:"Jogador 1",visible:true,scale:100},
- {id:"p-left-bottom",type:"player",team:"A",side:"left",sprite:"leftBottom",x:320,y:500,label:"2",name:"Jogador 2",visible:true,scale:100},
- {id:"p-right-top",type:"player",team:"B",side:"right",sprite:"rightTop",x:715,y:325,label:"3",name:"Jogador 3",visible:true,scale:100},
- {id:"p-right-bottom",type:"player",team:"B",side:"right",sprite:"rightBottom",x:790,y:500,label:"4",name:"Jogador 4",visible:true,scale:100},
- {id:"coach-official",type:"coach",side:"left",x:80,y:405,label:"P",name:"Professor",visible:true,scale:100}
+ {id:"p-left-top",type:"player",team:"A",side:"left",sprite:"leftTop",x:350,y:275,label:"1",name:"Jogador 1",visible:true,scale:100},
+ {id:"p-left-bottom",type:"player",team:"A",side:"left",sprite:"leftBottom",x:330,y:455,label:"2",name:"Jogador 2",visible:true,scale:100},
+ {id:"p-right-top",type:"player",team:"B",side:"right",sprite:"rightTop",x:705,y:275,label:"3",name:"Jogador 3",visible:true,scale:100},
+ {id:"p-right-bottom",type:"player",team:"B",side:"right",sprite:"rightBottom",x:785,y:465,label:"4",name:"Jogador 4",visible:true,scale:100},
+ {id:"coach-official",type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",visible:true,scale:100}
 ];
 
 export default function App(){
  const stageRef=useRef(), boxRef=useRef();
- const court=useAsset("/assets/arena-clean-premium-v1544.jpg?v=1544"),
+ const court=useAsset("/assets/arena-official-vertical-v1542.jpg?v=1543"),
  leftTop=useAsset("/assets/player_left_top_v1544.png?v=1544"),
  leftBottom=useAsset("/assets/player_left_bottom_v1544.png?v=1544"),
  rightTop=useAsset("/assets/player_right_top_v1544.png?v=1544"),
@@ -92,10 +92,10 @@ export default function App(){
  const addPlayer=t=>{
    let n=items.filter(x=>x.type==="player").length+1;
    const slots=[
-     {x:350,y:330,team:"A",side:"left",sprite:"leftTop"},
-     {x:320,y:500,team:"A",side:"left",sprite:"leftBottom"},
-     {x:715,y:325,team:"B",side:"right",sprite:"rightTop"},
-     {x:790,y:500,team:"B",side:"right",sprite:"rightBottom"}
+     {x:350,y:275,team:"A",side:"left",sprite:"leftTop"},
+     {x:330,y:455,team:"A",side:"left",sprite:"leftBottom"},
+     {x:705,y:275,team:"B",side:"right",sprite:"rightTop"},
+     {x:785,y:465,team:"B",side:"right",sprite:"rightBottom"}
    ];
    const used=items.filter(x=>x.type==="player").length;
    const slot=slots[Math.min(used,3)]||{x:350,y:350,team:t,side:"left",sprite:"leftTop"};
@@ -103,7 +103,7 @@ export default function App(){
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Jogador adicionado e selecionado");
  };
  const addCoach=()=>{
-   const obj={id:uid(),type:"coach",side:"left",x:80,y:405,label:"P",name:"Professor",sprite:"coach",visible:true,scale:100};
+   const obj={id:uid(),type:"coach",side:"left",x:75,y:360,label:"P",name:"Professor",sprite:"coach",visible:true,scale:100};
    commit([...items,obj]);setSelected(obj.id);activateMode("select","Professor adicionado e selecionado");
  };
  const addSimple=t=>{
@@ -421,10 +421,12 @@ export default function App(){
      <div style={{width:W*scale,height:H*scale}}>
       <Stage ref={stageRef} width={W*scale} height={H*scale} scaleX={scale} scaleY={scale} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={()=>{setDraft(null);setMode("select")}}>
        <Layer>
-        {/* V1.54.4: fundo premium LIMPO — sem jogadores, professor, rede, setas ou areia antiga sobreposta. */}
+        {/* V1.38: arena premium em perspectiva aprovada.
+            Rede, linhas, iluminação e decoração pertencem ao cenário-base.
+            Somente os elementos táticos interativos são desenhados acima. */}
         {court&&<KImage image={court} x={0} y={0} width={W} height={COURT_H}/>}
 
-        {/* V1.54.4: somente linhas externas e uma rede vertical central interativa/limpa. */}
+        {/* V1.54.2: layout oficial — somente linhas externas e rede vertical central. */}
         <Line points={[166,548,834,548,776,195,224,195,166,548]} stroke="#ffffff" strokeWidth={4} lineJoin="round" lineCap="round" listening={false}/>
 
         {items.filter(i=>!(i.type==="player"||i.type==="coach")).map(render)}

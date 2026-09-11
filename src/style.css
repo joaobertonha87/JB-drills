@@ -886,15 +886,3 @@ body{color:var(--jb-text)}
 .left,.right{position:sticky!important;top:82px!important;align-self:start!important;max-height:calc(100dvh - 90px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
 .right::-webkit-scrollbar,.left::-webkit-scrollbar{width:7px}.right::-webkit-scrollbar-thumb,.left::-webkit-scrollbar-thumb{background:#34515d;border-radius:20px}
 @media (min-width:768px) and (max-width:1199px) and (orientation:landscape){.studio{grid-template-columns:176px minmax(0,1fr) 235px!important}.left,.right{top:72px!important;max-height:calc(100dvh - 78px)!important}}
-
-/* ===== V1.54.4 CLEAN VISUAL RESET ===== */
-.center.view3d .courtBox>div,
-.view3d .courtBox>div,
-.view2d .courtBox>div{
-  filter:none!important;
-}
-.konvajs-content,
-.konvajs-content canvas{
-  mix-blend-mode:normal!important;
-  filter:none!important;
-}
