@@ -1,4 +1,0 @@
-JB Tactics V1.54.5 CLEAN RENDER FIX
-
-Correção de renderização: limpeza de cache e prevenção de carregamento de camadas antigas.
-Base: V1.54.4 HUMAN SPRITES FIX.
