@@ -1,12 +1,4 @@
-JB Tactics V1.54.4 — HUMAN SPRITES FIX — FULL REPLACEMENT
+JB Tactics V1.54.5 CLEAN RENDER FIX
 
-Base: JB_Tactics_V1_54_3_CLEAN_BUILD_VISUAL_FIX(2).zip
-
-Correções:
-- 4 sprites humanos substituídos por arquivos V1.54.4.
-- Professor/carrinho substituído por arquivo V1.54.4.
-- Assets V1.54.2 defeituosos removidos do pacote.
-- Referências do App atualizadas para ?v=1544.
-- Namespace localStorage atualizado para jb1544-*.
-- Service Worker limpa caches anteriores e usa no-store.
-- Demais funções da V1.54.3 preservadas.
+Correção de renderização: limpeza de cache e prevenção de carregamento de camadas antigas.
+Base: V1.54.4 HUMAN SPRITES FIX.
