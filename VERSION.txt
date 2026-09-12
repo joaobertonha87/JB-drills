@@ -1,0 +1,12 @@
+JB Tactics V1.55.2 — BAKED 3D SINGLE COURT — FULL REPLACEMENT
+
+CORREÇÃO:
+- O problema era a composição de uma quadra simples do Konva sobre um fundo de arena.
+- Agora existe somente UMA quadra visual realista.
+- A arena JPG contém: areia 3D + linhas oficiais + uma única rede vertical 3D.
+- App.jsx NÃO desenha mais uma segunda linha de quadra por cima.
+- App.jsx NÃO desenha mais uma segunda rede por cima.
+- Jogadores, professor, setas, bolas e demais elementos táticos continuam independentes/editáveis.
+- ZIP contém somente um arquivo de arena: arena-3d-court-v1552.jpg.
+- localStorage: jb1552-*.
+- Service Worker renovado.
