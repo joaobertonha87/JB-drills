@@ -1,0 +1,12 @@
+JB Tactics V1.55.0 — REALISTIC 3D SINGLE ARENA — FULL REPLACEMENT
+
+CORREÇÃO:
+- Arena única, sem sobreposição de duas quadras.
+- Fundo 3D realista com areia texturizada, iluminação e profundidade.
+- O background NÃO contém linhas de quadra, rede, jogadores ou professor.
+- Linhas externas e rede vertical são desenhadas UMA ÚNICA VEZ pelo Konva.
+- Jogadores/professor continuam como sprites independentes.
+- arena-clean-premium-v1544.jpg removida para impedir fallback.
+- Nova arena: arena-realistic-3d-v155.jpg.
+- localStorage atualizado para jb1550-*.
+- Service Worker novo e sem cache antigo.
