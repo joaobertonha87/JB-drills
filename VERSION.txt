@@ -1,10 +1,12 @@
-JB Tactics V1.54.7 - ARENA SINGLE SOURCE FIX
+JB Tactics V1.54.9 — TRUE SINGLE ARENA FIX — FULL REPLACEMENT
 
-Base: JB-drills-main.zip recebido.
+CAUSA ENCONTRADA:
+O App.jsx ainda carregava arena-official-vertical-v1542.jpg. Esse JPG já continha uma segunda camada de areia em blocos e restos de elementos antigos. O Konva desenhava novamente linhas, rede, jogadores e professor por cima.
 
-Correções:
-- remove referência da arena vertical antiga v1542.
-- usa uma única arena limpa como fonte visual.
-- invalida estado salvo antigo de itens.
-- remove assets v1542 para evitar fallback.
-- mantém sprites v1547.
+CORREÇÃO:
+- Única arena: arena-clean-premium-v1544.jpg?v=1549.
+- arena-official-vertical-v1542.jpg removida.
+- Assets humanos v1542 removidos.
+- Somente sprites v1544 mantidos.
+- localStorage novo: jb1549-*.
+- Service Worker limpa caches antigos e força no-store.

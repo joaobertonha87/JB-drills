@@ -1,6 +1,6 @@
 {
   "name": "jb-tactics-premium-studio",
-  "version": "1.54.4",
+  "version": "1.54.9",
   "private": true,
   "type": "module",
   "scripts": {"dev":"vite","build":"vite build","preview":"vite preview"},
