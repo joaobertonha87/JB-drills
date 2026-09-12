@@ -1,0 +1,16 @@
+JB Tactics V1.54.8 - PREMIUM ARENA SINGLE LAYER FIX
+
+Base: V1.54.7 ARENA SINGLE SOURCE FIX
+
+Objetivo:
+- manter uma única camada de arena;
+- reativar somente o fundo premium;
+- evitar retorno da segunda quadra.
+
+Composição esperada:
+1. Fundo premium da arena
+2. Quadra/rede única
+3. Jogadores e professor
+4. Elementos táticos (setas, bolas, desenhos)
+
+Correção focada na composição visual.
