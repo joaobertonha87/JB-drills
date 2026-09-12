@@ -1,0 +1,13 @@
+JB Tactics V1.55.1 — TRUE CLEAN 3D ARENA — FULL REPLACEMENT
+
+CORREÇÃO DEFINITIVA DE ASSETS:
+- O ZIP contém somente UMA imagem de arena: public/assets/arena-3d-clean-v1551.jpg.
+- arena-clean-premium-v1544.jpg REMOVIDA.
+- arena-official-vertical-v1542.jpg REMOVIDA.
+- arena-realistic-3d-v155.jpg REMOVIDA.
+- A nova arena NÃO possui linhas da quadra, rede, jogadores ou professor embutidos.
+- As linhas externas e a rede vertical continuam sendo renderizadas apenas uma vez pelo Konva.
+- Jogadores e professor permanecem como PNGs independentes.
+- Nova textura de areia criada do zero, sem recortes de quadra/linhas antigas.
+- localStorage: jb1551-*.
+- Service Worker novo, sem cache antigo.
