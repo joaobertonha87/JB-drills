@@ -1,12 +1,11 @@
-JB Tactics V1.55.2 — BAKED 3D SINGLE COURT — FULL REPLACEMENT
+JB Tactics V1.55.3 — LARGE PLAY BUILDER — FULL REPLACEMENT
 
-CORREÇÃO:
-- O problema era a composição de uma quadra simples do Konva sobre um fundo de arena.
-- Agora existe somente UMA quadra visual realista.
-- A arena JPG contém: areia 3D + linhas oficiais + uma única rede vertical 3D.
-- App.jsx NÃO desenha mais uma segunda linha de quadra por cima.
-- App.jsx NÃO desenha mais uma segunda rede por cima.
-- Jogadores, professor, setas, bolas e demais elementos táticos continuam independentes/editáveis.
-- ZIP contém somente um arquivo de arena: arena-3d-court-v1552.jpg.
-- localStorage: jb1552-*.
-- Service Worker renovado.
+ALTERAÇÃO:
+- Criador de Jogadas agora ocupa toda a largura abaixo da área tática.
+- Campo de escrita ampliado de ~92px para 220px de altura mínima.
+- Texto maior e melhor espaçamento para leitura.
+- Campo pode ser redimensionado verticalmente até 420px.
+- Botão Gerar Jogada ampliado.
+- Etapas geradas aparecem em cards maiores e responsivos.
+- Ajustes específicos para desktop, iPad paisagem/retrato e celular.
+- Demais funções da V1.55.2 preservadas.

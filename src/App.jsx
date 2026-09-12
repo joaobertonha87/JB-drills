@@ -510,7 +510,7 @@ export default function App(){
    </aside>
 
    <section className="smartBuilder panel">
-    <div className="smartHead"><div><h3>CRIADOR DE JOGADAS — PASSO A PASSO</h3><p>Descreva o treino. O JB Tactics separa os golpes e cria cada etapa em sequência.</p></div></div>
+    <div className="smartHead"><div><h3>CRIADOR DE JOGADAS — PASSO A PASSO</h3><p>Descreva o treino completo com liberdade. Use este espaço amplo para detalhar posições, deslocamentos, linhas da quadra, sequência de golpes e finalizações. O JB Tactics separa tudo em etapas.</p></div></div>
     <textarea className="playPrompt" value={playText} onChange={e=>setPlayText(e.target.value)}
       placeholder="Ex.: Professor lança a bola para o aluno que sai da linha dos 6m, avança e faz voleio anômalo no lado direito. Próximo golpe, recupera na linha dos 3m e faz smash na linha dos 4m. Próximo golpe, dá a volta no cone central, vai para o lado esquerdo e executa um rainbow."/>
     <button className="generatePlay" onClick={generatePlay}><ListOrdered/>Gerar jogada passo a passo</button>
