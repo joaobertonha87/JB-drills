@@ -1,0 +1,51 @@
+/* JB Tactics V1.56 — seletor e layouts por dispositivo */
+.deviceButton{background:#111a1e!important;color:#eaf1f3!important;border:1px solid #2b383e!important}
+.deviceButton svg{width:18px;height:18px;color:#9dff00}
+.deviceOverlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:rgba(0,5,8,.78);backdrop-filter:blur(12px)}
+.deviceDialog{width:min(540px,100%);border:1px solid rgba(157,255,0,.28);border-radius:22px;padding:22px;background:linear-gradient(155deg,#10191d,#060b0d 68%);box-shadow:0 28px 90px #000,0 0 60px rgba(157,255,0,.08)}
+.deviceDialogHead{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}
+.deviceDialogHead span{display:block;color:#9dff00;font-size:9px;font-weight:950;letter-spacing:.22em}
+.deviceDialogHead h2{margin:6px 0 5px;font-size:25px;letter-spacing:-.03em}
+.deviceDialogHead p{margin:0;color:#8e9da3;font-size:12px;line-height:1.45}
+.deviceClose{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:1px solid #2b373c;border-radius:12px;background:#151d20;color:#fff}
+.deviceClose svg{width:19px}
+.deviceChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.deviceChoices>button{position:relative;min-height:94px;display:grid;grid-template-columns:42px minmax(0,1fr) 22px;align-items:center;gap:11px;padding:14px;text-align:left;border:1px solid #26343a;border-radius:15px;background:#0c1417;color:#fff;transition:.16s ease}
+.deviceChoices>button:hover{border-color:#506068;transform:translateY(-1px)}
+.deviceChoices>button.selected{border-color:#9dff00;background:linear-gradient(135deg,rgba(157,255,0,.14),rgba(10,18,21,.96));box-shadow:inset 0 0 0 1px rgba(157,255,0,.14)}
+.deviceChoices i{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#172126;color:#aab6bb;font-style:normal}
+.deviceChoices .selected i{background:#9dff00;color:#071005}
+.deviceChoices i svg{width:21px}.deviceChoices span{display:grid;gap:4px}.deviceChoices strong{font-size:13px}.deviceChoices small{color:#8d9ba1;font-size:10px;line-height:1.35}.deviceChoices b{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#9dff00;color:#071005}.deviceChoices b svg{width:13px}
+.deviceSaved{display:block;margin-top:14px;text-align:center;color:#75858b;font-size:10px}
+
+/* PC / Notebook: área total e três painéis simultâneos. */
+.app[data-device="desktop"] .top{grid-template-columns:290px minmax(360px,1fr) 390px!important;height:78px!important;padding:0 18px!important}
+.app[data-device="desktop"] .studio{display:grid!important;grid-template-columns:250px minmax(650px,1fr) 300px!important;max-width:1620px!important;gap:10px!important;padding:12px!important}
+.app[data-device="desktop"] .left,.app[data-device="desktop"] .right{display:block!important;position:sticky!important;top:82px!important;max-height:calc(100dvh - 90px)!important}
+.app[data-device="desktop"] .smartBuilder{grid-column:1/-1!important}
+
+/* iPad: ferramentas laterais compactas e propriedades logo abaixo. */
+.app[data-device="ipad"] .top{grid-template-columns:205px minmax(330px,1fr) 350px!important;height:72px!important;padding:0 10px!important}
+.app[data-device="ipad"] .logo>b{font-size:39px}.app[data-device="ipad"] .logo strong{font-size:17px}.app[data-device="ipad"] .logo small{font-size:7px}
+.app[data-device="ipad"] .navtabs{gap:1px!important;overflow:auto;justify-content:flex-start}.app[data-device="ipad"] .navtabs button{min-width:66px!important;font-size:10px!important}
+.app[data-device="ipad"] .actions{gap:5px}.app[data-device="ipad"] .actions button{height:42px!important;padding:0 10px!important;font-size:11px!important}.app[data-device="ipad"] .actions .cloud{display:none}
+.app[data-device="ipad"] .studio{display:grid!important;grid-template-columns:190px minmax(480px,1fr)!important;grid-template-areas:"left center" "right right"!important;max-width:none!important;gap:8px!important;padding:8px!important}
+.app[data-device="ipad"] .left{grid-area:left!important;display:block!important;position:sticky!important;top:78px!important;max-height:calc(100dvh - 86px)!important;padding:10px!important}
+.app[data-device="ipad"] .center{grid-area:center!important;min-width:0!important;overflow:hidden!important}
+.app[data-device="ipad"] .right{grid-area:right!important;display:block!important;position:relative!important;top:auto!important;max-height:none!important}
+.app[data-device="ipad"] .right .players{grid-template-columns:repeat(2,minmax(0,1fr))}
+.app[data-device="ipad"] .smartBuilder{grid-column:1/-1!important;grid-row:auto!important}.app[data-device="ipad"] .view{display:none!important}
+
+/* iPhone: fluxo vertical, controles tocáveis e quadra sempre inteira. */
+.app[data-device="iphone"]{width:100%!important;max-width:520px!important;margin:0 auto!important;border-left:1px solid #172329;border-right:1px solid #172329}
+.app[data-device="iphone"] .top{position:relative!important;height:auto!important;display:grid!important;grid-template-columns:1fr auto!important;padding:12px!important;gap:10px!important}
+.app[data-device="iphone"] .logo>b{font-size:38px}.app[data-device="iphone"] .logo strong{font-size:17px}.app[data-device="iphone"] .logo small{font-size:7px}
+.app[data-device="iphone"] .navtabs{grid-column:1/-1;grid-row:2;order:initial!important;height:58px!important;justify-content:flex-start!important;overflow-x:auto!important;gap:2px!important}
+.app[data-device="iphone"] .navtabs button{min-width:72px!important;font-size:9px!important;padding:4px!important}
+.app[data-device="iphone"] .actions{grid-column:2;grid-row:1;align-self:center;gap:5px!important}.app[data-device="iphone"] .actions .cloud{display:none}.app[data-device="iphone"] .actions button{width:42px!important;height:42px!important;padding:0!important;justify-content:center!important}.app[data-device="iphone"] .actions button span,.app[data-device="iphone"] .actions .save,.app[data-device="iphone"] .actions .export{font-size:0}.app[data-device="iphone"] .actions .save svg,.app[data-device="iphone"] .actions .export svg{width:18px}.app[data-device="iphone"] .deviceButton span{display:none}
+.app[data-device="iphone"] .studio{display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;padding:7px!important;gap:7px!important}
+.app[data-device="iphone"] .center{order:1!important;width:100%!important;overflow:hidden!important}.app[data-device="iphone"] .left{order:2!important;display:block!important;position:relative!important;top:auto!important;width:100%!important;max-height:370px!important;padding:12px!important}.app[data-device="iphone"] .right{order:3!important;display:block!important;position:relative!important;top:auto!important;width:100%!important;max-height:none!important;padding:12px!important}.app[data-device="iphone"] .smartBuilder{order:4!important;width:100%!important;grid-column:auto!important;grid-row:auto!important;padding:14px!important}.app[data-device="iphone"] .view{display:none!important}
+.app[data-device="iphone"] .tool{min-height:48px!important}.app[data-device="iphone"] .tool span{display:inline!important}.app[data-device="iphone"] .courtBox{width:100%!important;overflow:hidden!important}.app[data-device="iphone"] .viewModeToggle{top:6px!important;right:7px!important;transform:scale(.84);transform-origin:top right}.app[data-device="iphone"] .fundamentoBar{margin:7px!important}.app[data-device="iphone"] .playPrompt{min-height:180px!important;font-size:16px!important}
+
+@media(max-width:900px){.app[data-device="ipad"] .top{height:auto!important;grid-template-columns:190px 1fr!important;padding:9px 12px!important}.app[data-device="ipad"] .logo{grid-column:1;grid-row:1}.app[data-device="ipad"] .actions{grid-column:2;grid-row:1;justify-content:flex-end}.app[data-device="ipad"] .navtabs{grid-column:1/-1;grid-row:2;height:58px!important;justify-content:center!important}.app[data-device="ipad"] .left{top:137px!important;max-height:calc(100dvh - 145px)!important}}
+@media(max-width:600px){.deviceDialog{padding:17px;border-radius:18px}.deviceChoices{grid-template-columns:1fr}.deviceChoices>button{min-height:76px}.deviceDialogHead h2{font-size:22px}}

@@ -1,4 +1,4 @@
-const CACHE='jb-tactics-v1-55-2-baked-3d-single-court';
+const CACHE='jb-tactics-v1-56-device-modes';
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',event=>{
   event.waitUntil(

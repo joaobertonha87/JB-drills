@@ -1,3 +1,12 @@
+JB Tactics V1.56.0 — MODOS DE DISPOSITIVO
+
+ALTERAÇÃO:
+- Seletor Automático, iPhone, iPad e PC / Notebook.
+- Detecção automática de tela e dispositivo.
+- Preferência salva localmente em cada aparelho.
+- Layout próprio para cada modo, preservando quadra, ferramentas e propriedades.
+
+BASE PRESERVADA:
 JB Tactics V1.55.3 — LARGE PLAY BUILDER — FULL REPLACEMENT
 
 ALTERAÇÃO:

@@ -5,7 +5,7 @@ import{
  Grid2X2,ClipboardList,Library,Users,Settings,Cloud,Save,Share2,UserRound,GraduationCap,
  CircleDot,Triangle,MoveRight,Square,Type,MousePointer2,Move,Trash2,Undo2,Redo2,
  Eye,EyeOff,Plus,Pencil,ChevronLeft,ChevronRight,Download,
- Copy,ImageDown,PanelTop,FolderOpen,ListOrdered
+ Copy,ImageDown,PanelTop,FolderOpen,ListOrdered,Smartphone,Tablet,Monitor,Check,X
 }from"lucide-react";
 
 const W=1000,COURT_H=580,LEGEND_H=146,H=COURT_H+LEGEND_H, LIME="#54e600", BLUE="#31b7ff", YELLOW="#f4f72b";
@@ -46,6 +46,9 @@ export default function App(){
  const[playText,setPlayText]=useState("");
  const[steps,setSteps]=useState([]);
  const[stepIndex,setStepIndex]=useState(0);
+ const[deviceMode,setDeviceMode]=useState(()=>localStorage.getItem("jb1552-device-mode")||"auto");
+ const[deviceMenuOpen,setDeviceMenuOpen]=useState(false);
+ const[autoDevice,setAutoDevice]=useState("desktop");
  useEffect(()=>{
   try{
    Object.keys(localStorage)
@@ -55,6 +58,25 @@ export default function App(){
    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
   }catch{}
  },[]);
+ useEffect(()=>{
+  const detect=()=>{
+   const ua=navigator.userAgent||"";
+   const ipad=/iPad/i.test(ua)||(/Macintosh/i.test(ua)&&navigator.maxTouchPoints>1);
+   const iphone=/iPhone|iPod/i.test(ua);
+   const touchTablet=/Android/i.test(ua)&&Math.min(window.innerWidth,window.innerHeight)>=600;
+   setAutoDevice(iphone||window.innerWidth<700?"iphone":ipad||touchTablet||window.innerWidth<1200?"ipad":"desktop");
+  };
+  detect();
+  window.addEventListener("resize",detect,{passive:true});
+  window.addEventListener("orientationchange",detect,{passive:true});
+  return()=>{window.removeEventListener("resize",detect);window.removeEventListener("orientationchange",detect)};
+ },[]);
+ useEffect(()=>{
+  localStorage.setItem("jb1552-device-mode",deviceMode);
+  document.documentElement.dataset.jbDevice=deviceMode==="auto"?autoDevice:deviceMode;
+  const id=setTimeout(()=>window.dispatchEvent(new Event("resize")),80);
+  return()=>clearTimeout(id);
+ },[deviceMode,autoDevice]);
  const fundamentos=["Saque","Smash","Bandeja","Voleio FH","Voleio BH","Curta","Gancho","Anômalo","Rainbow","Defesa","Topspin","Slice","Drive","Flat","Swing Volley","Fast Hands"];
 
  useEffect(()=>{
@@ -351,12 +373,28 @@ export default function App(){
 
  const playerList=items.filter(x=>teamTab==="P"?x.type==="coach":x.type==="player"&&x.team===teamTab);
 
- return <div className="app">
+ const activeDevice=deviceMode==="auto"?autoDevice:deviceMode;
+ const deviceOptions=[
+  {id:"auto",label:"Automático",detail:`Detectado: ${autoDevice==="iphone"?"iPhone":autoDevice==="ipad"?"iPad":"PC / Notebook"}`,icon:<PanelTop/>},
+  {id:"iphone",label:"iPhone",detail:"Controles grandes e painéis empilhados",icon:<Smartphone/>},
+  {id:"ipad",label:"iPad",detail:"Quadra ampla com painéis otimizados",icon:<Tablet/>},
+  {id:"desktop",label:"PC / Notebook",detail:"Estúdio completo em três colunas",icon:<Monitor/>}
+ ];
+
+ return <div className="app" data-device={activeDevice}>
   <header className="top">
    <div className="logo"><b>JB</b><div><strong>JB TACTICS</strong><small>TACTICAL BOARD • BEACH TENNIS</small></div></div>
    <nav className="navtabs"><button className="navactive"><Grid2X2/>Táticas</button><button disabled title="Em desenvolvimento"><ClipboardList/>Exercícios</button><button disabled title="Em desenvolvimento"><Library/>Biblioteca</button><button disabled title="Em desenvolvimento"><Users/>Alunos</button><button disabled title="Em desenvolvimento"><Settings/>Configurações</button></nav>
-   <div className="actions"><button className="cloud" disabled title="Sincronização em desenvolvimento"><Cloud/></button><button className="save" onClick={save}><Save/>Salvar</button><button className="export" onClick={exportPNG}><Share2/>Exportar</button></div>
+   <div className="actions"><button className="deviceButton" onClick={()=>setDeviceMenuOpen(true)} title="Escolher modo do dispositivo"><PanelTop/><span>Tela</span></button><button className="cloud" disabled title="Sincronização em desenvolvimento"><Cloud/></button><button className="save" onClick={save}><Save/>Salvar</button><button className="export" onClick={exportPNG}><Share2/>Exportar</button></div>
   </header>
+
+  {deviceMenuOpen&&<div className="deviceOverlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setDeviceMenuOpen(false)}}>
+   <section className="deviceDialog" role="dialog" aria-modal="true" aria-labelledby="device-title">
+    <div className="deviceDialogHead"><div><span>EXPERIÊNCIA RESPONSIVA</span><h2 id="device-title">Modo do dispositivo</h2><p>Escolha como o JB Tactics deve organizar o estúdio nesta tela.</p></div><button className="deviceClose" onClick={()=>setDeviceMenuOpen(false)} aria-label="Fechar"><X/></button></div>
+    <div className="deviceChoices">{deviceOptions.map(option=><button key={option.id} className={deviceMode===option.id?"selected":""} onClick={()=>{setDeviceMode(option.id);setDeviceMenuOpen(false)}}><i>{option.icon}</i><span><strong>{option.label}</strong><small>{option.detail}</small></span>{deviceMode===option.id&&<b><Check/></b>}</button>)}</div>
+    <small className="deviceSaved">A escolha fica salva somente neste dispositivo.</small>
+   </section>
+  </div>}
 
   <div className="studio">
    <aside className="left panel">
